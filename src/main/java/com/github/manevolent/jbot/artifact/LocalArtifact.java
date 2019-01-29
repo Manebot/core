@@ -1,10 +1,7 @@
 package com.github.manevolent.jbot.artifact;
 
-import com.github.manevolent.jbot.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.net.URI;
-import java.util.Collection;
 
 public interface LocalArtifact extends Artifact {
 

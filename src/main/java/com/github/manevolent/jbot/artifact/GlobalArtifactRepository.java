@@ -5,8 +5,16 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GlobalArtifactRepository extends AggregateArtifactRepository {
+public final class GlobalArtifactRepository extends AggregateArtifactRepository {
     private final List<ArtifactRepository> repositories = new LinkedList<>();
+
+    public GlobalArtifactRepository() {
+
+    }
+
+    public GlobalArtifactRepository(Collection<ArtifactRepository> artifactRepositories) {
+        repositories.addAll(artifactRepositories);
+    }
 
     /**
      * Adds a repository to this global artifact repository.

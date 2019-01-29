@@ -3,6 +3,8 @@ package com.github.manevolent.jbot.bot;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.LocalArtifactRepository;
 import com.github.manevolent.jbot.plugin.Plugin;
+import com.github.manevolent.jbot.plugin.loader.PluginLoader;
+import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +40,20 @@ public interface Bot {
      * @return Bot startup date.
      */
     Date getStarted();
+
+    /**
+     * Gets the plugin loader registry
+     * @return plugin loader registry.
+     */
+    PluginLoaderRegistry getPluginLoaderRegistry();
+
+    /**
+     * Gets the system plugin/artifact loader.
+     * @return PluginLoader instance.
+     */
+    default PluginLoader getPluginLoader() {
+        return getPluginLoaderRegistry();
+    }
 
     /**
      * Gets the global repository.

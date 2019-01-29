@@ -1,10 +1,10 @@
 package com.github.manevolent.jbot.artifact;
 
-public class ArtifactDependencyIdentifier extends ArtifactIdentifier {
+public class ArtifactDependency extends ArtifactIdentifier {
     private final ArtifactDependencyLevel dependencyType;
 
-    public ArtifactDependencyIdentifier(String packageId, String artifactId, Version version,
-                                        ArtifactDependencyLevel dependencyType) {
+    public ArtifactDependency(String packageId, String artifactId, Version version,
+                              ArtifactDependencyLevel dependencyType) {
         super(packageId, artifactId, version);
         this.dependencyType = dependencyType;
     }

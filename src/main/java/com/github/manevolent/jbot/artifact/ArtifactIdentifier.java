@@ -22,7 +22,7 @@ package com.github.manevolent.jbot.artifact;
  * a <b>Map</b>, or dictionary, utilizing hashed keys.
  *
  */
-public final class ArtifactIdentifier {
+public class ArtifactIdentifier {
     private final String packageId;
     private final String artifactId;
     private final Version version;
