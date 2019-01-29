@@ -105,7 +105,8 @@ public class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
-        return Integer.toString(major) + "." + Integer.toString(minor) + "." + Integer.toString(micro) + "-" + buildId;
+        return Integer.toString(major) + "." + Integer.toString(minor) + "." + Integer.toString(micro) +
+                (buildId != null ? ("-" + buildId) : "");
     }
 
     @Override
@@ -130,17 +131,23 @@ public class Version implements Comparable<Version> {
         switch (numericParts.length) {
             case 1:
                 return new Version(
-                        Integer.parseInt(parts[0]), 0, 0,
+                        Integer.parseInt(numericParts[0]),
+                        0,
+                        0,
                         artifactId
                 );
             case 2:
                 return new Version(
-                        Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), 0,
+                        Integer.parseInt(numericParts[0]),
+                        Integer.parseInt(numericParts[1]),
+                        0,
                         artifactId
                 );
             case 3:
                 return new Version(
-                        Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
+                        Integer.parseInt(numericParts[0]),
+                        Integer.parseInt(numericParts[1]),
+                        Integer.parseInt(numericParts[2]),
                         artifactId
                 );
             default:
