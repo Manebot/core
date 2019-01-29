@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.bot;
 
+import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.LocalArtifactRepository;
 import com.github.manevolent.jbot.plugin.Plugin;
@@ -72,6 +73,17 @@ public interface Bot {
      * @return loaded plugins.
      */
     Collection<Plugin> getPlugins();
+
+    /**
+     * Finds a previously loaded plugin by its artifact identifier.
+     * @param id artifact identifier
+     * @return Plugin instance.
+     */
+    default Plugin getPlugin(ArtifactIdentifier id) {
+        return getPlugins().stream()
+                .filter(x -> x.getArtifact().getIdentifier().equals(id))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("plugin not found"));
+    }
 
     /**
      * Gets a list of enabled plugins.

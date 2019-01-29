@@ -1,6 +1,10 @@
 package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.Artifact;
+import com.github.manevolent.jbot.platform.Platform;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public interface Plugin {
 
@@ -9,6 +13,12 @@ public interface Plugin {
      * @return associated Artifact instance.
      */
     Artifact getArtifact();
+
+    /**
+     * Gets a list of platforms registered by this plugin.
+     * @return associated Platform instances.
+     */
+    Collection<Platform> getPlatforms();
 
     /**
      * Gets this plugin's name.  This is typically the <b>artifactId</b> of the plugin.
