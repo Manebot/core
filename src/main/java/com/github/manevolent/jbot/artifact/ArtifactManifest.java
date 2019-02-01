@@ -22,22 +22,17 @@ public interface ArtifactManifest {
     /**
      * Gets the latest version of this plugin.
      *
-     * @param branch Code branch to search on.
      * @return Version instance representing the latest version of this plugin.
      */
-    Version getLatestVersion(String branch);
+    String getLatestVersion();
 
     /**
      * Finds if an update exists for a specific plugin's version.
      * @param version Version to check for an update to.
      * @return true if an update exists, false otherwise.
      */
-    default boolean doesUpdateExist(Version version) {
-        for (Version otherVersion : getVersions())
-            if (version.compareTo(otherVersion) < 0)
-                return true;
-
-        return false;
+    default boolean doesUpdateExist(String version) {
+        return !getLatestVersion().equals(version);
     }
 
     /**
@@ -45,13 +40,13 @@ public interface ArtifactManifest {
      * @param version version to get.
      * @return Artifact instance corresponding to the version requested.
      */
-    Artifact getPlugin(Version version) throws ArtifactNotFoundException;
+    Artifact getArtifact(String version) throws ArtifactNotFoundException;
 
     /**
      * Gets the versions this plugin has.
      * @return Version collection representing the versions for this plugin.
      */
-    Collection<Version> getVersions();
+    Collection<String> getVersions();
 
     /**
      * Gets the repository this plugin was obtained from.

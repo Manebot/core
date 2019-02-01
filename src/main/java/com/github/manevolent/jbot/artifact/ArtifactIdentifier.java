@@ -25,7 +25,7 @@ package com.github.manevolent.jbot.artifact;
 public class ArtifactIdentifier {
     private final String packageId;
     private final String artifactId;
-    private final Version version;
+    private final String version;
 
     /**
      * Constructs a new artifact identifier.
@@ -34,7 +34,7 @@ public class ArtifactIdentifier {
      * @param artifactId Artifact ID of the artifact, must not be null.
      * @param version Version of the artifact, may be null.
      */
-    public ArtifactIdentifier(String packageId, String artifactId, Version version) {
+    public ArtifactIdentifier(String packageId, String artifactId, String version) {
         if (packageId == null) throw new NullPointerException("packageId");
         assertLowercase(packageId);
         this.packageId = packageId;
@@ -43,8 +43,6 @@ public class ArtifactIdentifier {
         assertLowercase(artifactId);
         this.artifactId = artifactId;
 
-        if (version != null)
-            assertLowercase(version.getBuildId());
         this.version = version;
     }
 
@@ -68,7 +66,7 @@ public class ArtifactIdentifier {
      * Gets the version associated with this artifact.  May be null.
      * @return version.
      */
-    public final Version getVersion() {
+    public final String getVersion() {
         return version;
     }
 
@@ -85,7 +83,7 @@ public class ArtifactIdentifier {
     @Override
     public String toString() {
         return version != null ?
-                packageId + ":" + artifactId + ":" + version.toString() :
+                packageId + ":" + artifactId + ":" + version :
                 packageId + ":" + artifactId;
     }
 
@@ -151,7 +149,7 @@ public class ArtifactIdentifier {
             return new ArtifactIdentifier(
                     parts[0],
                     parts[1],
-                    Version.fromString(parts[2])
+                    parts[2]
             );
         } else
             throw new IllegalArgumentException("unexpected artifact identifier: " + string);

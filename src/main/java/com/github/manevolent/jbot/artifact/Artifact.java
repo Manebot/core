@@ -31,7 +31,7 @@ public interface Artifact {
      * Gets this plugin's version.
      * @return Version.
      */
-    Version getVersion();
+    String getVersion();
 
     /**
      * Gets this artifact's root resource URI.

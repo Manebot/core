@@ -28,7 +28,7 @@ public interface ArtifactRepository {
      */
     default Artifact getArtifact(ArtifactIdentifier identifier)
             throws ArtifactRepositoryException, ArtifactNotFoundException {
-        return getManifest(identifier.getPackageId(), identifier.getArtifactId()).getPlugin(identifier.getVersion());
+        return getManifest(identifier.getPackageId(), identifier.getArtifactId()).getArtifact(identifier.getVersion());
     }
 
 }
