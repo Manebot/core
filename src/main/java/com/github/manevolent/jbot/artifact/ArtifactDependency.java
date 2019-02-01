@@ -1,19 +1,15 @@
 package com.github.manevolent.jbot.artifact;
 
-public class ArtifactDependency extends ArtifactIdentifier {
-    private final ArtifactDependencyLevel dependencyType;
+public interface ArtifactDependency {
 
-    public ArtifactDependency(String packageId, String artifactId, Version version,
-                              ArtifactDependencyLevel dependencyType) {
-        super(packageId, artifactId, version);
-        this.dependencyType = dependencyType;
-    }
+    Artifact getParent();
+
+    Artifact getChild();
 
     /**
      * Gets the type of dependency this artifact dependency requires.
      * @return dependency type.
      */
-    public ArtifactDependencyLevel getType() {
-        return dependencyType;
-    }
+    ArtifactDependencyLevel getType();
+
 }
