@@ -6,12 +6,6 @@ import java.util.Collection;
 public interface Artifact {
 
     /**
-     * Gets the repositories that this artifact requires to resolve dependencies.
-     * @return Artifact repository dependencies.
-     */
-    Collection<ArtifactRepository> getRepositories();
-
-    /**
      * Gets this artifact's identifier.
      * @return artifact identifier.
      */
