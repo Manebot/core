@@ -1,5 +1,7 @@
 package com.github.manevolent.jbot.virtual;
 
+import java.util.Collection;
+
 public abstract class Virtual {
     private static final Object instanceLock = new Object();
     private static Virtual instance;
@@ -12,6 +14,12 @@ public abstract class Virtual {
             Virtual.instance = instance;
         }
     }
+
+    /**
+     * Finds all virtual processes.
+     * @return Processes.
+     */
+    public abstract Collection<VirtualProcess> getProcesses();
 
     /**
      * Creates a new process

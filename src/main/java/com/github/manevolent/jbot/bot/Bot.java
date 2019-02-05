@@ -2,7 +2,8 @@ package com.github.manevolent.jbot.bot;
 
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
-import com.github.manevolent.jbot.artifact.LocalArtifactRepository;
+import com.github.manevolent.jbot.artifact.Version;
+import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
@@ -10,9 +11,16 @@ import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public interface Bot {
+
+    /**
+     * Gets a list of platforms registered to the system.
+     * @return list of Platforms.
+     */
+    List<Platform> getPlatforms();
 
     /**
      * Gets the state of the bot.
@@ -61,12 +69,6 @@ public interface Bot {
      * @return global repository.
      */
     ArtifactRepository getRepostiory();
-
-    /**
-     * Gets the local artifact repository.
-     * @return local artifact repository.
-     */
-    LocalArtifactRepository getLocalRepository();
 
     /**
      * Gets a list of all plugins loaded into the system.
@@ -118,5 +120,11 @@ public interface Bot {
      * @throws IllegalAccessException if the caller does not have the appropriate permission.
      */
     void stop() throws IllegalAccessException;
+
+    /**
+     * Gets the version of the bot.
+     * @return Version.
+     */
+    Version getVersion();
 
 }

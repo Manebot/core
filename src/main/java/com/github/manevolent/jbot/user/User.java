@@ -1,8 +1,9 @@
 package com.github.manevolent.jbot.user;
 
-import com.github.manevolent.jbot.conversation.Conversation;
+import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.entity.Entity;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -48,10 +49,16 @@ public interface User extends Entity {
     Date getLastSeenDate();
 
     /**
+     * Finds the groups this user is a member of.
+     * @return group collection.
+     */
+    Collection<UserGroup> getGroups();
+
+    /**
      * Gets the bot's private conversation with this user.
      *
      * @return Private conversation, null if none exists.
      */
-    Conversation getPrivateConversation();
+    Chat getPrivateChat();
 
 }

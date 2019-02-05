@@ -1,6 +1,6 @@
 package com.github.manevolent.jbot.platform;
 
-import com.github.manevolent.jbot.conversation.Conversation;
+import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.user.User;
 
@@ -43,16 +43,16 @@ public interface Platform {
      *
      * @return immutable list of presently provided Conversations.
      */
-    List<Conversation> getConversations();
+    List<Chat> getChats();
 
     /**
      * Gets a conversation by a specific Id for this platform.
      *
-     * @param id Conversation Id,
-     * @return Conversation instance if one exists, null otherwise.
+     * @param id Chat Id,
+     * @return Chat instance if one exists, null otherwise.
      */
-    default Conversation getConversationById(String id) {
-        return getConversations().stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+    default Chat getChatById(String id) {
+        return getChats().stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -61,8 +61,8 @@ public interface Platform {
      * @param user User to get a PM conversation for.
      * @return Private message conversation for the specified user, null if one cannot be found.
      */
-    default Conversation getPMConvesation(User user) {
-        return getConversations().stream().filter(x -> x.isMember(user) && x.isPrivate()).findFirst().orElse(null);
+    default Chat getPrivateChat(User user) {
+        return getChats().stream().filter(x -> x.isMember(user) && x.isPrivate()).findFirst().orElse(null);
     }
 
 }

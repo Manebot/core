@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.conversation;
+package com.github.manevolent.jbot.chat;
 
 import com.github.manevolent.jbot.entity.Entity;
 import com.github.manevolent.jbot.platform.Platform;
@@ -6,7 +6,7 @@ import com.github.manevolent.jbot.user.User;
 
 import java.util.Collection;
 
-public interface Conversation extends Entity {
+public interface Chat extends Entity {
 
     /**
      * Gets the platform associated with facilitating this conversation.
@@ -17,7 +17,7 @@ public interface Conversation extends Entity {
     /**
      * Gets this conversation's ID.
      *
-     * Conversation IDs should follow the format:
+     * Chat IDs should follow the format:
      *  platform:scope:internal
      *
      * Where,
@@ -25,7 +25,7 @@ public interface Conversation extends Entity {
      *  scope is a Platform-specific scope.
      *  internal is a scope-specific identifier.
      *
-     * @return Conversation ID.
+     * @return Chat ID.
      */
     String getId();
 
@@ -40,6 +40,13 @@ public interface Conversation extends Entity {
      * @param user
      */
     void kick(User user);
+
+    /**
+     * Gets the last <i>n</i> messages in this chat.
+     * @param max Maximum messages to return.
+     * @return ChatMessage collection of previous messages.
+     */
+    Collection<ChatMessage> getLastMessages(int max);
 
     /**
      * Finds if a given user is a member of this conversation.
