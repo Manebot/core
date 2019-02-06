@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.artifact;
+package com.github.manevolent.jbot;
 
 /**
  * Describes a jBot version.

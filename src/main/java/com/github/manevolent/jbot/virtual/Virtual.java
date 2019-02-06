@@ -1,8 +1,9 @@
 package com.github.manevolent.jbot.virtual;
 
 import java.util.Collection;
+import java.util.concurrent.ThreadFactory;
 
-public abstract class Virtual {
+public abstract class Virtual implements ThreadFactory {
     private static final Object instanceLock = new Object();
     private static Virtual instance;
     public static Virtual getInstance() {

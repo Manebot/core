@@ -1,4 +1,4 @@
-import com.github.manevolent.jbot.artifact.Version;
+import com.github.manevolent.jbot.Version;
 import junit.framework.TestCase;
 
 public class VersionTest extends TestCase {

@@ -1,17 +1,22 @@
 package com.github.manevolent.jbot.plugin.java;
 
 import com.github.manevolent.jbot.artifact.Artifact;
-import com.github.manevolent.jbot.bot.Bot;
+import com.github.manevolent.jbot.Bot;
+import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
+import com.github.manevolent.jbot.database.Database;
+import com.github.manevolent.jbot.database.DatabaseInitializer;
+import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformManager;
 import com.github.manevolent.jbot.plugin.Plugin;
+import com.github.manevolent.jbot.plugin.PluginException;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class JavaPlugin implements Plugin {
     private boolean initialized = false;
@@ -19,6 +24,7 @@ public abstract class JavaPlugin implements Plugin {
     private PluginEventManager eventManager;
     private PluginCommandManager commandManager;
     private PluginPlatformManager platformManager;
+    private PluginDatabaseManager databaseManager;
 
     private Bot bot;
 
@@ -51,6 +57,10 @@ public abstract class JavaPlugin implements Plugin {
         return platformManager;
     }
 
+    protected final DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
     /**
      * Sets the <b>Bot</b> instance associated with this plugin.
      * @param bot Bot instance.
@@ -58,7 +68,8 @@ public abstract class JavaPlugin implements Plugin {
     public final void initialize(Bot bot,
                                  CommandManager commandManager,
                                  EventManager eventManager,
-                                 PlatformManager platformManager)
+                                 PlatformManager platformManager,
+                                 DatabaseManager databaseManager)
             throws IllegalStateException {
         synchronized (this) {
             if (initialized) throw new IllegalStateException();
@@ -67,6 +78,7 @@ public abstract class JavaPlugin implements Plugin {
             this.commandManager = new PluginCommandManager(commandManager);
             this.eventManager = new PluginEventManager(eventManager);
             this.platformManager = new PluginPlatformManager(platformManager);
+            this.databaseManager = new PluginDatabaseManager(databaseManager);
 
             this.initialized = true;
         }
@@ -83,7 +95,7 @@ public abstract class JavaPlugin implements Plugin {
     }
 
     @Override
-    public final boolean setEnabled(boolean enabled) {
+    public final boolean setEnabled(boolean enabled) throws PluginException {
         synchronized (enableLock) {
             if (this.enabled != enabled) {
                 if (enabled) {
@@ -94,6 +106,8 @@ public abstract class JavaPlugin implements Plugin {
                     onDisable();
                     commandManager.destroy();
                     eventManager.destroy();
+                    platformManager.destroy();
+                    databaseManager.destroy();
                     this.enabled = false;
                     onDisabled();
                 }
@@ -103,10 +117,10 @@ public abstract class JavaPlugin implements Plugin {
         }
     }
 
-    protected void onEnable() {}
-    protected void onEnabled() {}
-    protected void onDisable() {}
-    protected void onDisabled() {}
+    protected void onEnable() throws PluginException {}
+    protected void onEnabled() throws PluginException {}
+    protected void onDisable() throws PluginException {}
+    protected void onDisabled() throws PluginException {}
 
     private class PluginEventManager implements EventManager {
         private final Object registrationLock = new Object();
@@ -237,6 +251,55 @@ public abstract class JavaPlugin implements Plugin {
             synchronized (registrationLock) {
                 platforms.forEach(this::unregisterPlatform);
             }
+        }
+    }
+
+    private class PluginDatabaseManager implements DatabaseManager {
+        private final DatabaseManager databaseManager;
+
+        private PluginDatabaseManager(DatabaseManager databaseManager) {
+            this.databaseManager = databaseManager;
+        }
+
+        private void destroy() {
+            // Do nothing
+        }
+
+        @Override
+        public Collection<Database> getDatabases() {
+            ArtifactIdentifier identifier = getArtifact().getIdentifier();
+
+            return Collections.unmodifiableCollection(
+                    databaseManager.getDatabases().stream().filter(
+                            db -> {
+                                ArtifactIdentifier other = db.getSubject();
+
+                                return other.getPackageId().equals(identifier.getPackageId()) &&
+                                        other.getArtifactId().equals(identifier.getArtifactId());
+                            })
+                            .collect(Collectors.toList())
+            );
+        }
+
+        @Override
+        public boolean hasDatabase(String name) {
+            return hasDatabase(getDbNamePrefix() + ":" + name);
+        }
+
+
+        @Override
+        public Database getDatabase(String name) {
+            return getDatabase(getDbNamePrefix() + ":" + name);
+        }
+
+        @Override
+        public Database createDatabase(String name, DatabaseInitializer initializer) {
+            return databaseManager.createDatabase(getDbNamePrefix() + ":" + name, initializer);
+        }
+
+        private String getDbNamePrefix() {
+            ArtifactIdentifier identifier = getArtifact().getIdentifier();
+            return identifier.getPackageId() + ":" + identifier.getArtifactId();
         }
     }
 }

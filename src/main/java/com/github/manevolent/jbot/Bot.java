@@ -1,27 +1,19 @@
-package com.github.manevolent.jbot.bot;
+package com.github.manevolent.jbot;
 
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
-import com.github.manevolent.jbot.artifact.Version;
 import com.github.manevolent.jbot.command.CommandDispatcher;
-import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.conversation.ConversationProvider;
-import com.github.manevolent.jbot.entity.Entity;
-import com.github.manevolent.jbot.entity.EntityManager;
 import com.github.manevolent.jbot.event.EventDispatcher;
-import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
-import com.github.manevolent.jbot.user.User;
-import com.github.manevolent.jbot.user.UserGroup;
 import com.github.manevolent.jbot.user.UserManager;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public interface Bot {

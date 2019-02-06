@@ -1,6 +1,5 @@
 package com.github.manevolent.jbot.plugin.loader;
 
-import com.github.manevolent.jbot.artifact.Artifact;
 import com.github.manevolent.jbot.artifact.LocalArtifact;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.PluginLoadException;

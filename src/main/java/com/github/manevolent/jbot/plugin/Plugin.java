@@ -31,7 +31,7 @@ public interface Plugin {
      * @param enabled enabled state
      * @return true if the artifact's state was changed, false otherwise.
      */
-    boolean setEnabled(boolean enabled);
+    boolean setEnabled(boolean enabled) throws PluginException;
 
     /**
      * Finds if this plugin is enabled.

@@ -1,5 +1,4 @@
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
-import com.github.manevolent.jbot.artifact.Version;
 import junit.framework.TestCase;
 
 public class ArtifactIdentifierTest extends TestCase {

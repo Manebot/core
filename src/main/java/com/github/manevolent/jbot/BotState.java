@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.bot;
+package com.github.manevolent.jbot;
 
 public enum BotState {
     STARTING,
