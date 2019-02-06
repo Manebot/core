@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.user;
 
 import com.github.manevolent.jbot.chat.Chat;
+import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.entity.Entity;
 
 import java.util.Collection;
@@ -60,5 +61,14 @@ public interface User extends Entity {
      * @return Private conversation, null if none exists.
      */
     Chat getPrivateChat();
+
+    /**
+     * Creates a command sender for the specified user.
+     *
+     * @param chat Chat to create a command sender for.
+     * @return CommandSender instance.
+     * @throws SecurityException
+     */
+    CommandSender createSender(Chat chat) throws SecurityException;
 
 }

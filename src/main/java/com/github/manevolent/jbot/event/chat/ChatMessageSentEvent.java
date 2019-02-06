@@ -7,7 +7,7 @@ public class ChatMessageSentEvent extends ChatEvent {
     private final ChatMessage message;
 
     public ChatMessageSentEvent(Object sender, ChatMessage chatMessage) {
-        super(sender, chatMessage.getChat());
+        super(sender, chatMessage.getSender().getChat());
 
         this.message = chatMessage;
     }
