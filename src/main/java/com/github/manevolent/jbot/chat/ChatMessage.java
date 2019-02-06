@@ -1,22 +1,16 @@
 package com.github.manevolent.jbot.chat;
 
-import com.github.manevolent.jbot.user.User;
+import com.github.manevolent.jbot.command.CommandSender;
 
 import java.util.Date;
 
 public interface ChatMessage {
 
     /**
-     * Gets the chat this message was sent in.
-     * @return chat instance.
+     * Gets the sender for this chat message.
+     * @return sender.
      */
-    Chat getChat();
-
-    /**
-     * Gets the user that sent this message.
-     * @return user.
-     */
-    User getUser();
+    CommandSender getSender();
 
     /**
      * Gets the user-friendly chat message string for this message.

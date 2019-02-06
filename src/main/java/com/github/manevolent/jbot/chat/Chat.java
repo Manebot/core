@@ -36,6 +36,17 @@ public interface Chat extends Entity {
     boolean isConnected();
 
     /**
+     * Finds if this chat should buffer its output.
+     *
+     * Buffered output will send individual command response lines in "chunks" for most commands.
+     *
+     * @return true if buffering should take place, false otherwise.
+     */
+    default boolean isBuffered() {
+        return true;
+    }
+
+    /**
      * Kicks a user from the conversation.
      * @param user
      */
