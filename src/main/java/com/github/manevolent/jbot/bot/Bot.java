@@ -3,6 +3,8 @@ package com.github.manevolent.jbot.bot;
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.Version;
+import com.github.manevolent.jbot.command.CommandHandler;
+import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
@@ -82,6 +84,18 @@ public interface Bot {
      * @return event manager.
      */
     EventManager getEventManager();
+
+    /**
+     * Gets the system command manager.
+     * @return command manager.
+     */
+    CommandManager getCommandManager();
+
+    /**
+     * Gets the system command handler.
+     * @return command handler.
+     */
+    CommandHandler getCommandHandler();
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.

@@ -14,11 +14,4 @@ public interface EventManager {
      */
     void unregisterListener(EventListener listener);
 
-    /**
-     * Checks an event given from the global system against the cached event system.
-     * @param event Event to check.
-     * @return A checked event.
-     */
-    Event fire(Event event) throws EventExecutionException;
-
 }
