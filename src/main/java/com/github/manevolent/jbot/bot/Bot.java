@@ -5,7 +5,9 @@ import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.Version;
 import com.github.manevolent.jbot.command.CommandDispatcher;
 import com.github.manevolent.jbot.command.CommandManager;
+import com.github.manevolent.jbot.conversation.ConversationProvider;
 import com.github.manevolent.jbot.entity.Entity;
+import com.github.manevolent.jbot.entity.EntityManager;
 import com.github.manevolent.jbot.event.EventDispatcher;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
@@ -14,6 +16,7 @@ import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserGroup;
+import com.github.manevolent.jbot.user.UserManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -95,12 +98,17 @@ public interface Bot {
      */
     CommandDispatcher getCommandDispatcher();
 
-    User getUserById(String id);
-    User getUserByName(String name);
-    UserGroup getUserGroupByName(String name);
-    Collection<User> getUsers();
-    Collection<UserGroup> getUserGroups();
-    Entity getEntityById(String id);
+    /**
+     * Gets the system user manager.
+     * @return user manager.
+     */
+    UserManager getUserManager();
+
+    /**
+     * Gets the system conversation provider.
+     * @return conversation provider.
+     */
+    ConversationProvider getConversationProvider();
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.

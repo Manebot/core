@@ -1,6 +1,5 @@
 package com.github.manevolent.jbot.chat;
 
-import com.github.manevolent.jbot.entity.Entity;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.user.User;
 
@@ -28,6 +27,14 @@ public interface Chat {
      * @return Chat ID.
      */
     String getId();
+
+    /**
+     * Gets the user-friendly name of this chat.
+     * @return chat user-friendly name.
+     */
+    default String getName() {
+        return getId();
+    }
 
     /**
      * Finds if this conversation is connected to the plugin's associated conversation resource.
@@ -87,6 +94,8 @@ public interface Chat {
      */
     void sendMessage(String message);
 
+    boolean canChangeTypingStatus();
+
     /**
      * Sets the Bot's typing status on this conversation.
      * @param typing true to begin typing, false otherwise.
@@ -103,18 +112,12 @@ public interface Chat {
      * Finds if the bot can send messages in this conversation.
      * @return true if the bot can send messages, false otherwise.
      */
-    boolean canSendMessages();
+    default boolean canSendMessages() { return true; }
 
     /**
      * Finds if the bot can receive messages in this conversation.
      * @return true if the bot receive send messages, false otherwise.
      */
-    boolean canReceiveMessages();
-
-    /**
-     * Gets the entity associated with this chat.
-     * @return Associated entity.
-     */
-    Entity getEntity();
+    default boolean canReceiveMessages() { return true; }
 
 }
