@@ -173,6 +173,14 @@ public abstract class JavaPlugin implements Plugin {
             }
         }
 
+        @Override
+        public CommandExecutor getExecutor(String label) {
+            if (registeredLabels.contains(label))
+                return commandManager.getExecutor(label);
+            else
+                return null;
+        }
+
         private void destroy() {
             synchronized (registrationLock) {
                 registeredLabels.forEach(this::unregisterExecutor);
