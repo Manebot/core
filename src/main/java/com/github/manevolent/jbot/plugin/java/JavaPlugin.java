@@ -86,12 +86,8 @@ public abstract class JavaPlugin implements Plugin {
                     this.enabled = false;
                     onDisabled();
                 }
-
                 return true;
             }
-
-
-
             return false;
         }
     }
