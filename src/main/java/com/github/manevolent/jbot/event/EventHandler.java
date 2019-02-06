@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface EventHandler {
 
     /**
-     * The events priority.
+     * The event handler's priority.
      * @return Priority. HIGHEST executes first, while LOWEST executes last.
      */
     public EventPriority priority() default EventPriority.NORMAL;

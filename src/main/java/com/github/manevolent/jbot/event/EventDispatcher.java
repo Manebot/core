@@ -4,8 +4,8 @@ public interface EventDispatcher {
 
     /**
      * Fires an event
-     * @param event Event to check.
-     * @return A checked event.
+     * @param event Event to fire.
+     * @return Event
      */
     Event fire(Event event) throws EventExecutionException;
 
