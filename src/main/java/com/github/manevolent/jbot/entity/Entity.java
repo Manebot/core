@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.entity;
 
 import com.github.manevolent.jbot.property.Property;
 import com.github.manevolent.jbot.security.Grant;
+import com.github.manevolent.jbot.security.GrantedPermission;
 import com.github.manevolent.jbot.security.Permission;
 
 import java.util.Collection;
@@ -67,5 +68,11 @@ public interface Entity {
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;
     }
+
+    /**
+     * Gets the explicitly granted permissions for this entity.
+     * @return permission grants.
+     */
+    Collection<GrantedPermission> getPermissions();
 
 }

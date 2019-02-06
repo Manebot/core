@@ -3,6 +3,7 @@ package com.github.manevolent.jbot.user;
 import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.entity.Entity;
+import com.github.manevolent.jbot.entity.EntityType;
 
 import java.util.Collection;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
 /**
  * Users define individual jBot users.
  */
-public interface User extends Entity {
+public interface User extends EntityType {
 
     /**
      * Gets this user's username on the system.

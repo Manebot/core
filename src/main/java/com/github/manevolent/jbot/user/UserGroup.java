@@ -1,16 +1,22 @@
 package com.github.manevolent.jbot.user;
 
-import com.github.manevolent.jbot.entity.Entity;
+import com.github.manevolent.jbot.entity.EntityType;
 
 import java.util.Collection;
 
-public interface UserGroup extends Entity {
+public interface UserGroup extends EntityType {
 
     /**
      * Gets the name of this group.
      * @return group name.
      */
     String getName();
+
+    /**
+     * Gets this group's owner.
+     * @return owner.
+     */
+    User getOwner();
 
     /**
      * Gets the users in this group.

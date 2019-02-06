@@ -6,7 +6,7 @@ import com.github.manevolent.jbot.user.User;
 
 import java.util.Collection;
 
-public interface Chat extends Entity {
+public interface Chat {
 
     /**
      * Gets the platform associated with facilitating this conversation.
@@ -110,5 +110,11 @@ public interface Chat extends Entity {
      * @return true if the bot receive send messages, false otherwise.
      */
     boolean canReceiveMessages();
+
+    /**
+     * Gets the entity associated with this chat.
+     * @return Associated entity.
+     */
+    Entity getEntity();
 
 }
