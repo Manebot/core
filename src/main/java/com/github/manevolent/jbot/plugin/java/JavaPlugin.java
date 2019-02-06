@@ -6,6 +6,8 @@ import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
+import com.github.manevolent.jbot.platform.Platform;
+import com.github.manevolent.jbot.platform.PlatformManager;
 import com.github.manevolent.jbot.plugin.Plugin;
 
 import java.util.LinkedList;
@@ -16,6 +18,7 @@ public abstract class JavaPlugin implements Plugin {
 
     private PluginEventManager eventManager;
     private PluginCommandManager commandManager;
+    private PluginPlatformManager platformManager;
 
     private Bot bot;
 
@@ -44,11 +47,18 @@ public abstract class JavaPlugin implements Plugin {
         return commandManager;
     }
 
+    protected final PlatformManager getPlatformManager() {
+        return platformManager;
+    }
+
     /**
      * Sets the <b>Bot</b> instance associated with this plugin.
      * @param bot Bot instance.
      */
-    public final void initialize(Bot bot, CommandManager commandManager, EventManager eventManager)
+    public final void initialize(Bot bot,
+                                 CommandManager commandManager,
+                                 EventManager eventManager,
+                                 PlatformManager platformManager)
             throws IllegalStateException {
         synchronized (this) {
             if (initialized) throw new IllegalStateException();
@@ -56,6 +66,7 @@ public abstract class JavaPlugin implements Plugin {
             this.bot = bot;
             this.commandManager = new PluginCommandManager(commandManager);
             this.eventManager = new PluginEventManager(eventManager);
+            this.platformManager = new PluginPlatformManager(platformManager);
 
             this.initialized = true;
         }
@@ -184,6 +195,39 @@ public abstract class JavaPlugin implements Plugin {
                 }
 
                 return this;
+            }
+        }
+    }
+
+    private class PluginPlatformManager implements PlatformManager {
+        private final Object registrationLock = new Object();
+        private final PlatformManager platformManager;
+        private final List<Platform> platforms = new LinkedList<>();
+
+        private PluginPlatformManager(PlatformManager platformManager) {
+            this.platformManager = platformManager;
+        }
+
+        @Override
+        public void registerPlatform(Platform listener) {
+            synchronized (registrationLock) {
+                platformManager.registerPlatform(listener);
+                platforms.add(listener);
+            }
+        }
+
+        @Override
+        public void unregisterPlatform(Platform listener) {
+            synchronized (registrationLock) {
+                if (!platforms.contains(listener)) return;
+
+                platformManager.unregisterPlatform(listener);
+                platforms.remove(listener);
+            }
+        }
+        private void destroy() {
+            synchronized (registrationLock) {
+                platforms.forEach(this::unregisterPlatform);
             }
         }
     }

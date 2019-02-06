@@ -30,7 +30,7 @@ public final class PluginLoaderRegistry implements PluginLoader {
      */
     public void registerLoader(String extension, PluginLoader loader) {
         if (loaderMap.containsKey(extension))
-            throw new IllegalArgumentException("loader for " + extension + " exists");
+            throw new IllegalArgumentException("loader for \"" + extension + "\" already exists");
 
         loaderMap.put(extension, loader);
     }

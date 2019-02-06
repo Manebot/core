@@ -27,10 +27,31 @@ import java.util.stream.Collectors;
 public interface Bot {
 
     /**
+     * Gets the version of the bot.
+     * @return Version.
+     */
+    Version getVersion();
+
+    /**
+     * Gets the API version of the bot.
+     * @return API Version.
+     */
+    Version getApiVersion();
+
+    /**
      * Gets a list of platforms registered to the system.
      * @return list of Platforms.
      */
-    List<Platform> getPlatforms();
+    Collection<Platform> getPlatforms();
+
+    /**
+     * Finds a platform by its ID.
+     * @param id Platform ID to find.
+     * @return Platform instance if a platform is found, null otherwise.
+     */
+    default Platform getPlatformById(String id) {
+        return getPlatforms().stream().filter(platform -> platform.getId().equals(id)).findFirst().orElse(null);
+    }
 
     /**
      * Gets the state of the bot.
@@ -113,7 +134,7 @@ public interface Bot {
     /**
      * Finds a previously loaded plugin by its artifact identifier.
      * @param id artifact identifier
-     * @return Plugin instance.
+     * @return Plugin instance if one is found, null otherwise.
      */
     default Plugin getPlugin(ArtifactIdentifier id) {
         return getPlugins().stream()
@@ -158,11 +179,5 @@ public interface Bot {
      * @throws IllegalAccessException if the caller does not have the appropriate permission.
      */
     void stop() throws IllegalAccessException;
-
-    /**
-     * Gets the version of the bot.
-     * @return Version.
-     */
-    Version getVersion();
 
 }

@@ -54,10 +54,16 @@ public interface Chat {
     }
 
     /**
-     * Kicks a user from the conversation.
-     * @param user
+     * Removes, or kicks, a user from the conversation.
+     * @param user User to remove.
      */
-    void kick(User user);
+    void remove(User user);
+
+    /**
+     * Adds a user to this conversation.
+     * @param user User to add.
+     */
+    void add(User user);
 
     /**
      * Gets the last <i>n</i> messages in this chat.
@@ -93,6 +99,13 @@ public interface Chat {
      * @param message Text message to send.
      */
     void sendMessage(String message);
+
+    /**
+     * Sets the name, or title, of this conversation.
+     * @param name Conversation title.
+     * @throws UnsupportedOperationException
+     */
+    void setName(String name) throws UnsupportedOperationException;
 
     boolean canChangeTypingStatus();
 
