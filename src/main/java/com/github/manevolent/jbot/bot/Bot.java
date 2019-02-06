@@ -5,12 +5,15 @@ import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.Version;
 import com.github.manevolent.jbot.command.CommandDispatcher;
 import com.github.manevolent.jbot.command.CommandManager;
+import com.github.manevolent.jbot.entity.Entity;
 import com.github.manevolent.jbot.event.EventDispatcher;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
+import com.github.manevolent.jbot.user.User;
+import com.github.manevolent.jbot.user.UserGroup;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -92,6 +95,13 @@ public interface Bot {
      */
     CommandDispatcher getCommandDispatcher();
 
+    User getUserById(String id);
+    User getUserByName(String name);
+    UserGroup getUserGroupByName(String name);
+    Collection<User> getUsers();
+    Collection<UserGroup> getUserGroups();
+    Entity getEntityById(String id);
+
     /**
      * Finds a previously loaded plugin by its artifact identifier.
      * @param id artifact identifier
@@ -100,7 +110,7 @@ public interface Bot {
     default Plugin getPlugin(ArtifactIdentifier id) {
         return getPlugins().stream()
                 .filter(x -> x.getArtifact().getIdentifier().equals(id))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("plugin not found"));
+                .findFirst().orElse(null);
     }
 
     /**
@@ -109,7 +119,9 @@ public interface Bot {
      */
     default Collection<Plugin> getEnabledPlugins() {
         return Collections.unmodifiableCollection(
-                getPlugins().stream().filter(x -> x != null && x.isEnabled()).collect(Collectors.toList())
+                getPlugins().stream()
+                        .filter(x -> x != null && x.isEnabled())
+                        .collect(Collectors.toList())
         );
     }
 
@@ -119,7 +131,9 @@ public interface Bot {
      */
     default Collection<Plugin> getDisabledPlugins() {
         return Collections.unmodifiableCollection(
-                getPlugins().stream().filter(x -> x != null && !x.isEnabled()).collect(Collectors.toList())
+                getPlugins().stream()
+                        .filter(x -> x != null && !x.isEnabled())
+                        .collect(Collectors.toList())
         );
     }
 
