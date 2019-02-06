@@ -3,6 +3,7 @@ package com.github.manevolent.jbot.bot;
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.Version;
+import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
@@ -75,6 +76,12 @@ public interface Bot {
      * @return loaded plugins.
      */
     Collection<Plugin> getPlugins();
+
+    /**
+     * Gets the system event manager.
+     * @return event manager.
+     */
+    EventManager getEventManager();
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.
