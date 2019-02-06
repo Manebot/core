@@ -4,7 +4,7 @@ public class CommandNotFoundException extends CommandExecutionException {
     private final String command;
 
     public CommandNotFoundException(String command) {
-        super(false, "\u2716 Command not recognized.");
+        super(false, "\u2716 CommandMessage not recognized.");
 
         this.command = command;
     }

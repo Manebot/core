@@ -1,7 +1,5 @@
 package com.github.manevolent.jbot.chat;
 
-import java.util.Date;
-
 public interface ChatSender {
 
     /**
@@ -19,5 +17,35 @@ public interface ChatSender {
      * @return Chat instance.
      */
     Chat getChat();
+
+    /**
+     * Opens the command buffer.
+     * @return true if the buffer was opened, false if no changes were made.
+     */
+    boolean begin();
+
+    /**
+     * Adds a message to the command buffer or sends a message.
+     * @param message message to add.
+     */
+    void sendMessage(String message);
+
+    /**
+     * Ends the command buffer.
+     * @return number of lines sent.
+     */
+    int end();
+
+    /**
+     * Sends several messages to the remote.
+     * @param messages Messages to send.
+     */
+    void sendMessage(String... messages);
+
+    /**
+     * Flushes the buffer.
+     * @return number of lines sent.
+     */
+    int flush();
 
 }

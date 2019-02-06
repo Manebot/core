@@ -48,7 +48,7 @@ public abstract class CommandSender implements ChatSender {
      * Opens the command buffer.
      * @return true if the buffer was opened, false if no changes were made.
      */
-    public boolean beginBuffer() {
+    public boolean begin() {
         synchronized (bufferLock) {
             if (buffered) return false;
             else return buffered = true;
@@ -74,7 +74,7 @@ public abstract class CommandSender implements ChatSender {
      * Ends the command buffer.
      * @return number of lines sent.
      */
-    public int endBuffer() {
+    public int end() {
         int c = 0;
         StringBuilder builder = new StringBuilder();
 
@@ -110,13 +110,19 @@ public abstract class CommandSender implements ChatSender {
     /**
      * Flushes the buffer.
      */
-    public void flush() {
+    public int flush() {
+        int c;
+
         synchronized (bufferLock) {
             if (buffered) {
-                endBuffer();
-                beginBuffer();
+                c = end();
+                begin();
+            } else {
+                c = 0;
             }
         }
+
+        return c;
     }
 
     public static final String formatMessage(String message) {

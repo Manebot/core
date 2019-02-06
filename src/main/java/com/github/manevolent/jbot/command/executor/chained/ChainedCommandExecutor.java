@@ -150,7 +150,7 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
         if (completedChains.size() <= 0)
             throw new CommandArgumentException("Arguments not acceptable; see command help for more information.");
         else if (completedChains.size() > 1)
-            throw new CommandArgumentException("Command argument disambiguation: " + completedChains.size() + " matches.");
+            throw new CommandArgumentException("CommandMessage argument disambiguation: " + completedChains.size() + " matches.");
 
         PrioritizedChain chain = completedChains.get(0);
         if (chain.getChain().getExecutor() == null) throw new CommandExecutionException("No handler for command.");
