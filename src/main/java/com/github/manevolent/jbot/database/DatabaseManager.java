@@ -8,16 +8,13 @@ public interface DatabaseManager {
         return getDatabase(name) != null;
     }
 
+    Collection<Database> getDatabases();
+
     default Database getDatabase(String name) {
         return getDatabases().stream().filter(db -> db.getName().equals(name)).findFirst().orElse(null);
     }
 
-    Collection<Database> getDatabases();
-
-    default Database createDatabase(String name) {
-        return createDatabase(name, (database) -> { /*do nothing*/ });
-    }
-
+    Database createDatabase(String name);
     Database createDatabase(String name, DatabaseInitializer initializer);
 
 }

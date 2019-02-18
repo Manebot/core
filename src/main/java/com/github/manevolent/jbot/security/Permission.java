@@ -2,10 +2,11 @@ package com.github.manevolent.jbot.security;
 
 import com.google.common.collect.MapMaker;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public final class Permission {
-    private static final ConcurrentMap<String, Permission> referenceMap = new MapMaker().weakValues().makeMap();
+    private static final Map<String, Permission> referenceMap = new MapMaker().weakValues().makeMap();
     private final String node;
 
     private Permission(String node) {

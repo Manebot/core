@@ -8,6 +8,7 @@ import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.database.DatabaseInitializer;
 import com.github.manevolent.jbot.database.DatabaseManager;
+import com.github.manevolent.jbot.database.SystemDatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
@@ -69,7 +70,7 @@ public abstract class JavaPlugin implements Plugin {
                                  CommandManager commandManager,
                                  EventManager eventManager,
                                  PlatformManager platformManager,
-                                 DatabaseManager databaseManager)
+                                 SystemDatabaseManager databaseManager)
             throws IllegalStateException {
         synchronized (this) {
             if (initialized) throw new IllegalStateException();
@@ -255,9 +256,9 @@ public abstract class JavaPlugin implements Plugin {
     }
 
     private class PluginDatabaseManager implements DatabaseManager {
-        private final DatabaseManager databaseManager;
+        private final SystemDatabaseManager databaseManager;
 
-        private PluginDatabaseManager(DatabaseManager databaseManager) {
+        private PluginDatabaseManager(SystemDatabaseManager databaseManager) {
             this.databaseManager = databaseManager;
         }
 
@@ -267,17 +268,8 @@ public abstract class JavaPlugin implements Plugin {
 
         @Override
         public Collection<Database> getDatabases() {
-            ArtifactIdentifier identifier = getArtifact().getIdentifier();
-
             return Collections.unmodifiableCollection(
-                    databaseManager.getDatabases().stream().filter(
-                            db -> {
-                                ArtifactIdentifier other = db.getSubject();
-
-                                return other.getPackageId().equals(identifier.getPackageId()) &&
-                                        other.getArtifactId().equals(identifier.getArtifactId());
-                            })
-                            .collect(Collectors.toList())
+                    databaseManager.getDatabases(artifact.getIdentifier().withoutVersion())
             );
         }
 
@@ -286,15 +278,26 @@ public abstract class JavaPlugin implements Plugin {
             return hasDatabase(getDbNamePrefix() + ":" + name);
         }
 
-
         @Override
         public Database getDatabase(String name) {
             return getDatabase(getDbNamePrefix() + ":" + name);
         }
 
         @Override
+        public Database createDatabase(String name) {
+            return databaseManager.createDatabase(
+                    artifact.getIdentifier().withoutVersion(),
+                    getDbNamePrefix() + ":" + name
+            );
+        }
+
+        @Override
         public Database createDatabase(String name, DatabaseInitializer initializer) {
-            return databaseManager.createDatabase(getDbNamePrefix() + ":" + name, initializer);
+            return databaseManager.createDatabase(
+                    artifact.getIdentifier().withoutVersion(),
+                    getDbNamePrefix() + ":" + name,
+                    initializer
+            );
         }
 
         private String getDbNamePrefix() {

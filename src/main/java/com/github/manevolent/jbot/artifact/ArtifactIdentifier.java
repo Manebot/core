@@ -47,6 +47,17 @@ public class ArtifactIdentifier {
     }
 
     /**
+     * Constructs a new artifact identifier.
+     *
+     * @param packageId Package ID of the artifact, must not be null.
+     * @param artifactId Artifact ID of the artifact, must not be null.
+     */
+
+    public ArtifactIdentifier(String packageId, String artifactId) {
+        this(packageId, artifactId, null);
+    }
+
+    /**
      * Gets the artifactId associated with this artifact identifier.
      * @return artifactId.
      */
@@ -153,5 +164,9 @@ public class ArtifactIdentifier {
             );
         } else
             throw new IllegalArgumentException("unexpected artifact identifier: " + string);
+    }
+
+    public ArtifactIdentifier withoutVersion() {
+        return new ArtifactIdentifier(packageId, artifactId);
     }
 }
