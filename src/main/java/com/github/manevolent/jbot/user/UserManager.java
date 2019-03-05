@@ -1,5 +1,7 @@
 package com.github.manevolent.jbot.user;
 
+import com.github.manevolent.jbot.platform.Platform;
+
 import java.util.Collection;
 
 public interface UserManager {
@@ -56,5 +58,13 @@ public interface UserManager {
      * @param name name of the user group to delete.
      */
     void deleteUserGroup(String name);
+
+    /**
+     * Gets a user association.
+     * @param platform Platform holding the association.
+     * @param id Platform-specific ID for the associaton.
+     * @return UserAssociation instance if one exists, null otherwise.
+     */
+    UserAssociation getUserAssociation(Platform platform, String id);
 
 }

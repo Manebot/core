@@ -2,8 +2,11 @@ package com.github.manevolent.jbot.chat;
 
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.user.User;
+import com.github.manevolent.jbot.user.UserAssociation;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public interface Chat {
 
@@ -57,13 +60,33 @@ public interface Chat {
      * Removes, or kicks, a user from the conversation.
      * @param user User to remove.
      */
-    void remove(User user);
+    default void removeUser(User user) {
+        for (UserAssociation platformAssociation : user.getAssociations(getPlatform())) {
+            removeMember(platformAssociation.getPlatformId());
+        }
+    }
+
+    /**
+     * Removes, or kicks, a platform-specific user from this conversation.
+     * @param platformId Platform-specific Id to remove.
+     */
+    void removeMember(String platformId);
 
     /**
      * Adds a user to this conversation.
      * @param user User to add.
      */
-    void add(User user);
+    default void addUser(User user) {
+        for (UserAssociation platformAssociation : user.getAssociations(getPlatform())) {
+            addMember(platformAssociation.getPlatformId());
+        }
+    }
+
+    /**
+     * Adds a platform-specific user to this conversation.
+     * @param platformId platform-specific Id.
+     */
+    void addMember(String platformId);
 
     /**
      * Gets the last <i>n</i> messages in this chat.
@@ -82,10 +105,36 @@ public interface Chat {
     }
 
     /**
-     * Gets the members for this conversation.
-     * @return immutable collection of members in this conversation.
+     * Gets the users in this conversation.
+     *
+     * @return immutable collection of users in this conversation.
      */
-    Collection<User> getMembers();
+    default Collection<User> getMembers() {
+        return Collections.unmodifiableCollection(
+                getMemberAssociations().stream().map(UserAssociation::getUser).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Gets the member user associations for this conversation.
+     *
+     * @return immutable collection of member user associations in this conversation.
+     */
+    default Collection<UserAssociation> getMemberAssociations() {
+        return Collections.unmodifiableCollection(
+                getPlatformMemberIds().stream()
+                .map(x -> getPlatform().getUserAssocation(x))
+                .filter(x -> x.getUser() != null)
+                .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Gets a raw immutable collection of members, in the form of platform-specific Ids.
+     *
+     * @return immutable collection of all members, in the form of platform-specific Ids.
+     */
+    Collection<String> getPlatformMemberIds();
 
     /**
      * Finds if the conversation is private. Private conversations are conversations which are typically a direct
@@ -105,8 +154,12 @@ public interface Chat {
      * @param name Conversation title.
      * @throws UnsupportedOperationException
      */
-    void setName(String name) throws UnsupportedOperationException;
+    void setTitle(String name) throws UnsupportedOperationException;
 
+    /**
+     * Finds if it is possible to change the typing status in this chat.
+     * @return true if typing status can be changed, false otherwise.
+     */
     boolean canChangeTypingStatus();
 
     /**
