@@ -14,6 +14,7 @@ import com.github.manevolent.jbot.user.UserManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public interface Bot {
@@ -171,5 +172,8 @@ public interface Bot {
      * @throws IllegalAccessException if the caller does not have the appropriate permission.
      */
     void stop() throws IllegalAccessException;
+
+    boolean registerStateListener(Consumer<BotState> listener);
+    boolean unregisterStateListener(Consumer<BotState> listener);
 
 }
