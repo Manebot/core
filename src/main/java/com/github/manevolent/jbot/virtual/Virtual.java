@@ -24,8 +24,29 @@ public abstract class Virtual implements ThreadFactory {
 
     /**
      * Creates a new process
+     *
      * @param runnable runnable for process to execute.
      * @return VirtualProcess instance.
      */
     public abstract VirtualProcess create(Runnable runnable) throws SecurityException;
+
+    /**
+     * Gets the current process.
+     *
+     * @return VirtualProcess instance if found, null otherwise.
+     */
+    public VirtualProcess currentProcess() {
+        return getProcess(Thread.currentThread());
+    }
+
+    /**
+     * Gets the process associated with a given thread.
+     *
+     * @param thread Thread to look for.
+     * @return VirtualProcess instance if found, null otherwise.
+     */
+    public VirtualProcess getProcess(Thread thread) {
+        long id = thread.getId();
+        return getProcesses().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+    }
 }
