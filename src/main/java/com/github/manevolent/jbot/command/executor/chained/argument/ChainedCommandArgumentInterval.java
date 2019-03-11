@@ -2,6 +2,12 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
+import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
     private final IntervalTime[] intervals = new IntervalTime[]
@@ -12,6 +18,14 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
                     new IntervalTime(86400, new String[] {"d", "dy", "day"}),
                     new IntervalTime(604800, new String[] {"w", "wk", "week"})
             };
+
+    public ChainedCommandArgumentInterval() {
+
+    }
+
+    public ChainedCommandArgumentInterval(Argument argument) {
+
+    }
 
     @Override
     public String getHelpString() {
@@ -67,4 +81,9 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
             this.matches = matches;
         }
     }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @ReflectiveCommandExecutor.Argument(type = ChainedCommandArgumentInterval.class)
+    public @interface Argument {}
 }

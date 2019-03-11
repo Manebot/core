@@ -2,8 +2,22 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
+import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 public class ChainedCommandArgumentFollowing extends ChainedCommandArgument {
+    public ChainedCommandArgumentFollowing() {
+
+    }
+
+    public ChainedCommandArgumentFollowing(Argument argument) {
+
+    }
+
     @Override
     public String getHelpString() {
         return "...";
@@ -28,4 +42,9 @@ public class ChainedCommandArgumentFollowing extends ChainedCommandArgument {
     public boolean canCoexist(ChainedCommandArgument b) {
         return !(b instanceof ChainedCommandArgumentFollowing);
     }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @ReflectiveCommandExecutor.Argument(type = ChainedCommandArgumentFollowing.class)
+    public @interface Argument {}
 }

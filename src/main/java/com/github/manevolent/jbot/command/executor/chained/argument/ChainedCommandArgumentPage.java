@@ -2,8 +2,22 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
+import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 public class ChainedCommandArgumentPage extends ChainedCommandArgument {
+    public ChainedCommandArgumentPage() {
+
+    }
+
+    public ChainedCommandArgumentPage(Argument argument) {
+
+    }
+
     @Override
     public String getHelpString() {
         return "[Page:#]";
@@ -46,4 +60,9 @@ public class ChainedCommandArgumentPage extends ChainedCommandArgument {
     public boolean canCoexist(ChainedCommandArgument b) {
         return true;
     }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @ReflectiveCommandExecutor.Argument(type = ChainedCommandArgumentPage.class)
+    public @interface Argument {}
 }

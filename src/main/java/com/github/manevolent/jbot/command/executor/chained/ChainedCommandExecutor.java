@@ -13,7 +13,11 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
     private final CommandChain root = new CommandChain(null);
 
     protected CommandChain withArguments(ChainedCommandArgument... arguments) {
-        if (arguments.length <= 0) throw new IllegalArgumentException("argument length cannot be <= 0");
+        return withArguments(Arrays.asList(arguments));
+    }
+
+    protected CommandChain withArguments(Collection<ChainedCommandArgument> arguments) {
+        if (arguments.size() <= 0) throw new IllegalArgumentException("argument length cannot be <= 0");
 
         CommandChain chain = this.root;
         for (ChainedCommandArgument argument : arguments) chain.addChild(chain = new CommandChain(argument));

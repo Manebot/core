@@ -199,7 +199,7 @@ public interface Chat {
      * Finds if the bot can send rich messages in this conversation.
      * @return true if the bot can send rich messages, false otherwise.
      */
-    boolean canSendRichMessages();
+    default boolean canSendRichMessages() { return false; }
 
     /**
      * Finds if the bot can receive messages in this conversation.
@@ -207,11 +207,19 @@ public interface Chat {
      */
     default boolean canReceiveMessages() { return true; }
 
-
     /**
      * Finds if the bot can send emoji in this conversation.
      * @return true if the bot receive send emoji, false otherwise.
      */
-    default boolean canSendEmoji() { return true; }
+    default boolean canSendEmoji() { return false; }
+
+    /**
+     * Finds if the bot can send a specific rich chat element type in this conversation.
+     * @param elementClass Element class type
+     * @return true if the bot can send the specified rich element type in this chat, false otherwise.
+     */
+    default boolean canSendRichElement(Class<? extends RichChatMessage.Element> elementClass) {
+        return canSendRichMessages();
+    }
 
 }

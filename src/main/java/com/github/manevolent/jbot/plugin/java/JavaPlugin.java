@@ -6,7 +6,6 @@ import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.database.Database;
-import com.github.manevolent.jbot.database.DatabaseInitializer;
 import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.database.SystemDatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
@@ -288,15 +287,6 @@ public abstract class JavaPlugin implements Plugin {
             return databaseManager.createDatabase(
                     artifact.getIdentifier().withoutVersion(),
                     getDbNamePrefix() + ":" + name
-            );
-        }
-
-        @Override
-        public Database createDatabase(String name, DatabaseInitializer initializer) {
-            return databaseManager.createDatabase(
-                    artifact.getIdentifier().withoutVersion(),
-                    getDbNamePrefix() + ":" + name,
-                    initializer
             );
         }
 
