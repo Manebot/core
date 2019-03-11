@@ -5,7 +5,7 @@ import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public interface SystemDatabaseManager {
+public interface SystemDatabaseManager extends DatabaseManager {
     ArtifactIdentifier SYSTEM_IDENTIFIER = new ArtifactIdentifier("com.github.manevolent", "jbot");
 
     default boolean hasSystemDatabase(String name) {
@@ -36,17 +36,11 @@ public interface SystemDatabaseManager {
     Collection<Database> getDatabases();
 
     default Database createDatabase(ArtifactIdentifier identifier, String name) {
-        return createDatabase(identifier, name, (database) -> { /*do nothing*/ });
+        return createDatabase(identifier, name);
     }
-
-    Database createDatabase(ArtifactIdentifier subject, String name, DatabaseInitializer initializer);
 
     default Database createSystemDatabase(String name) {
-        return createDatabase(SYSTEM_IDENTIFIER, name, (database) -> { /*do nothing*/ });
-    }
-
-    default Database createSystemDatabase(String name, DatabaseInitializer initializer) {
-        return createDatabase(SYSTEM_IDENTIFIER, name, initializer);
+        return createDatabase(SYSTEM_IDENTIFIER, name);
     }
 
 }

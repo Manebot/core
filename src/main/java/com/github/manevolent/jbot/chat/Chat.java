@@ -145,9 +145,24 @@ public interface Chat {
 
     /**
      * Sends a text message to the conversation.
-     * @param message Text message to send.
+     * @param message PlainText message to send.
      */
     void sendMessage(String message);
+
+    /**
+     * Sends a text message to the conversation.
+     * @param message PlainText message to send.
+     */
+    default void sendMessage(ChatMessage message) {
+        sendMessage(message.getMessage());
+    }
+
+    /**
+     * Sends a rich message to the conversation.
+     * @param message Rich message to send.
+     * @throws UnsupportedOperationException if the conversation does not support rich messaging.
+     */
+    void sendMessage(RichChatMessage message) throws UnsupportedOperationException;
 
     /**
      * Sets the name, or title, of this conversation.
@@ -181,9 +196,22 @@ public interface Chat {
     default boolean canSendMessages() { return true; }
 
     /**
+     * Finds if the bot can send rich messages in this conversation.
+     * @return true if the bot can send rich messages, false otherwise.
+     */
+    boolean canSendRichMessages();
+
+    /**
      * Finds if the bot can receive messages in this conversation.
      * @return true if the bot receive send messages, false otherwise.
      */
     default boolean canReceiveMessages() { return true; }
+
+
+    /**
+     * Finds if the bot can send emoji in this conversation.
+     * @return true if the bot receive send emoji, false otherwise.
+     */
+    default boolean canSendEmoji() { return true; }
 
 }

@@ -15,6 +15,5 @@ public interface DatabaseManager {
     }
 
     Database createDatabase(String name);
-    Database createDatabase(String name, DatabaseInitializer initializer);
 
 }
