@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.chat;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class DefaultChatMessage implements ChatMessage {
@@ -11,6 +12,14 @@ public class DefaultChatMessage implements ChatMessage {
         this.sender = sender;
         this.message = message;
         this.date = date;
+    }
+
+    public DefaultChatMessage(String message, Date date) {
+        this(null, message, date);
+    }
+
+    public DefaultChatMessage(String message) {
+        this(null, message, Calendar.getInstance().getTime());
     }
 
     @Override
