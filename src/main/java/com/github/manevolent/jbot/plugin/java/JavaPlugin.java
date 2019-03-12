@@ -5,9 +5,7 @@ import com.github.manevolent.jbot.Bot;
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
-import com.github.manevolent.jbot.database.Database;
-import com.github.manevolent.jbot.database.DatabaseManager;
-import com.github.manevolent.jbot.database.SystemDatabaseManager;
+
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
@@ -16,15 +14,14 @@ import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.PluginException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public abstract class JavaPlugin implements Plugin {
+public abstract class JavaPlugin
+        implements Plugin, EventListener {
     private boolean initialized = false;
 
     private PluginEventManager eventManager;
     private PluginCommandManager commandManager;
     private PluginPlatformManager platformManager;
-    private PluginDatabaseManager databaseManager;
 
     private Bot bot;
 
@@ -57,10 +54,6 @@ public abstract class JavaPlugin implements Plugin {
         return platformManager;
     }
 
-    protected final DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
     /**
      * Sets the <b>Bot</b> instance associated with this plugin.
      * @param bot Bot instance.
@@ -68,8 +61,7 @@ public abstract class JavaPlugin implements Plugin {
     public final void initialize(Bot bot,
                                  CommandManager commandManager,
                                  EventManager eventManager,
-                                 PlatformManager platformManager,
-                                 SystemDatabaseManager databaseManager)
+                                 PlatformManager platformManager)
             throws IllegalStateException {
         synchronized (this) {
             if (initialized) throw new IllegalStateException();
@@ -78,7 +70,6 @@ public abstract class JavaPlugin implements Plugin {
             this.commandManager = new PluginCommandManager(commandManager);
             this.eventManager = new PluginEventManager(eventManager);
             this.platformManager = new PluginPlatformManager(platformManager);
-            this.databaseManager = new PluginDatabaseManager(databaseManager);
 
             this.initialized = true;
         }
@@ -107,7 +98,6 @@ public abstract class JavaPlugin implements Plugin {
                     commandManager.destroy();
                     eventManager.destroy();
                     platformManager.destroy();
-                    databaseManager.destroy();
                     this.enabled = false;
                     onDisabled();
                 }
@@ -251,48 +241,6 @@ public abstract class JavaPlugin implements Plugin {
             synchronized (registrationLock) {
                 platforms.forEach(this::unregisterPlatform);
             }
-        }
-    }
-
-    private class PluginDatabaseManager implements DatabaseManager {
-        private final SystemDatabaseManager databaseManager;
-
-        private PluginDatabaseManager(SystemDatabaseManager databaseManager) {
-            this.databaseManager = databaseManager;
-        }
-
-        private void destroy() {
-            // Do nothing
-        }
-
-        @Override
-        public Collection<Database> getDatabases() {
-            return Collections.unmodifiableCollection(
-                    databaseManager.getDatabases(artifact.getIdentifier().withoutVersion())
-            );
-        }
-
-        @Override
-        public boolean hasDatabase(String name) {
-            return hasDatabase(getDbNamePrefix() + ":" + name);
-        }
-
-        @Override
-        public Database getDatabase(String name) {
-            return getDatabase(getDbNamePrefix() + ":" + name);
-        }
-
-        @Override
-        public Database createDatabase(String name) {
-            return databaseManager.createDatabase(
-                    artifact.getIdentifier().withoutVersion(),
-                    getDbNamePrefix() + ":" + name
-            );
-        }
-
-        private String getDbNamePrefix() {
-            ArtifactIdentifier identifier = getArtifact().getIdentifier();
-            return identifier.getPackageId() + ":" + identifier.getArtifactId();
         }
     }
 }
