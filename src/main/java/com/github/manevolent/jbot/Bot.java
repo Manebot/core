@@ -118,11 +118,15 @@ public interface Bot {
      */
     UserManager getUserManager();
 
+    void setUserManager(UserManager userManager);
+
     /**
      * Gets the system conversation provider.
      * @return conversation provider.
      */
     ConversationProvider getConversationProvider();
+
+    void setConversationProvider(ConversationProvider conversationProvider);
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.
