@@ -2,10 +2,11 @@ package com.github.manevolent.jbot.plugin.java;
 
 import com.github.manevolent.jbot.artifact.Artifact;
 import com.github.manevolent.jbot.Bot;
-import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 
+import com.github.manevolent.jbot.database.Database;
+import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
 import com.github.manevolent.jbot.platform.Platform;
@@ -14,21 +15,23 @@ import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.PluginException;
 
 import java.util.*;
+import java.util.function.Function;
 
 public abstract class JavaPlugin
         implements Plugin, EventListener {
     private boolean initialized = false;
 
-    private PluginEventManager eventManager;
-    private PluginCommandManager commandManager;
-    private PluginPlatformManager platformManager;
+    private final Artifact artifact;
 
     private Bot bot;
 
-    private final Artifact artifact;
+    private PluginEventManager eventManager;
+    private PluginCommandManager commandManager;
+    private PluginPlatformManager platformManager;
+    private PluginDatabaseManager databaseManager;
 
     private final Object enableLock = new Object();
-    private boolean enabled;
+    private boolean enabled = false;
 
     protected JavaPlugin(Artifact artifact) {
         this.artifact = artifact;
@@ -54,6 +57,26 @@ public abstract class JavaPlugin
         return platformManager;
     }
 
+    protected final DatabaseManager getDatabaseManager() { return databaseManager; }
+
+    /**
+     * Called to create database models for this plugin.
+     * @param databaseManager DatabaseManager instance.
+     */
+    protected void onModelCreating(DatabaseManager databaseManager) {
+
+    }
+
+    @Override
+    public final Collection<Platform> getPlatforms() {
+        return Collections.unmodifiableCollection(platformManager.platforms);
+    }
+
+    @Override
+    public final Collection<String> getCommands() {
+        return Collections.unmodifiableCollection(commandManager.registeredLabels);
+    }
+
     /**
      * Sets the <b>Bot</b> instance associated with this plugin.
      * @param bot Bot instance.
@@ -61,18 +84,31 @@ public abstract class JavaPlugin
     public final void initialize(Bot bot,
                                  CommandManager commandManager,
                                  EventManager eventManager,
-                                 PlatformManager platformManager)
+                                 PlatformManager platformManager,
+                                 DatabaseManager databaseManager)
             throws IllegalStateException {
         synchronized (this) {
-            if (initialized) throw new IllegalStateException();
+            if (isInitialized()) throw new IllegalStateException();
 
             this.bot = bot;
+
             this.commandManager = new PluginCommandManager(commandManager);
             this.eventManager = new PluginEventManager(eventManager);
             this.platformManager = new PluginPlatformManager(platformManager);
+            this.databaseManager = new PluginDatabaseManager(databaseManager);
+
+            onModelCreating(this.databaseManager);
 
             this.initialized = true;
         }
+    }
+
+    /**
+     * Finds if the JavaPlugin has been initialized.
+     * @return initialization state.
+     */
+    public final boolean isInitialized() {
+        return this.initialized;
     }
 
     @Override
@@ -109,6 +145,7 @@ public abstract class JavaPlugin
 
     protected void onEnable() throws PluginException {}
     protected void onEnabled() throws PluginException {}
+
     protected void onDisable() throws PluginException {}
     protected void onDisabled() throws PluginException {}
 
@@ -240,6 +277,36 @@ public abstract class JavaPlugin
         private void destroy() {
             synchronized (registrationLock) {
                 platforms.forEach(this::unregisterPlatform);
+            }
+        }
+    }
+
+    private class PluginDatabaseManager implements DatabaseManager {
+        private final Object registrationLock = new Object();
+
+        private final DatabaseManager databaseManager;
+        private final List<Database> databases = new LinkedList<>();
+
+        private PluginDatabaseManager(DatabaseManager databaseManager) {
+            this.databaseManager = databaseManager;
+        }
+
+        @Override
+        public Collection<Database> getDatabases() {
+            return Collections.unmodifiableCollection(databases);
+        }
+
+        @Override
+        public Database defineDatabase(String name, Function<Database.ModelConstructor, Database> func) {
+            synchronized (registrationLock) {
+                Database database = databaseManager.defineDatabase(name, func);
+
+                if (database == null) throw new NullPointerException("database");
+
+                databases.add(database);
+
+                return database;
+
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.Artifact;
+import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.platform.Platform;
 
 import java.util.Collection;
@@ -21,7 +22,13 @@ public interface Plugin {
     Collection<Platform> getPlatforms();
 
     /**
-     * Gets this plugin's name.  This is typically the <b>artifactId</b> of the plugin.
+     * Gets the registered command labels for this plugin.
+     * @return registered commands.
+     */
+    Collection<String> getCommands();
+
+    /**
+     * Gets this plugin's name.  This is typically the lowercase <b>artifactId</b> of the plugin.
      * @return Plugin's name.
      */
     String getName();

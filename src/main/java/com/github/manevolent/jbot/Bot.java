@@ -4,11 +4,13 @@ import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.command.CommandDispatcher;
 import com.github.manevolent.jbot.conversation.ConversationProvider;
+import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.event.EventDispatcher;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
+import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserManager;
 
 import java.util.Collection;
@@ -67,6 +69,12 @@ public interface Bot {
     default boolean isStopping() {
         return getState() == BotState.STOPPING;
     }
+
+    /**
+     * Gets the system database.
+     * @return System database.
+     */
+    Database getSystemDatabase();
 
     /**
      * Gets the time at which the bot was started.
@@ -178,6 +186,7 @@ public interface Bot {
     void stop() throws IllegalAccessException;
 
     boolean registerStateListener(Consumer<BotState> listener);
+
     boolean unregisterStateListener(Consumer<BotState> listener);
 
 }
