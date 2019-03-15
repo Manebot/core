@@ -1,10 +1,7 @@
 package com.github.manevolent.jbot.database;
 
-import org.hibernate.Session;
-
 import javax.persistence.EntityManager;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.sql.SQLException;
 
 public interface Database {
 
@@ -19,32 +16,70 @@ public interface Database {
      *
      * @param function Function to execute.
      * @param <T> Return type of the function.
-     * @return Returned function.
+     *
+     * @throws E user-defined exception
+     *
+     * @return User-defined result.
      */
-    default <T> T execute(Function<EntityManager, T> function) {
+    default <T, E extends Throwable> T execute(Execution<T, E> function) throws E {
         EntityManager session = null;
 
         try {
             session = openSession();
-            return function.apply(session);
+
+            return function.execute(session);
         } finally {
-            if (session != null) session.close();
+            if (session != null)
+                session.close();
         }
     }
 
     /**
      * Executes a function on the database, using a session and returning the session to the pool fairly.
      *
+     * @throws E user-defined exception
+     *
      * @param function Function to execute.
      */
-    default void execute(Consumer<EntityManager> function) {
-       EntityManager session = null;
+    default <E extends Throwable> void execute(VoidExecution<E> function) throws E {
+        EntityManager session = null;
 
         try {
             session = openSession();
-            function.accept(session);
+
+            function.execute(session);
         } finally {
-            if (session != null) session.close();
+            if (session != null)
+                session.close();
+        }
+    }
+
+    /**
+     * Executes a function on the database, using a transactional
+     * session and returning the session to the pool fairly, automatically rolling back on failure.
+     *
+     * @param function Function to execute.
+     * @throws SQLException failure to execute <b>function</b> or transactional behavior.
+     */
+    default <E extends Throwable> void executeTransaction(VoidExecution<E> function) throws SQLException {
+        EntityManager session = null;
+
+        try {
+            session = openSession();
+
+            session.getTransaction().begin();
+
+            function.execute(session);
+
+            session.getTransaction().commit();
+        } catch (Throwable e) {
+            if (session != null && session.getTransaction().isActive())
+                session.getTransaction().rollback();
+
+            throw new SQLException("Problem executing transaction", e);
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 
@@ -81,6 +116,14 @@ public interface Database {
          */
         Database define();
 
+    }
+
+    interface VoidExecution<E extends Throwable> {
+        void execute(EntityManager entityManager) throws E;
+    }
+
+    interface Execution<T, E extends Throwable> {
+        T execute(EntityManager entityManager) throws E;
     }
 
 }
