@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.database;
 
 import org.hibernate.Session;
 
+import javax.persistence.EntityManager;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -20,9 +21,14 @@ public interface Database {
      * @param <T> Return type of the function.
      * @return Returned function.
      */
-    default <T> T execute(Function<Session, T> function) {
-        try (Session session = openSession()) {
+    default <T> T execute(Function<EntityManager, T> function) {
+        EntityManager session = null;
+
+        try {
+            session = openSession();
             return function.apply(session);
+        } finally {
+            if (session != null) session.close();
         }
     }
 
@@ -31,9 +37,14 @@ public interface Database {
      *
      * @param function Function to execute.
      */
-    default void execute(Consumer<Session> function) {
-        try (Session session = openSession()) {
+    default void execute(Consumer<EntityManager> function) {
+       EntityManager session = null;
+
+        try {
+            session = openSession();
             function.accept(session);
+        } finally {
+            if (session != null) session.close();
         }
     }
 
@@ -42,7 +53,7 @@ public interface Database {
      *
      * @return Session instance.
      */
-    Session openSession();
+    EntityManager openSession();
 
     /**
      * Database model constructor.
