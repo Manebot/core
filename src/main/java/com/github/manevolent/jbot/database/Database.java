@@ -103,11 +103,20 @@ public interface Database {
         String getDatabaseName();
 
         /**
+         * Depends on another database, associating those models with this model.
+         *
+         * @param database Database to depend on.
+         * @return ModelConstructor instance.
+         */
+        ModelConstructor depend(Database database);
+
+        /**
          * Registers an entityi n the persistence system for this database.
          *
          * @param entityClass Entity class.
+         * @return ModelConstructor instance.
          */
-        void registerEntity(Class<?> entityClass);
+        ModelConstructor registerEntity(Class<?> entityClass);
 
         /**
          * Defines the database in the persistence system.
