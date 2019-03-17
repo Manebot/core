@@ -2,14 +2,33 @@ package com.github.manevolent.jbot.database;
 
 import javax.persistence.EntityManager;
 import java.sql.SQLException;
+import java.util.Collection;
 
-public interface Database {
+public interface Database extends AutoCloseable {
 
     /**
      * Gets the database's name.
      * @return Database name.
      */
     String getName();
+
+    /**
+     * Gets a list of this database's own registered entities.
+     * @return Collection of Class objects.
+     */
+    Collection<Class<?>> getEntities();
+
+    /**
+     * Gets an immutable collection of this database's dependent databases.
+     * @return Database collection.
+     */
+    Collection<Database> getDependentDatabases();
+
+    /**
+     * Finds if this database is closed.  A closed database does not hold open connections to a server.
+     * @return true if the database is closed, false otherwise.
+     */
+    boolean isClosed();
 
     /**
      * Executes a function on the database, using a session and returning the session to the pool fairly.
