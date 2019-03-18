@@ -1,19 +1,20 @@
 package com.github.manevolent.jbot.security;
 
-public class GrantedPermission {
-    private final Permission permission;
-    private final Grant grant;
+import com.github.manevolent.jbot.entity.Entity;
+import com.github.manevolent.jbot.user.User;
 
-    public GrantedPermission(Permission permission, Grant grant) {
-        this.permission = permission;
-        this.grant = grant;
-    }
+import java.util.Date;
 
-    public Permission getPermission() {
-        return permission;
-    }
+public interface GrantedPermission {
 
-    public Grant getGrant() {
-        return grant;
-    }
+    Entity getEntity();
+
+    Permission getPermission();
+
+    Grant getGrant();
+
+    User getGranter();
+
+    Date getDate();
+
 }

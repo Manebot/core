@@ -42,4 +42,8 @@ public interface EntityType {
         if (!hasPermission(permission)) throw new CommandAccessException(permission.getNode());
     }
 
+    default void checkPermission(String node) throws CommandAccessException {
+        if (!hasPermission(node)) throw new CommandAccessException(node);
+    }
+
 }
