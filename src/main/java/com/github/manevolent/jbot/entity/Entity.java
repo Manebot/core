@@ -1,6 +1,5 @@
 package com.github.manevolent.jbot.entity;
 
-import com.github.manevolent.jbot.command.exception.CommandAccessException;
 import com.github.manevolent.jbot.property.Property;
 import com.github.manevolent.jbot.security.Grant;
 import com.github.manevolent.jbot.security.GrantedPermission;
@@ -34,16 +33,29 @@ public interface Entity {
      * @param node permission node to check for.
      * @return ALLOW or DENY, null if no permission grant is explicitly defined.
      */
-    Grant getGrant(String node);
+    GrantedPermission getPermission(String node);
 
     /**
      * Gets a specific pre-existing grant for this entity.
      * @param permission Permission to check for.
      * @return ALLOW or DENY, null if no permission grant is explicitly defined.
      */
-    default Grant getGrant(Permission permission) {
-        return getGrant(permission.getNode());
+    default GrantedPermission getPermission(Permission permission) {
+        return getPermission(permission.getNode());
     }
+
+    /**
+     * Grants a specific permission to this entity.
+     * @param node permission node to grant.
+     * @param type type of grant to supply.
+     */
+    GrantedPermission setPermission(String node, Grant type);
+
+    /**
+     * Removes a specific permission from this entity.
+     * @param node permission node to grant.
+     */
+    void removePermission(String node);
 
     /**
      * Gets the explicitly granted permissions for this entity.

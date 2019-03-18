@@ -19,7 +19,7 @@ public interface EntityType {
      * @return true if the permission node is granted, false otherwise.
      */
     default boolean hasPermission(String node) {
-        Grant grant = getEntity().getGrant(node);
+        Grant grant = getEntity().getPermission(node).getGrant();
 
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;
@@ -32,7 +32,7 @@ public interface EntityType {
      * @return true if the permission is granted, false otherwise.
      */
     default boolean hasPermission(Permission permission) {
-        Grant grant = getEntity().getGrant(permission);
+        Grant grant = getEntity().getPermission(permission).getGrant();
 
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;
