@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.entity;
 
+import com.github.manevolent.jbot.command.exception.CommandAccessException;
 import com.github.manevolent.jbot.property.Property;
 import com.github.manevolent.jbot.security.Grant;
 import com.github.manevolent.jbot.security.GrantedPermission;
@@ -67,6 +68,10 @@ public interface Entity {
 
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;
+    }
+
+    default void checkPermission(Permission permission) throws CommandAccessException {
+        if (!hasPermission(permission)) throw new CommandAccessException(permission.getNode());
     }
 
     /**
