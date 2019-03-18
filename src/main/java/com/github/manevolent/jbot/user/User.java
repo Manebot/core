@@ -129,4 +129,8 @@ public interface User extends EntityType {
      */
     CommandSender createSender(Chat chat) throws SecurityException;
 
+    UserType getType();
+
+    void setType(UserType type);
+
 }

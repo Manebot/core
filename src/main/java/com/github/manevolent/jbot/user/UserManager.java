@@ -9,9 +9,10 @@ public interface UserManager {
     /**
      * Creates a new user.
      * @param username username of the new user.
+     * @param type user type to create
      * @return User instance representing the new user.
      */
-    User createUser(String username);
+    User createUser(String username, UserType type);
 
     /**
      * Gets a user by their username.
@@ -32,6 +33,13 @@ public interface UserManager {
      * @return Collection representing all users on the system.
      */
     Collection<User> getUsers();
+
+    /**
+     * Gets all users defined as a specific type.
+     * @param type user type to search for.
+     * @return Collection representing all users of a specific type on the system.
+     */
+    Collection<User> getUsersByType(UserType type);
 
     /**
      * Gets a user group by name.
