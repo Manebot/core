@@ -101,6 +101,38 @@ public interface Database extends AutoCloseable {
                 session.close();
         }
     }
+    /**
+     * Executes a function on the database, using a transactional
+     * session and returning the session to the pool fairly, automatically rolling back on failure.
+     *
+     * @param function Function to execute.
+     * @return User-defined result.
+     * @throws SQLException failure to execute <b>function</b> or transactional behavior.
+     */
+    default <T, E extends Throwable> T executeTransaction(Execution<T, E> function) throws SQLException {
+        EntityManager session = null;
+        T o;
+
+        try {
+            session = openSession();
+
+            session.getTransaction().begin();
+
+            o = function.execute(session);
+
+            session.getTransaction().commit();
+
+            return o;
+        } catch (Throwable e) {
+            if (session != null && session.getTransaction().isActive())
+                session.getTransaction().rollback();
+
+            throw new SQLException("Problem executing transaction", e);
+        } finally {
+            if (session != null)
+                session.close();
+        }
+    }
 
     /**
      * Opens a session to the database.
