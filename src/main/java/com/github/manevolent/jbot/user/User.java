@@ -2,6 +2,8 @@ package com.github.manevolent.jbot.user;
 
 import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.command.CommandSender;
+import com.github.manevolent.jbot.command.DefaultCommandSender;
+import com.github.manevolent.jbot.conversation.Conversation;
 import com.github.manevolent.jbot.entity.EntityType;
 import com.github.manevolent.jbot.platform.Platform;
 
@@ -36,6 +38,12 @@ public interface User extends EntityType {
      * @return Display name.
      */
     String getDisplayName();
+
+    /**
+     * Sets this user's desired display name.
+     * @param displayName Display name.
+     */
+    void setDisplayName(String displayName);
 
     /**
      * Gets the date this user was registered.
@@ -123,11 +131,13 @@ public interface User extends EntityType {
     /**
      * Creates a command sender for the specified user.
      *
-     * @param chat Chat to create a command sender for.
+     * @param conversation Conversation to create a command sender for.
      * @return CommandSender instance.
      * @throws SecurityException
      */
-    CommandSender createSender(Chat chat) throws SecurityException;
+    default CommandSender createSender(Conversation conversation) throws SecurityException {
+        return new DefaultCommandSender(conversation, this);
+    }
 
     UserType getType();
 
