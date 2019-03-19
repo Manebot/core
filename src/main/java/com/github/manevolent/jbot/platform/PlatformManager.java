@@ -9,13 +9,29 @@ import java.util.stream.Collectors;
 public interface PlatformManager {
 
     /**
-     * Registers a platform in the system.  Registration may only occur if a system platform has not yet been assigned.
+     * Registers a platform in the system, and automatically connects to it.
+     * Registration may only occur if a system platform has not yet been assigned.
      *
      * @param function Platform building function connection to call for registration.
      * @return Platform instance.
      */
-    PlatformRegistration registerPlatform(Function<Builder, PlatformRegistration> function)
-            throws IllegalStateException;
+    default PlatformRegistration registerPlatform(Function<Builder, PlatformRegistration> function)
+            throws IllegalStateException {
+        PlatformRegistration registration = function.apply(buildPlatform());
+
+        PlatformConnection connection = registration.getConnection();
+        if (connection != null)
+            connection.connect();
+
+        return registration;
+    }
+
+    /**
+     * Constructs a new builder for a Platform.
+     *
+     * @return Builder instance to construct a Platform.
+     */
+    Builder buildPlatform();
 
     /**
      * Unregisters a platform registration from the system.
@@ -103,7 +119,7 @@ public interface PlatformManager {
          * @param plugin Plugin to assign this platform to.
          * @return AssignedPlatform instance.
          */
-        abstract PlatformRegistration register(Plugin plugin);
+        public abstract PlatformRegistration register(Plugin plugin);
     }
 
 }
