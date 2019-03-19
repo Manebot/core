@@ -9,10 +9,10 @@ import com.github.manevolent.jbot.plugin.Plugin;
 public interface Platform {
 
     /**
-     * Gets the plugin associated with the ownership of this platform.
-     * @return Plugin instance.
+     * Gets the runtime registration associated with this platform.
+     * @return Platform runtime registration.
      */
-    Plugin getPlugin();
+    PlatformRegistration getRegistration();
 
     /**
      * Gets the platform's internal unique ID.
@@ -20,13 +20,6 @@ public interface Platform {
      * @return platform ID.
      */
     String getId();
-
-    /**
-     * Gets the platform's user-friendly name.
-     *
-     * @return platform name.
-     */
-    String getName();
 
     /**
      * Finds if the platform is currently connected.
@@ -41,6 +34,20 @@ public interface Platform {
      * Gets the current platform connection instance for this platform.
      * @return PlatformConnection instance of this platform.
      */
-    PlatformConnection getConnection();
+    default PlatformConnection getConnection() {
+        PlatformRegistration registration = getRegistration();
+        if (registration == null) return null;
+        else return registration.getConnection();
+    }
+
+    /**
+     * Gets the current plugin instance for this platform.
+     * @return Plugin instance of this platform.
+     */
+    default Plugin getPlugin() {
+        PlatformRegistration registration = getRegistration();
+        if (registration == null) return null;
+        else return registration.getPlugin();
+    }
 
 }

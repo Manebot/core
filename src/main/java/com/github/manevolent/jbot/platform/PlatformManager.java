@@ -14,13 +14,14 @@ public interface PlatformManager {
      * @param function Platform building function connection to call for registration.
      * @return Platform instance.
      */
-    AssignedPlatform registerPlatform(Function<Builder, AssignedPlatform> function) throws IllegalStateException;
+    PlatformRegistration registerPlatform(Function<Builder, PlatformRegistration> function)
+            throws IllegalStateException;
 
     /**
-     * Unregisters a platform from the system.
-     * @param platform Platform instance to unregister.
+     * Unregisters a platform registration from the system.
+     * @param registration Platform registration instance to unregister.
      */
-    void unregisterPlatform(Platform platform);
+    void unregisterPlatform(PlatformRegistration registration);
 
     /**
      * Gets a list of system platforms in the system.
@@ -43,7 +44,11 @@ public interface PlatformManager {
      * @return Platform instance if found, null otherwise.
      */
     default Platform getPlatformByName(String name) {
-        return getPlatforms().stream().filter(platform -> platform.getName().equals(name)).findFirst().orElse(null);
+        return getPlatforms().stream().filter(platform -> {
+            PlatformRegistration registration = platform.getRegistration();
+            if (registration == null) return false;
+            return registration.getName().equals(name);
+        }).findFirst().orElse(null);
     }
 
     /**
@@ -58,7 +63,7 @@ public interface PlatformManager {
     }
 
     abstract class Builder {
-        private String id;
+        private String id, name;
         private PlatformConnection connection;
 
         public String getId() {
@@ -67,6 +72,18 @@ public interface PlatformManager {
 
         public Builder id(String id) {
             this.id = id;
+
+            if (this.name == null) this.name = id;
+
+            return this;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
 
             return this;
         }
@@ -86,7 +103,7 @@ public interface PlatformManager {
          * @param plugin Plugin to assign this platform to.
          * @return AssignedPlatform instance.
          */
-        abstract AssignedPlatform register(Plugin plugin);
+        abstract PlatformRegistration register(Plugin plugin);
     }
 
 }

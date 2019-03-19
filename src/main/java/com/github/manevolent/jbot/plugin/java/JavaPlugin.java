@@ -8,17 +8,15 @@ import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
-import com.github.manevolent.jbot.platform.AssignedPlatform;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformManager;
+import com.github.manevolent.jbot.platform.PlatformRegistration;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.PluginException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class JavaPlugin
         implements Plugin, EventListener {
@@ -62,17 +60,9 @@ public abstract class JavaPlugin
 
     protected final DatabaseManager getDatabaseManager() { return databaseManager; }
 
-    /**
-     * Called to create database models for this plugin.
-     * @param databaseManager DatabaseManager instance.
-     */
-    protected void onModelCreating(DatabaseManager databaseManager) {
-
-    }
-
     @Override
     public final Collection<Platform> getPlatforms() {
-        return Collections.unmodifiableCollection(platformManager.platforms);
+        return platformManager.getPlatforms();
     }
 
     @Override
@@ -99,8 +89,6 @@ public abstract class JavaPlugin
             this.eventManager = new PluginEventManager(eventManager);
             this.platformManager = new PluginPlatformManager(platformManager);
             this.databaseManager = new PluginDatabaseManager(databaseManager);
-
-            onModelCreating(this.databaseManager);
 
             this.initialized = true;
         }
@@ -155,7 +143,7 @@ public abstract class JavaPlugin
     private class PluginEventManager implements EventManager {
         private final Object registrationLock = new Object();
         private final EventManager eventManager;
-        private final List<EventListener> registeredListeners = new LinkedList<>();
+        private final Set<EventListener> registeredListeners = new HashSet<>();
 
         private PluginEventManager(EventManager eventManager) {
             this.eventManager = eventManager;
@@ -188,7 +176,7 @@ public abstract class JavaPlugin
     private class PluginCommandManager extends CommandManager {
         private final Object registrationLock = new Object();
         private final CommandManager commandManager;
-        private final List<String> registeredLabels = new LinkedList<>();
+        private final Set<String> registeredLabels = new HashSet<>();
 
         private PluginCommandManager(CommandManager commandManager) {
             this.commandManager = commandManager;
@@ -254,35 +242,39 @@ public abstract class JavaPlugin
     private class PluginPlatformManager implements PlatformManager {
         private final Object registrationLock = new Object();
         private final PlatformManager platformManager;
-        private final List<AssignedPlatform> platforms = new LinkedList<>();
+        private final Set<PlatformRegistration> platforms = new HashSet<>();
 
         private PluginPlatformManager(PlatformManager platformManager) {
             this.platformManager = platformManager;
         }
 
         @Override
-        public AssignedPlatform registerPlatform(Function<Builder, AssignedPlatform> function)
+        public PlatformRegistration registerPlatform(Function<Builder, PlatformRegistration> function)
                 throws IllegalStateException {
             synchronized (registrationLock) {
-                AssignedPlatform assignedPlatform = platformManager.registerPlatform(function);
+                PlatformRegistration assignedPlatform = platformManager.registerPlatform(function);
                 platforms.add(assignedPlatform);
                 return assignedPlatform;
             }
         }
 
         @Override
-        public void unregisterPlatform(Platform listener) {
+        public void unregisterPlatform(PlatformRegistration registration) {
             synchronized (registrationLock) {
-                if (!platforms.contains(listener)) return;
+                if (!platforms.contains(registration)) return;
 
-                platformManager.unregisterPlatform(listener);
-                platforms.remove(listener);
+                platformManager.unregisterPlatform(registration);
+                platforms.remove(registration);
             }
         }
 
         @Override
         public Collection<Platform> getPlatforms() {
-            return Collections.unmodifiableCollection(platforms);
+            return Collections.unmodifiableCollection(
+                    platforms.stream()
+                            .map(PlatformRegistration::getPlatform)
+                            .collect(Collectors.toList())
+            );
         }
 
         private void destroy() {
