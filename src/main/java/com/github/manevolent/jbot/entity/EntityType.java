@@ -5,6 +5,9 @@ import com.github.manevolent.jbot.security.Grant;
 import com.github.manevolent.jbot.security.GrantedPermission;
 import com.github.manevolent.jbot.security.Permission;
 
+import static com.github.manevolent.jbot.security.Grant.ALLOW;
+import static com.github.manevolent.jbot.security.Grant.DENY;
+
 public interface EntityType {
 
     /**
@@ -20,13 +23,7 @@ public interface EntityType {
      * @return true if the permission node is granted, false otherwise.
      */
     default boolean hasPermission(String node) {
-        GrantedPermission grantedPermission = getEntity().getPermission(node);
-        if (grantedPermission == null) return false;
-
-        Grant grant = grantedPermission.getGrant();
-
-        // grant != null may be superfluous
-        return grant != null && grant == Grant.ALLOW;
+        return hasPermission(Permission.get(node), DENY);
     }
 
 
@@ -36,21 +33,50 @@ public interface EntityType {
      * @return true if the permission is granted, false otherwise.
      */
     default boolean hasPermission(Permission permission) {
+        return hasPermission(permission, DENY);
+    }
+
+    /**
+     * Finds if this entity has a specific permission
+     * @param node Permission node to check for.
+     * @return true if the permission is granted, false otherwise.
+     */
+    default boolean hasPermission(String node, Grant fallback) {
+        return hasPermission(Permission.get(node), fallback);
+    }
+
+    /**
+     * Finds if this entity has a specific permission
+     * @param permission Permission to check for.
+     * @return true if the permission is granted, false otherwise.
+     */
+    default boolean hasPermission(Permission permission, Grant fallback) {
         GrantedPermission grantedPermission = getEntity().getPermission(permission);
         if (grantedPermission == null) return false;
 
         Grant grant = grantedPermission.getGrant();
 
         // grant != null may be superfluous
-        return grant != null && grant == Grant.ALLOW;
+        if (grant == null)
+            grant = fallback;
+
+        return grant == ALLOW;
     }
 
     default void checkPermission(Permission permission) throws CommandAccessException {
-        if (!hasPermission(permission)) throw new CommandAccessException(permission.getNode());
+        checkPermission(permission, DENY);
     }
 
     default void checkPermission(String node) throws CommandAccessException {
-        if (!hasPermission(node)) throw new CommandAccessException(node);
+        checkPermission(Permission.get(node), DENY);
+    }
+
+    default void checkPermission(Permission permission, Grant fallback) throws CommandAccessException {
+        if (!hasPermission(permission, fallback)) throw new CommandAccessException(permission.getNode());
+    }
+
+    default void checkPermission(String node, Grant fallback) throws CommandAccessException {
+        if (!hasPermission(node, fallback)) throw new CommandAccessException(node);
     }
 
 }
