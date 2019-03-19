@@ -282,6 +282,8 @@ public abstract class JavaPlugin
     }
 
     private class PluginDatabaseManager implements DatabaseManager {
+        private final String pluginDatabaseNameFormat = "%s_%s";
+
         private final Object registrationLock = new Object();
 
         private final DatabaseManager databaseManager;
@@ -292,6 +294,11 @@ public abstract class JavaPlugin
         }
 
         @Override
+        public Bot getBot() {
+            return databaseManager.getBot();
+        }
+
+        @Override
         public Collection<Database> getDatabases() {
             return Collections.unmodifiableCollection(databases);
         }
@@ -299,7 +306,10 @@ public abstract class JavaPlugin
         @Override
         public Database defineDatabase(String name, Function<Database.ModelConstructor, Database> func) {
             synchronized (registrationLock) {
-                Database database = databaseManager.defineDatabase(name, func);
+                Database database = databaseManager.defineDatabase(
+                        String.format(pluginDatabaseNameFormat, JavaPlugin.this.getName().toLowerCase(), name),
+                        func
+                );
 
                 if (database == null) throw new NullPointerException("database");
 
