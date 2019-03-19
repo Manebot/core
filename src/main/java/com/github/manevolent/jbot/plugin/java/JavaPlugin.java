@@ -9,6 +9,7 @@ import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.event.EventManager;
+import com.github.manevolent.jbot.platform.AssignedPlatform;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformManager;
 import com.github.manevolent.jbot.plugin.Plugin;
@@ -251,17 +252,19 @@ public abstract class JavaPlugin
     private class PluginPlatformManager implements PlatformManager {
         private final Object registrationLock = new Object();
         private final PlatformManager platformManager;
-        private final List<Platform> platforms = new LinkedList<>();
+        private final List<AssignedPlatform> platforms = new LinkedList<>();
 
         private PluginPlatformManager(PlatformManager platformManager) {
             this.platformManager = platformManager;
         }
 
         @Override
-        public void registerPlatform(Platform listener) {
+        public AssignedPlatform registerPlatform(Function<Builder, AssignedPlatform> function)
+                throws IllegalStateException {
             synchronized (registrationLock) {
-                platformManager.registerPlatform(listener);
-                platforms.add(listener);
+                AssignedPlatform assignedPlatform = platformManager.registerPlatform(function);
+                platforms.add(assignedPlatform);
+                return assignedPlatform;
             }
         }
 
@@ -274,6 +277,12 @@ public abstract class JavaPlugin
                 platforms.remove(listener);
             }
         }
+
+        @Override
+        public Collection<Platform> getPlatforms() {
+            return Collections.unmodifiableCollection(platforms);
+        }
+
         private void destroy() {
             synchronized (registrationLock) {
                 platforms.forEach(this::unregisterPlatform);

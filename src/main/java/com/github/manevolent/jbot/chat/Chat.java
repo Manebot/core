@@ -123,7 +123,7 @@ public interface Chat {
     default Collection<UserAssociation> getMemberAssociations() {
         return Collections.unmodifiableCollection(
                 getPlatformMemberIds().stream()
-                .map(x -> getPlatform().getUserAssocation(x))
+                .map(x -> getPlatform().getConnection().getUserAssocation(x))
                 .filter(x -> x.getUser() != null)
                 .collect(Collectors.toList())
         );

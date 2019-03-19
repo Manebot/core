@@ -14,7 +14,7 @@ public interface PlatformManager {
      * @param function Platform building function connection to call for registration.
      * @return Platform instance.
      */
-    Platform registerPlatform(Function<Builder, Platform> function) throws IllegalStateException;
+    AssignedPlatform registerPlatform(Function<Builder, AssignedPlatform> function) throws IllegalStateException;
 
     /**
      * Unregisters a platform from the system.
