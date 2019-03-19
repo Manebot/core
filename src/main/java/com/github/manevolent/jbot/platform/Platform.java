@@ -1,13 +1,12 @@
 package com.github.manevolent.jbot.platform;
 
-import com.github.manevolent.jbot.chat.ChatProvider;
 import com.github.manevolent.jbot.plugin.Plugin;
 
 /**
  * Platforms are the structure of the bot that represent individual chatting platforms, such as Discord, Skype,
  * and so on.
  */
-public interface Platform extends ChatProvider {
+public interface Platform {
 
     /**
      * Gets the plugin associated with the ownership of this platform.
