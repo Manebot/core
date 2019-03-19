@@ -259,6 +259,11 @@ public abstract class JavaPlugin
         }
 
         @Override
+        public Builder buildPlatform() {
+            return platformManager.buildPlatform();
+        }
+
+        @Override
         public void unregisterPlatform(PlatformRegistration registration) {
             synchronized (registrationLock) {
                 if (!platforms.contains(registration)) return;
