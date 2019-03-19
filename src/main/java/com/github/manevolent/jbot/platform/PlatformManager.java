@@ -58,7 +58,7 @@ public interface PlatformManager {
     }
 
     abstract class Builder {
-        private String name, id;
+        private String id;
         private PlatformConnection connection;
 
         public String getId() {
@@ -67,16 +67,6 @@ public interface PlatformManager {
 
         public Builder id(String id) {
             this.id = id;
-
-            return this;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
 
             return this;
         }

@@ -11,6 +11,26 @@ import java.util.stream.Collectors;
 public interface PlatformConnection {
 
     /**
+     * Calls to connect to the platform.  This process is called automatically upon registration.
+     */
+    void connect();
+
+    /**
+     * Calls to disconnect from the platform.
+     */
+    default void disconnect() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Finds if the platform connection holds a connection.
+     * @return true if a connection is held, false otherwise.
+     */
+    default boolean isConnected() {
+        return true;
+    }
+
+    /**
      * Gets a list of user associations for this platform.
      *
      * @return collection of user associations.
