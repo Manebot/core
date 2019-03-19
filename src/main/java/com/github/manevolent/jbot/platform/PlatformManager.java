@@ -53,8 +53,7 @@ public interface PlatformManager {
      */
     default Collection<Platform> getPlatformsByPlugin(Plugin plugin) {
         return getPlatforms().stream().filter(platform ->
-                platform.getConnection() != null &&
-                platform.getConnection().getPlugin().equals(plugin)
+                platform.getPlugin() != null
         ).collect(Collectors.toList());
     }
 
