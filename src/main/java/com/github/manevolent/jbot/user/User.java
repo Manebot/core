@@ -41,6 +41,7 @@ public interface User extends EntityType {
 
     /**
      * Sets this user's desired display name.
+     *
      * @param displayName Display name.
      */
     void setDisplayName(String displayName);
@@ -126,7 +127,14 @@ public interface User extends EntityType {
      *
      * @return Private conversation, null if none exists.
      */
-    Chat getPrivateChat();
+    Conversation getPrivateConversation();
+
+    /**
+     * Sets the bot's private conversation with this user.
+     *
+     * @param conversation private conversation, or null to unset.
+     */
+    void setPrivateConversation(Conversation conversation);
 
     /**
      * Creates a command sender for the specified user.
@@ -139,8 +147,17 @@ public interface User extends EntityType {
         return new DefaultCommandSender(conversation, this);
     }
 
+    /**
+     * Gets the user's system type.
+     * @return UserType instance.
+     */
     UserType getType();
 
-    void setType(UserType type);
+    /**
+     * Changes the user's system type.
+     * @param type UserType instance to change to.
+     * @return true if the type was changed.
+     */
+    boolean setType(UserType type);
 
 }
