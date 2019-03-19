@@ -94,6 +94,11 @@ public interface PlatformManager {
             return this;
         }
 
+        public Platform platform(String id) {
+            id(id);
+            return getPlatform();
+        }
+
         public String getName() {
             return name;
         }
@@ -103,6 +108,12 @@ public interface PlatformManager {
 
             return this;
         }
+
+        /**
+         * Gets the plugin associated with the Builder's <b>id</b>, as previous set.
+         * @return
+         */
+        public abstract Platform getPlatform();
 
         public PlatformConnection getConnection() {
             return connection;
