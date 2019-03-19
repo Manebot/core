@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.entity;
 
 import com.github.manevolent.jbot.command.exception.CommandAccessException;
 import com.github.manevolent.jbot.security.Grant;
+import com.github.manevolent.jbot.security.GrantedPermission;
 import com.github.manevolent.jbot.security.Permission;
 
 public interface EntityType {
@@ -19,7 +20,10 @@ public interface EntityType {
      * @return true if the permission node is granted, false otherwise.
      */
     default boolean hasPermission(String node) {
-        Grant grant = getEntity().getPermission(node).getGrant();
+        GrantedPermission grantedPermission = getEntity().getPermission(node);
+        if (grantedPermission == null) return false;
+
+        Grant grant = grantedPermission.getGrant();
 
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;
@@ -32,7 +36,10 @@ public interface EntityType {
      * @return true if the permission is granted, false otherwise.
      */
     default boolean hasPermission(Permission permission) {
-        Grant grant = getEntity().getPermission(permission).getGrant();
+        GrantedPermission grantedPermission = getEntity().getPermission(permission);
+        if (grantedPermission == null) return false;
+
+        Grant grant = grantedPermission.getGrant();
 
         // grant != null may be superfluous
         return grant != null && grant == Grant.ALLOW;

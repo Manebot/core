@@ -3,7 +3,6 @@ package com.github.manevolent.jbot.security;
 import com.google.common.collect.MapMaker;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 public final class Permission {
     private static final Map<String, Permission> referenceMap = new MapMaker().weakValues().makeMap();

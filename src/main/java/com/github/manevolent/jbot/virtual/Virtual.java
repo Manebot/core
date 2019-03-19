@@ -47,6 +47,8 @@ public abstract class Virtual implements ThreadFactory {
      */
     public VirtualProcess getProcess(Thread thread) {
         long id = thread.getId();
+
         return getProcesses().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
     }
+
 }
