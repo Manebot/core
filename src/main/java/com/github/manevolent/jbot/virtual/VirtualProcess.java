@@ -36,4 +36,6 @@ public interface VirtualProcess {
 
     boolean isRunning();
 
+    Profiler getProfiler();
+
 }
