@@ -17,7 +17,6 @@ public interface CommandDispatcher {
      * Dispatches a command asynchronously.
      * @param commandMessage Command message to execute.
      * @return Future instance to track execution.
-     * @throws CommandExecutionException
      */
     Future<?> executeAsync(CommandMessage commandMessage);
 
