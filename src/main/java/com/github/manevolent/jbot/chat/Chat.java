@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.chat;
 
 import com.github.manevolent.jbot.platform.Platform;
+import com.github.manevolent.jbot.platform.PlatformConnection;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
 
@@ -9,6 +10,14 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 public interface Chat {
+
+    /**
+     * Gets the platform connection associated with facilitating this conversation.
+     * @return PlatformConnection instance.
+     */
+    default PlatformConnection getPlatformConnection() {
+        return getPlatform().getConnection();
+    }
 
     /**
      * Gets the platform associated with facilitating this conversation.
@@ -123,7 +132,7 @@ public interface Chat {
     default Collection<UserAssociation> getMemberAssociations() {
         return Collections.unmodifiableCollection(
                 getPlatformMemberIds().stream()
-                .map(x -> getPlatform().getConnection().getUserAssocation(x))
+                .map(x -> getPlatformConnection().getUserAssocation(x))
                 .filter(x -> x.getUser() != null)
                 .collect(Collectors.toList())
         );
