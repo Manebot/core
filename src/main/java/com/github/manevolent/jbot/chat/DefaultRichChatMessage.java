@@ -28,6 +28,16 @@ public class DefaultRichChatMessage extends DefaultChatMessage implements RichCh
         this.body = body;
     }
 
+    public DefaultRichChatMessage(
+            String message, Date date,
+            String title, String footer,
+            ImageElement thumbnail,
+            Color color,
+            Collection<Element> body
+    ) {
+        this(null, message, date, title, footer, thumbnail, color, body);
+    }
+
     @Override
     public Color getColor() {
         return color;

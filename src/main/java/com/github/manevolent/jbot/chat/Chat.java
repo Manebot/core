@@ -231,4 +231,24 @@ public interface Chat {
         return canSendRichMessages();
     }
 
+    /**
+     * Gets the default command prefixes for this chat, for messages to be handles as commands.
+     * @return immutable collection of command prefixes (such as, "." or "!").
+     */
+    default Collection<String> getCommandPrefixes() {
+        return Collections.singletonList(".");
+    }
+
+    /**
+     * Gets the chat type for a specific message.
+     * @param message ChatMessage instance to check
+     * @return ChatType instance.
+     */
+    default ChatType getChatType(ChatMessage message) {
+        for (String prefix : getCommandPrefixes())
+            if (message.getMessage().startsWith(prefix)) return ChatType.COMMAND;
+
+        return ChatType.CHAT;
+    }
+
 }
