@@ -7,6 +7,12 @@ import java.util.Collection;
 public interface Database extends AutoCloseable {
 
     /**
+     * Gets the database manager associated with creating this database.
+     * @return DatabaseManager instance.
+     */
+    DatabaseManager getDatabaseManager();
+
+    /**
      * Gets the database's name.
      * @return Database name.
      */

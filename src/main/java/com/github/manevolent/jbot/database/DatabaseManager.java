@@ -1,9 +1,17 @@
 package com.github.manevolent.jbot.database;
 
+import com.github.manevolent.jbot.Bot;
+
 import java.util.Collection;
 import java.util.function.Function;
 
 public interface DatabaseManager {
+
+    /**
+     * Gets the bot instance this database manager is connected with.
+     * @return Bot instance.
+     */
+    Bot getBot();
 
     /**
      * Gets an immutable list of all defined databases in this provider.
