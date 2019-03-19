@@ -38,6 +38,15 @@ public interface PlatformManager {
     }
 
     /**
+     * Gets a platform by its name.
+     * @param name Platform name.
+     * @return Platform instance if found, null otherwise.
+     */
+    default Platform getPlatformByName(String name) {
+        return getPlatforms().stream().filter(platform -> platform.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    /**
      * Gets all platforms assigned to a specific Plugin instance.
      * @param plugin Plugin instance to search for.
      * @return Platform instances assigned ot the specified Plugin instance.

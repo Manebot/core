@@ -15,6 +15,12 @@ import java.util.stream.Collectors;
 public interface Platform extends ChatProvider {
 
     /**
+     * Gets the plugin associated with the ownership of this platform.
+     * @return Plugin instance.
+     */
+    Plugin getPlugin();
+
+    /**
      * Gets the platform's internal unique ID.
      *
      * @return platform ID.
