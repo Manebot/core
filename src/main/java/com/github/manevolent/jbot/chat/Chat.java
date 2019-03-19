@@ -235,8 +235,8 @@ public interface Chat {
      * Gets the default command prefixes for this chat, for messages to be handles as commands.
      * @return immutable collection of command prefixes (such as, "." or "!").
      */
-    default Collection<String> getCommandPrefixes() {
-        return Collections.singletonList(".");
+    default Collection<Character> getCommandPrefixes() {
+        return Collections.singletonList('.');
     }
 
     /**
@@ -245,8 +245,12 @@ public interface Chat {
      * @return ChatType instance.
      */
     default ChatType getChatType(ChatMessage message) {
-        for (String prefix : getCommandPrefixes())
-            if (message.getMessage().startsWith(prefix)) return ChatType.COMMAND;
+        for (Character prefix : getCommandPrefixes())
+            if (message.getMessage().startsWith(prefix.toString()) &&
+                    message.getMessage().length() > 1 &&
+                    Character.isLetterOrDigit(message.getMessage().charAt(1))) {
+                return ChatType.COMMAND;
+            }
 
         return ChatType.CHAT;
     }
