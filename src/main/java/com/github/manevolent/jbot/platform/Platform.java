@@ -34,7 +34,7 @@ public interface Platform {
      * @return true if the platform is connected, false otherwise.
      */
     default boolean isConnected() {
-        return getConnection() != null;
+        return getConnection() != null && getConnection().isConnected();
     }
 
     /**
