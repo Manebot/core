@@ -1,6 +1,8 @@
 package com.github.manevolent.jbot.command.exception;
 
-public class CommandExecutionException extends Exception {
+import com.github.manevolent.jbot.chat.exception.ChatException;
+
+public class CommandExecutionException extends ChatException {
     private final String message;
 
     public CommandExecutionException(Exception cause) {

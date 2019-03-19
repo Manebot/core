@@ -2,6 +2,7 @@ package com.github.manevolent.jbot;
 
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
+import com.github.manevolent.jbot.chat.ChatDispatcher;
 import com.github.manevolent.jbot.command.CommandDispatcher;
 import com.github.manevolent.jbot.conversation.ConversationProvider;
 import com.github.manevolent.jbot.database.Database;
@@ -120,20 +121,22 @@ public interface Bot {
     CommandDispatcher getCommandDispatcher();
 
     /**
+     * Gets the system chat dispatcher.
+     * @return chat dispatcher.
+     */
+    ChatDispatcher getChatDispatcher();
+
+    /**
      * Gets the system user manager.
      * @return user manager.
      */
     UserManager getUserManager();
-
-    void setUserManager(UserManager userManager);
 
     /**
      * Gets the system conversation provider.
      * @return conversation provider.
      */
     ConversationProvider getConversationProvider();
-
-    void setConversationProvider(ConversationProvider conversationProvider);
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.
@@ -184,8 +187,18 @@ public interface Bot {
      */
     void stop() throws IllegalAccessException;
 
+    /**
+     * Registers a state listener into the bot.
+     * @param listener state listener instance.
+     * @return true if the listener was registered, false otherwise.
+     */
     boolean registerStateListener(Consumer<BotState> listener);
 
+    /**
+     * Unregisters a state listener from the bot.
+     * @param listener state listener instance.
+     * @return true if the listener was removed, false otherwise.
+     */
     boolean unregisterStateListener(Consumer<BotState> listener);
 
 }

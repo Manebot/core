@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.platform;
 
 import com.github.manevolent.jbot.chat.Chat;
+import com.github.manevolent.jbot.chat.ChatMessage;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
 
