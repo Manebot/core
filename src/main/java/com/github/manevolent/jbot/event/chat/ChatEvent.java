@@ -1,18 +1,15 @@
 package com.github.manevolent.jbot.event.chat;
 
 import com.github.manevolent.jbot.chat.Chat;
+import com.github.manevolent.jbot.event.Event;
 
-public abstract class ChatEvent {
-    private final Object sender;
+public abstract class ChatEvent extends Event {
     private final Chat chat;
 
     public ChatEvent(Object sender, Chat chat) {
-        this.sender = sender;
-        this.chat = chat;
-    }
+        super(sender);
 
-    public Object getSender() {
-        return sender;
+        this.chat = chat;
     }
 
     public Chat getChat() {
