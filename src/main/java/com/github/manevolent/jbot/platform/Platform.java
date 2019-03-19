@@ -2,11 +2,6 @@ package com.github.manevolent.jbot.platform;
 
 import com.github.manevolent.jbot.chat.ChatProvider;
 import com.github.manevolent.jbot.plugin.Plugin;
-import com.github.manevolent.jbot.user.User;
-import com.github.manevolent.jbot.user.UserAssociation;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * Platforms are the structure of the bot that represent individual chatting platforms, such as Discord, Skype,

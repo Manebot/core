@@ -1,6 +1,5 @@
 package com.github.manevolent.jbot.user;
 
-import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.DefaultCommandSender;
 import com.github.manevolent.jbot.conversation.Conversation;

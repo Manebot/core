@@ -1,10 +1,9 @@
 package com.github.manevolent.jbot.plugin.java;
 
-import com.github.manevolent.jbot.artifact.Artifact;
 import com.github.manevolent.jbot.Bot;
+import com.github.manevolent.jbot.artifact.Artifact;
 import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
-
 import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.database.DatabaseManager;
 import com.github.manevolent.jbot.event.EventListener;
@@ -15,7 +14,10 @@ import com.github.manevolent.jbot.platform.PlatformManager;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.PluginException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 public abstract class JavaPlugin

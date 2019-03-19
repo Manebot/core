@@ -1,11 +1,9 @@
 package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.Artifact;
-import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.platform.Platform;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public interface Plugin {
 

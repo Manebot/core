@@ -3,7 +3,6 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
-import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
 
 public class ChainedCommandArgumentOptional extends ChainedCommandArgument {
     private final Optional<?> defaultObj;

@@ -10,7 +10,6 @@ import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
-import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserManager;
 
 import java.util.Collection;

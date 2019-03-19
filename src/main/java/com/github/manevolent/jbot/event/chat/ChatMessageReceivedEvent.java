@@ -1,7 +1,6 @@
 package com.github.manevolent.jbot.event.chat;
 
 import com.github.manevolent.jbot.chat.ChatMessage;
-import com.github.manevolent.jbot.event.Event;
 
 public class ChatMessageReceivedEvent extends ChatEvent {
     private final ChatMessage message;

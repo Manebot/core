@@ -2,12 +2,6 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
-import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 public class ChainedCommandArgumentNone extends ChainedCommandArgument {
     public ChainedCommandArgumentNone() {
