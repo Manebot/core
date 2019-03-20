@@ -32,7 +32,11 @@ public interface PluginRegistration {
 
     /**
      * Loads the plugin into the system.
+     *
+     * @return loaded Plugin instance.
+     * @throws IllegalStateException if the plugin was already loaded.
+     * @throws PluginLoadException if there was a problem loading the plugin.
      */
-    void load();
+    Plugin load() throws IllegalStateException, PluginLoadException;
 
 }
