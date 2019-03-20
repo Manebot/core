@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class PluginLoaderRegistry implements PluginLoader {
+public final class PluginLoaderRegistry {
     private final Map<String, PluginLoader> loaderMap = new LinkedHashMap<>();
 
     /**
@@ -70,17 +70,4 @@ public final class PluginLoaderRegistry implements PluginLoader {
         return loaderMap.get(extension);
     }
 
-    /**
-     * Helper method.  Loads a plugin based on the specified associated artifact.
-     * @param artifact Local artifact/file to load.
-     * @return Plugin instance.
-     * @throws IllegalArgumentException if the artifact's file extension is not recognized.
-     * @throws PluginLoadException if there is a problem loading the plugin file associated with the artifcat.
-     * @throws FileNotFoundException if the plugin artifact or one of its artifact dependencies does not exist.
-     */
-    @Override
-    public Plugin load(LocalArtifact artifact)
-            throws IllegalArgumentException, PluginLoadException, FileNotFoundException {
-        return getLoader(artifact.getFile()).load(artifact);
-    }
 }

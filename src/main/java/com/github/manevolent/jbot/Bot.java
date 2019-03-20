@@ -9,8 +9,8 @@ import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.event.EventDispatcher;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.plugin.Plugin;
+import com.github.manevolent.jbot.plugin.PluginManager;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
-import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 import com.github.manevolent.jbot.user.UserManager;
 
 import java.util.Collection;
@@ -86,14 +86,14 @@ public interface Bot {
      * Gets the plugin loader registry
      * @return plugin loader registry.
      */
-    PluginLoaderRegistry getPluginLoaderRegistry();
+    PluginManager getPluginManager();
 
     /**
-     * Gets the system plugin/artifact loader.
+     * Gets the system default plugin/artifact loader.
      * @return PluginLoader instance.
      */
     default PluginLoader getPluginLoader() {
-        return getPluginLoaderRegistry();
+        return getPluginManager();
     }
 
     /**
