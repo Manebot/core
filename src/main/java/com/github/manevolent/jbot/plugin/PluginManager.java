@@ -28,10 +28,24 @@ public interface PluginManager extends PluginLoader {
      * Gets an immutable collection of recognized plugins.
      * @return Plugin collection.
      */
-    Collection<Plugin> getPlugins();
+    Collection<ArtifactIdentifier> getPlugins();
 
     /**
-     * Unloads the specified plugin.
+     * Adds a plugin to the system.
+     * @param artifactIdentifier Plugin ArtifactIdentifier to add.
+     * @return true if the plugin was added, false otherwise.
+     */
+    boolean add(ArtifactIdentifier artifactIdentifier);
+
+    /**
+     * Removes a plugin from the system.
+     * @param artifactIdentifier Plugin ArtifactIdentifier to remove.
+     * @return true if the plugin was removed, false otherwise.
+     */
+    boolean remove(ArtifactIdentifier artifactIdentifier);
+
+    /**
+     * Unloads the specified Plugin instance from the PluginManager instance.
      * @param plugin Plugin to unload.
      */
     void unload(Plugin plugin);
@@ -56,7 +70,7 @@ public interface PluginManager extends PluginLoader {
      * @return Plugin instance if one is found, null otherwise.
      */
     default Plugin getPlugin(ArtifactIdentifier id) {
-        return getPlugins().stream()
+        return getLoadedPlugins().stream()
                 .filter(x -> x.getArtifact().getIdentifier().equals(id))
                 .findFirst().orElse(null);
     }
@@ -67,7 +81,7 @@ public interface PluginManager extends PluginLoader {
      */
     default Collection<Plugin> getEnabledPlugins() {
         return Collections.unmodifiableCollection(
-                getPlugins().stream()
+                getLoadedPlugins().stream()
                         .filter(x -> x != null && x.isEnabled())
                         .collect(Collectors.toList())
         );
@@ -79,7 +93,7 @@ public interface PluginManager extends PluginLoader {
      */
     default Collection<Plugin> getDisabledPlugins() {
         return Collections.unmodifiableCollection(
-                getPlugins().stream()
+                getLoadedPlugins().stream()
                         .filter(x -> x != null && !x.isEnabled())
                         .collect(Collectors.toList())
         );
