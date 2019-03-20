@@ -7,10 +7,11 @@ public interface EventDispatcher {
     /**
      * Fires an event.
      * @param event Event to fire.
+     * @param <T> Event type.
      * @return Event
      * @throws EventExecutionException if an exception occurred executing the event.
      */
-    Event execute(Event event) throws EventExecutionException;
+    <T extends Event> T execute(T event) throws EventExecutionException;
 
     /**
      * Fires an event asynchronously.
