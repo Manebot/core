@@ -1,17 +1,17 @@
 package com.github.manevolent.jbot.event.chat;
 
-import com.github.manevolent.jbot.chat.ChatMessage;
+import com.github.manevolent.jbot.chat.ReceivedChatMessage;
 
 public class ChatMessageReceivedEvent extends ChatEvent {
-    private final ChatMessage message;
+    private final ReceivedChatMessage message;
 
-    public ChatMessageReceivedEvent(Object sender, ChatMessage chatMessage) {
+    public ChatMessageReceivedEvent(Object sender, ReceivedChatMessage chatMessage) {
         super(sender, chatMessage.getSender().getChat());
 
         this.message = chatMessage;
     }
 
-    public ChatMessage getMessage() {
+    public ReceivedChatMessage getMessage() {
         return message;
     }
 }

@@ -12,30 +12,19 @@ public class DefaultRichChatMessage extends DefaultChatMessage implements RichCh
     private final Collection<Element> body;
 
     public DefaultRichChatMessage(
-            ChatSender sender,
-            String message, Date date,
+            String message,
             String title, String footer,
             ImageElement thumbnail,
             Color color,
             Collection<Element> body
     ) {
-        super(sender, message, date);
+        super(message);
 
         this.title = title;
         this.footer = footer;
         this.thumbnail = thumbnail;
         this.color = color;
         this.body = body;
-    }
-
-    public DefaultRichChatMessage(
-            String message, Date date,
-            String title, String footer,
-            ImageElement thumbnail,
-            Color color,
-            Collection<Element> body
-    ) {
-        this(null, message, date, title, footer, thumbnail, color, body);
     }
 
     @Override
@@ -111,9 +100,7 @@ public class DefaultRichChatMessage extends DefaultChatMessage implements RichCh
 
         public DefaultRichChatMessage build() {
             return new DefaultRichChatMessage(
-                    null,
                     description,
-                    date,
                     title,
                     footer,
                     thumbnail,

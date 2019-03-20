@@ -102,7 +102,7 @@ public interface Chat {
      * @param max Maximum messages to return.
      * @return ChatMessage collection of previous messages.
      */
-    Collection<ChatMessage> getLastMessages(int max);
+    Collection<ReceivedChatMessage> getLastMessages(int max);
 
     /**
      * Finds if a given user is a member of this conversation.

@@ -11,13 +11,13 @@ public interface ChatDispatcher {
      * @param chatMessage ChatMessage instance to dispatch.
      * @throws ChatException if there was an exception executing the chat.
      */
-    void execute(ChatMessage chatMessage) throws ChatException;
+    void execute(ReceivedChatMessage chatMessage) throws ChatException;
 
     /**
      * Dispatches a chat message asynchronously.
      * @param chatMessage ChatMessage instance to dispatch.
      * @return Future representing the chat future execution.
      */
-    Future<?> executeAsync(ChatMessage chatMessage);
+    Future<?> executeAsync(ReceivedChatMessage chatMessage);
 
 }

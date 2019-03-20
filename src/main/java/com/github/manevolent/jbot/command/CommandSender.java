@@ -15,9 +15,14 @@ public abstract class CommandSender implements ChatSender {
     private final Object bufferLock = new Object();
     private volatile boolean buffered = false;
 
+    /**
+     * Gets the parent to this command sender, such as for a sub-execution.
+     * @return CommandSender instance.
+     */
     public CommandSender getParent() {
         return null;
     }
+
     /**
      * Gets the conversation the message was sent in.
      */
