@@ -10,7 +10,9 @@ public interface ChatSender {
     /**
      * Gets the display name of the command sender.
      */
-    String getDisplayName();
+    default String getDisplayName() {
+        return getUsername();
+    }
 
     /**
      * Gets the chat the message was sent in.

@@ -8,6 +8,8 @@ public class DefaultCommandSender extends CommandSender {
     private final User user;
 
     public DefaultCommandSender(Conversation conversation, User user) {
+        super(user.getUsername(), user.getDisplayName(), conversation.getChat());
+
         this.conversation = conversation;
         this.user = user;
     }
