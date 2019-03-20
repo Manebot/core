@@ -70,7 +70,7 @@ public interface UserManager {
     /**
      * Gets a user association.
      * @param platform Platform holding the association.
-     * @param id Platform-specific ID for the associaton.
+     * @param id Platform-specific ID for the association.
      * @return UserAssociation instance if one exists, null otherwise.
      */
     UserAssociation getUserAssociation(Platform platform, String id);
