@@ -7,7 +7,6 @@ import com.github.manevolent.jbot.artifact.LocalArtifact;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * The <B>PluginManager</B> handles loading and unload plugins from the system.
  */
-public interface PluginManager extends PluginLoader {
+public interface PluginManager {
 
     /**
      * Gets the plugin and library repository.
