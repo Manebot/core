@@ -22,4 +22,9 @@ public interface UserAssociation {
      */
     String getPlatformId();
 
+    /**
+     * Removes this User association fromm the Platform.
+     */
+    void remove();
+
 }
