@@ -97,12 +97,6 @@ public interface Bot {
     }
 
     /**
-     * Gets the global repository.
-     * @return global repository.
-     */
-    ArtifactRepository getRepostiory();
-
-    /**
      * Gets the system command manager.
      * @return command manager.
      */

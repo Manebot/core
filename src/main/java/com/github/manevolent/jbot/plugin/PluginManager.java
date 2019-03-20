@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
+import com.github.manevolent.jbot.artifact.ArtifactRepository;
 import com.github.manevolent.jbot.artifact.LocalArtifact;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
@@ -10,7 +11,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * The <B>PluginManager</B> handles loading and unload plugins from the system.
+ */
 public interface PluginManager extends PluginLoader {
+
+    /**
+     * Gets the plugin and library repository.
+     * @return global repository.
+     */
+    ArtifactRepository getRepostiory();
 
     /**
      * Gets this PluginManager's PluginLoaderRegistry instance, used to load plugins from LocalArtifacts.
@@ -32,23 +42,20 @@ public interface PluginManager extends PluginLoader {
 
     /**
      * Adds a plugin to the system.
+     *
      * @param artifactIdentifier Plugin ArtifactIdentifier to add.
-     * @return true if the plugin was added, false otherwise.
+     * @return Plugin instance that was installed.
      */
-    boolean add(ArtifactIdentifier artifactIdentifier);
+    Plugin install(ArtifactIdentifier artifactIdentifier)
+            throws IllegalArgumentException, PluginLoadException;
 
     /**
      * Removes a plugin from the system.
+     *
      * @param artifactIdentifier Plugin ArtifactIdentifier to remove.
      * @return true if the plugin was removed, false otherwise.
      */
-    boolean remove(ArtifactIdentifier artifactIdentifier);
-
-    /**
-     * Unloads the specified Plugin instance from the PluginManager instance.
-     * @param plugin Plugin to unload.
-     */
-    void unload(Plugin plugin);
+    boolean uninstall(ArtifactIdentifier artifactIdentifier);
 
     /**
      * Helper method.  Loads a plugin based on the specified associated artifact.
@@ -63,6 +70,12 @@ public interface PluginManager extends PluginLoader {
             throws IllegalArgumentException, PluginLoadException, FileNotFoundException {
         return getLoaderRegistry().getLoader(artifact.getFile()).load(artifact);
     }
+
+    /**
+     * Unloads the specified Plugin instance from the PluginManager instance.
+     * @param plugin Plugin to unload.
+     */
+    void unload(Plugin plugin);
 
     /**
      * Finds a previously loaded plugin by its artifact identifier.
