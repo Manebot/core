@@ -247,12 +247,15 @@ public interface Chat {
      * @return ChatType instance.
      */
     default ChatType getChatType(ChatMessage message) {
-        for (Character prefix : getCommandPrefixes())
+        for (Character prefix : getCommandPrefixes()) {
+            if (prefix == null) return ChatType.COMMAND;
+
             if (message.getMessage().startsWith(prefix.toString()) &&
                     message.getMessage().length() > 1 &&
                     Character.isLetterOrDigit(message.getMessage().charAt(1))) {
                 return ChatType.COMMAND;
             }
+        }
 
         return ChatType.CHAT;
     }
