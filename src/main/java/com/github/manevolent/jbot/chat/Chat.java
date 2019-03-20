@@ -7,6 +7,7 @@ import com.github.manevolent.jbot.user.UserAssociation;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -242,22 +243,49 @@ public interface Chat {
     }
 
     /**
-     * Gets the chat type for a specific message.
+     * Processes a chat message and formats the message as a command.
      * @param message ChatMessage instance to check
-     * @return ChatType instance.
+     * @return ReceivedChatMessage instance of the parsed command, null if there is no command detected.
      */
-    default ChatType getChatType(ChatMessage message) {
+    default ReceivedChatMessage parseCommand(ReceivedChatMessage message) {
         for (Character prefix : getCommandPrefixes()) {
-            if (prefix == null) return ChatType.COMMAND;
+            if (prefix == null) return null;
 
             if (message.getMessage().startsWith(prefix.toString()) &&
                     message.getMessage().length() > 1 &&
                     Character.isLetterOrDigit(message.getMessage().charAt(1))) {
-                return ChatType.COMMAND;
+                final String substringedMessage = message.getMessage().substring(1);
+
+                return new ReceivedChatMessage() {
+                    @Override
+                    public ChatSender getSender() {
+                        return message.getSender();
+                    }
+
+                    @Override
+                    public void delete() throws UnsupportedOperationException {
+                        message.delete();
+                    }
+
+                    @Override
+                    public void edit(ChatMessage newMessage) throws UnsupportedOperationException {
+                        message.edit(newMessage);
+                    }
+
+                    @Override
+                    public Date getDate() {
+                        return message.getDate();
+                    }
+
+                    @Override
+                    public String getMessage() {
+                        return substringedMessage;
+                    }
+                };
             }
         }
 
-        return ChatType.CHAT;
+        return null;
     }
 
 }
