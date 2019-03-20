@@ -7,6 +7,7 @@ import com.github.manevolent.jbot.user.UserAssociation;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public interface Chat {
@@ -132,9 +133,10 @@ public interface Chat {
     default Collection<UserAssociation> getMemberAssociations() {
         return Collections.unmodifiableCollection(
                 getPlatformMemberIds().stream()
-                .map(x -> getPlatform().getUserAssocation(x))
-                .filter(x -> x.getUser() != null)
-                .collect(Collectors.toList())
+                        .map(platformUserId -> getPlatform().getUserAssocation(platformUserId))
+                        .filter(Objects::nonNull)
+                        .filter(association -> association.getUser() != null)
+                        .collect(Collectors.toList())
         );
     }
 
