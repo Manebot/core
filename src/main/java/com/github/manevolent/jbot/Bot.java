@@ -103,12 +103,6 @@ public interface Bot {
     ArtifactRepository getRepostiory();
 
     /**
-     * Gets a list of all plugins loaded into the system.
-     * @return loaded plugins.
-     */
-    Collection<Plugin> getPlugins();
-
-    /**
      * Gets the system command manager.
      * @return command manager.
      */
@@ -137,41 +131,6 @@ public interface Bot {
      * @return conversation provider.
      */
     ConversationProvider getConversationProvider();
-
-    /**
-     * Finds a previously loaded plugin by its artifact identifier.
-     * @param id artifact identifier
-     * @return Plugin instance if one is found, null otherwise.
-     */
-    default Plugin getPlugin(ArtifactIdentifier id) {
-        return getPlugins().stream()
-                .filter(x -> x.getArtifact().getIdentifier().equals(id))
-                .findFirst().orElse(null);
-    }
-
-    /**
-     * Gets a list of enabled plugins.
-     * @return enabled plugins.
-     */
-    default Collection<Plugin> getEnabledPlugins() {
-        return Collections.unmodifiableCollection(
-                getPlugins().stream()
-                        .filter(x -> x != null && x.isEnabled())
-                        .collect(Collectors.toList())
-        );
-    }
-
-    /**
-     * Gets a list of disabled plugins.
-     * @return disabled plugins.
-     */
-    default Collection<Plugin> getDisabledPlugins() {
-        return Collections.unmodifiableCollection(
-                getPlugins().stream()
-                        .filter(x -> x != null && !x.isEnabled())
-                        .collect(Collectors.toList())
-        );
-    }
 
     /**
      * Starts the bot.

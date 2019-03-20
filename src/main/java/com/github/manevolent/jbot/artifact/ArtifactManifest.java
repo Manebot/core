@@ -6,25 +6,35 @@ import java.util.Collection;
 public interface ArtifactManifest {
 
     /**
+     * Gets the manifest's qualifier.
+     * @return ArtifactQualifier instance.
+     */
+    ManifestIdentifier getQualifier();
+
+    /**
      * Gets the artifact's ID.
      *
      * @return Artifact ID.
      */
-    String getArtifactId();
+    default String getArtifactId() {
+        return getQualifier().getArtifactId();
+    }
 
     /**
      * Gets the artifact's package ID.
      *
      * @return Artifact package ID.
      */
-    String getPackageId();
+    default String getPackageId() {
+        return getQualifier().getPackageId();
+    }
 
     /**
      * Gets the latest version of this plugin.
      *
      * @return Version instance representing the latest version of this plugin.
      */
-    String getLatestVersion();
+    ArtifactIdentifier getLatestVersion();
 
     /**
      * Finds if an update exists for a specific plugin's version.
@@ -32,7 +42,7 @@ public interface ArtifactManifest {
      * @return true if an update exists, false otherwise.
      */
     default boolean doesUpdateExist(String version) {
-        return !getLatestVersion().equals(version);
+        return !getLatestVersion().getVersion().equals(version);
     }
 
     /**

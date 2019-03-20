@@ -11,6 +11,19 @@ public abstract class AggregateArtifactRepository implements ArtifactRepository 
     }
 
     @Override
+    public ArtifactManifest getManifest(ManifestIdentifier identifier) throws ArtifactNotFoundException {
+        for (ArtifactRepository repository : getRepositories()) {
+            try {
+                return repository.getManifest(identifier);
+            } catch (ArtifactRepositoryException ex) {
+                // Ignore
+            }
+        }
+
+        throw new ArtifactNotFoundException(identifier.getPackageId() + ":" + identifier.getArtifactId());
+    }
+
+    @Override
     public ArtifactManifest getManifest(String packageId, String artifactId) throws ArtifactNotFoundException {
         for (ArtifactRepository repository : getRepositories()) {
             try {

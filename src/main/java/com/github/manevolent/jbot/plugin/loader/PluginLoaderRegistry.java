@@ -1,11 +1,6 @@
 package com.github.manevolent.jbot.plugin.loader;
 
-import com.github.manevolent.jbot.artifact.LocalArtifact;
-import com.github.manevolent.jbot.plugin.Plugin;
-import com.github.manevolent.jbot.plugin.PluginLoadException;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;

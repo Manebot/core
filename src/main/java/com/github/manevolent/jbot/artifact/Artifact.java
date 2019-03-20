@@ -9,9 +9,7 @@ public interface Artifact {
      * Gets this artifact's identifier.
      * @return artifact identifier.
      */
-    default ArtifactIdentifier getIdentifier() {
-        return new ArtifactIdentifier(getManifest().getArtifactId(), getManifest().getPackageId(), getVersion());
-    }
+    ArtifactIdentifier getIdentifier();
 
     /**
      * Gets this artifact's manifest.
@@ -31,7 +29,9 @@ public interface Artifact {
      * Gets this plugin's version.
      * @return Version.
      */
-    String getVersion();
+    default String getVersion() {
+        return getIdentifier().getVersion();
+    }
 
     /**
      * Gets this artifact's root resource URI.
