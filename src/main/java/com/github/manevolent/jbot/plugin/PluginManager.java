@@ -59,26 +59,6 @@ public interface PluginManager extends PluginLoader {
     boolean uninstall(PluginRegistration registration);
 
     /**
-     * Loads a plugin based on the specified associated artifact.
-     * @param artifact Local artifact/file to load.
-     * @return Plugin instance.
-     * @throws IllegalArgumentException if the artifact's file extension is not recognized.
-     * @throws PluginLoadException if there is a problem loading the plugin file associated with the artifcat.
-     * @throws FileNotFoundException if the plugin artifact or one of its artifact dependencies does not exist.
-     */
-    @Override
-    default Plugin load(LocalArtifact artifact)
-            throws IllegalArgumentException, PluginLoadException, FileNotFoundException {
-        return getLoaderRegistry().getLoader(artifact.getFile()).load(artifact);
-    }
-
-    /**
-     * Unloads the specified Plugin instance from the PluginManager instance.
-     * @param plugin Plugin to unload.
-     */
-    void unload(Plugin plugin);
-
-    /**
      * Finds a previously loaded plugin by its artifact identifier.
      * @param id artifact identifier
      * @return Plugin instance if one is found, null otherwise.

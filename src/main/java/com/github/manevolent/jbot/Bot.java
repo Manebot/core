@@ -89,14 +89,6 @@ public interface Bot {
     PluginManager getPluginManager();
 
     /**
-     * Gets the system default plugin/artifact loader.
-     * @return PluginLoader instance.
-     */
-    default PluginLoader getPluginLoader() {
-        return getPluginManager();
-    }
-
-    /**
      * Gets the system command manager.
      * @return command manager.
      */

@@ -9,13 +9,6 @@ import java.io.FileNotFoundException;
 public interface PluginLoader {
 
     /**
-     * Loads a plugin based on its root library file.
-     * @param file Plugin file to load.
-     * @return Plugin instance.
-     */
-    //Plugin load(File file) throws PluginLoadException, FileNotFoundException;
-
-    /**
      * Loads a plugin based on its local artifact.
      * @param artifact Plugin artifact to load.
      * @return Plugin instance.
