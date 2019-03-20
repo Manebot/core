@@ -1,7 +1,6 @@
 package com.github.manevolent.jbot.platform;
 
 import com.github.manevolent.jbot.chat.Chat;
-import com.github.manevolent.jbot.chat.ChatMessage;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
 
@@ -32,13 +31,6 @@ public interface PlatformConnection {
     }
 
     /**
-     * Gets a list of user associations for this platform.
-     *
-     * @return collection of user associations.
-     */
-    Collection<UserAssociation> getUserAssociations();
-
-    /**
      * Gets a list of chats associated with this platform.
      * @return collection of Chat instances associated with this platform.
      */
@@ -65,30 +57,6 @@ public interface PlatformConnection {
                 getChats().stream()
                     .filter(chat -> chat.isMember(member))
                     .collect(Collectors.toList())
-        );
-    }
-
-    /**
-     * Gets a specific assocation for this platform.
-     *
-     * @param id Platform-specific user ID to search for.
-     * @return user association if found on this platform, null otherwise.
-     */
-    default UserAssociation getUserAssocation(String id) {
-        return getUserAssociations().stream()
-                .filter(assoc -> assoc.getPlatformId().equals(id)).findFirst().orElse(null);
-    }
-
-    /**
-     * Gets a set of user associations for the specified user.
-     *
-     * @param user User to search for.
-     * @return collection of user associations for the specified uesr.
-     */
-    default Collection<UserAssociation> getUserAssociations(User user) {
-        return Collections.unmodifiableCollection(
-                getUserAssociations().stream()
-                .filter(assoc -> assoc.getUser().equals(user)).collect(Collectors.toList())
         );
     }
 

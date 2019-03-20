@@ -1,6 +1,12 @@
 package com.github.manevolent.jbot.platform;
 
 import com.github.manevolent.jbot.plugin.Plugin;
+import com.github.manevolent.jbot.user.User;
+import com.github.manevolent.jbot.user.UserAssociation;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Platforms are the structure of the bot that represent individual chatting platforms, such as Discord, Skype,
@@ -29,6 +35,38 @@ public interface Platform {
     default boolean isConnected() {
         return getConnection() != null && getConnection().isConnected();
     }
+
+
+    /**
+     * Gets a specific assocation for this platform.
+     *
+     * @param id Platform-specific user ID to search for.
+     * @return user association if found on this platform, null otherwise.
+     */
+    default UserAssociation getUserAssocation(String id) {
+        return getUserAssociations().stream()
+                .filter(assoc -> assoc.getPlatformId().equals(id)).findFirst().orElse(null);
+    }
+
+    /**
+     * Gets a set of user associations for the specified user.
+     *
+     * @param user User to search for.
+     * @return collection of user associations for the specified uesr.
+     */
+    default Collection<UserAssociation> getUserAssociations(User user) {
+        return Collections.unmodifiableCollection(
+                getUserAssociations().stream()
+                        .filter(assoc -> assoc.getUser().equals(user)).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Gets a list of user associations for this platform.
+     *
+     * @return collection of user associations.
+     */
+    Collection<UserAssociation> getUserAssociations();
 
     /**
      * Gets the current platform connection instance for this platform.
