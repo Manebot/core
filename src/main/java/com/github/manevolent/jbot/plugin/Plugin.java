@@ -8,6 +8,12 @@ import java.util.Collection;
 public interface Plugin {
 
     /**
+     * Gets the registration used to map this Plugin object to the system.
+     * @return PluginRegistration instance.
+     */
+    PluginRegistration getRegistration();
+
+    /**
      * Gets the artifact associated with this plugin.
      * @return associated Artifact instance.
      */

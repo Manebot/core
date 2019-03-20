@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 import com.github.manevolent.jbot.artifact.ArtifactRepository;
+import com.github.manevolent.jbot.artifact.ArtifactRepositoryException;
 import com.github.manevolent.jbot.artifact.LocalArtifact;
 import com.github.manevolent.jbot.plugin.loader.PluginLoader;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
@@ -35,30 +36,30 @@ public interface PluginManager extends PluginLoader {
     Collection<Plugin> getLoadedPlugins();
 
     /**
-     * Gets an immutable collection of recognized plugins.
+     * Gets an immutable collection of registered plugins.
      * @return Plugin collection.
      */
-    Collection<ArtifactIdentifier> getPlugins();
+    Collection<PluginRegistration> getPlugins();
 
     /**
      * Adds a plugin to the system.
      *
      * @param artifactIdentifier Plugin ArtifactIdentifier to add.
-     * @return Plugin instance that was installed.
+     * @return PluginRegistration instance that was installed.
      */
-    Plugin install(ArtifactIdentifier artifactIdentifier)
+    PluginRegistration install(ArtifactIdentifier artifactIdentifier)
             throws IllegalArgumentException, PluginLoadException;
 
     /**
      * Removes a plugin from the system.
      *
-     * @param artifactIdentifier Plugin ArtifactIdentifier to remove.
+     * @param registration Plugin registration instance to remove.
      * @return true if the plugin was removed, false otherwise.
      */
-    boolean uninstall(ArtifactIdentifier artifactIdentifier);
+    boolean uninstall(PluginRegistration registration);
 
     /**
-     * Helper method.  Loads a plugin based on the specified associated artifact.
+     * Loads a plugin based on the specified associated artifact.
      * @param artifact Local artifact/file to load.
      * @return Plugin instance.
      * @throws IllegalArgumentException if the artifact's file extension is not recognized.
