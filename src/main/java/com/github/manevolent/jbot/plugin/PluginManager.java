@@ -58,14 +58,17 @@ public interface PluginManager {
     boolean uninstall(PluginRegistration registration);
 
     /**
-     * Finds a previously loaded plugin by its artifact identifier.
+     * Finds a previously installed plugin by its artifact identifier.
+     *
      * @param id artifact identifier
      * @return Plugin instance if one is found, null otherwise.
      */
-    default Plugin getPlugin(ArtifactIdentifier id) {
-        return getLoadedPlugins().stream()
-                .filter(x -> x.getArtifact().getIdentifier().equals(id))
-                .findFirst().orElse(null);
+    default PluginRegistration getPlugin(ArtifactIdentifier id) {
+        return getPlugins()
+                .stream()
+                .filter(x -> x.getIdentifier().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -91,5 +94,12 @@ public interface PluginManager {
                         .collect(Collectors.toList())
         );
     }
+
+    /**
+     * Resolves an identifier by its friendly name, or returns an artifact identifier otherwise.
+     * @param friendlyName Friendly name.
+     * @return ArtifactIdentifier instance.
+     */
+    ArtifactIdentifier resolveIdentifier(String friendlyName);
 
 }
