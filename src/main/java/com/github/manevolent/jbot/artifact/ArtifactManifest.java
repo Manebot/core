@@ -9,7 +9,7 @@ public interface ArtifactManifest {
      * Gets the manifest's qualifier.
      * @return ArtifactQualifier instance.
      */
-    ManifestIdentifier getQualifier();
+    ManifestIdentifier getIdentifier();
 
     /**
      * Gets the artifact's ID.
@@ -17,7 +17,7 @@ public interface ArtifactManifest {
      * @return Artifact ID.
      */
     default String getArtifactId() {
-        return getQualifier().getArtifactId();
+        return getIdentifier().getArtifactId();
     }
 
     /**
@@ -26,7 +26,7 @@ public interface ArtifactManifest {
      * @return Artifact package ID.
      */
     default String getPackageId() {
-        return getQualifier().getPackageId();
+        return getIdentifier().getPackageId();
     }
 
     /**

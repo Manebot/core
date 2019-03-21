@@ -2,7 +2,7 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
-import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
+import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -84,6 +84,6 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @ReflectiveCommandExecutor.Argument(type = ChainedCommandArgumentInterval.class)
+    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentInterval.class)
     public @interface Argument {}
 }

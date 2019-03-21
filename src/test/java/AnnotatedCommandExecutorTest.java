@@ -1,18 +1,18 @@
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
-import com.github.manevolent.jbot.command.executor.chained.ReflectiveCommandExecutor;
+import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
 import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentLabel;
 import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentString;
 import junit.framework.TestCase;
 
 
-public class ReflectiveCommandExecutorTest extends TestCase {
+public class AnnotatedCommandExecutorTest extends TestCase {
     public static void main(String[] args) throws Exception {
-        new ReflectiveCommandExecutorTest().testParser();
+        new AnnotatedCommandExecutorTest().testParser();
     }
 
     public void testParser() throws Exception {
-        CommandExecutor executor = new ReflectiveCommandExecutor() {
+        CommandExecutor executor = new AnnotatedCommandExecutor() {
             @Command(description = "test description")
             public void test(CommandSender sender,
                              @ChainedCommandArgumentLabel.Argument(label = "test") String test,

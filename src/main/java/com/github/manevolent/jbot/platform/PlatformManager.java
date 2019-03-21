@@ -15,7 +15,7 @@ public interface PlatformManager {
      * @param function Platform building function connection to call for registration.
      * @return Platform instance.
      */
-    default PlatformRegistration registerPlatform(Function<Builder, PlatformRegistration> function)
+    default PlatformRegistration registerPlatform(Function<Platform.Builder, PlatformRegistration> function)
             throws IllegalStateException {
         PlatformRegistration registration = function.apply(buildPlatform());
 
@@ -31,7 +31,7 @@ public interface PlatformManager {
      *
      * @return Builder instance to construct a Platform.
      */
-    Builder buildPlatform();
+    Platform.Builder buildPlatform();
 
     /**
      * Unregisters a platform registration from the system.
@@ -76,61 +76,6 @@ public interface PlatformManager {
         return getPlatforms().stream().filter(platform ->
                 platform.getPlugin() != null
         ).collect(Collectors.toList());
-    }
-
-    abstract class Builder {
-        private String id, name;
-        private PlatformConnection connection;
-
-        public String getId() {
-            return id;
-        }
-
-        public Builder id(String id) {
-            this.id = id;
-
-            if (this.name == null) this.name = id;
-
-            return this;
-        }
-
-        public Platform platform(String id) {
-            id(id);
-            return getPlatform();
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-
-            return this;
-        }
-
-        /**
-         * Gets the plugin associated with the Builder's <b>id</b>, as previous set.
-         * @return
-         */
-        public abstract Platform getPlatform();
-
-        public PlatformConnection getConnection() {
-            return connection;
-        }
-
-        public Builder withConnection(PlatformConnection connection) {
-            this.connection = connection;
-
-            return this;
-        }
-
-        /**
-         * Registers this platform, returning an assigned platform instance capable of managing the platform assignment.
-         * @param plugin Plugin to assign this platform to.
-         * @return AssignedPlatform instance.
-         */
-        public abstract PlatformRegistration register(Plugin plugin);
     }
 
 }

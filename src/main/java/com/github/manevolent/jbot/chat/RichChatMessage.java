@@ -64,6 +64,19 @@ public interface RichChatMessage extends ChatMessage {
         }
     }
 
+    class Mention extends TextElement {
+        private final String id;
+
+        public Mention(String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String getText() {
+            return id;
+        }
+    }
+
     class PlainText extends TextElement {
         private final String text;
 

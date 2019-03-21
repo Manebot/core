@@ -1,8 +1,15 @@
 package com.github.manevolent.jbot.plugin;
 
+import com.github.manevolent.jbot.Bot;
 import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
 
 public interface PluginRegistration {
+
+    /**
+     * Gets the bot instance for this registration.
+     * @return Bot instance associated with this Plugin registration.
+     */
+    Bot getBot();
 
     /**
      * Gets the ArtifactIdentifier associated with this registration.

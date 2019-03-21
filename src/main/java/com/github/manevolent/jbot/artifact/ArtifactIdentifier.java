@@ -35,6 +35,7 @@ public class ArtifactIdentifier extends ManifestIdentifier {
     public ArtifactIdentifier(String packageId, String artifactId, String version) {
         super(packageId, artifactId);
 
+        if (version == null) throw new NullPointerException("version");
         this.version = version;
     }
 
@@ -64,6 +65,15 @@ public class ArtifactIdentifier extends ManifestIdentifier {
     @Override
     public int hashCode() {
         return super.hashCode() ^ version.hashCode();
+    }
+
+    public boolean isManifest(ManifestIdentifier manifestIdentifier) {
+        return manifestIdentifier.getPackageId().equals(getPackageId()) &&
+                manifestIdentifier.getArtifactId().equals(getArtifactId());
+    }
+
+    public boolean isManifest(ArtifactManifest manifest) {
+        return isManifest(manifest.getIdentifier());
     }
 
     @Override

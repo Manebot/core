@@ -1,10 +1,6 @@
 package com.github.manevolent.jbot.plugin;
 
-import com.github.manevolent.jbot.artifact.ArtifactIdentifier;
-import com.github.manevolent.jbot.artifact.ArtifactRepository;
-import com.github.manevolent.jbot.artifact.ArtifactRepositoryException;
-import com.github.manevolent.jbot.artifact.LocalArtifact;
-import com.github.manevolent.jbot.plugin.loader.PluginLoader;
+import com.github.manevolent.jbot.artifact.*;
 import com.github.manevolent.jbot.plugin.loader.PluginLoaderRegistry;
 
 import java.util.Collection;
@@ -67,6 +63,20 @@ public interface PluginManager {
         return getPlugins()
                 .stream()
                 .filter(x -> x.getIdentifier().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Finds a previously installed plugin by its artifact identifier.
+     *
+     * @param id manifest identifier
+     * @return Plugin instance if one is found, null otherwise.
+     */
+    default PluginRegistration getPlugin(ManifestIdentifier id) {
+        return getPlugins()
+                .stream()
+                .filter(x -> x.getIdentifier().isManifest(id))
                 .findFirst()
                 .orElse(null);
     }

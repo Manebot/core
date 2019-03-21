@@ -13,8 +13,8 @@ import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public abstract class ReflectiveCommandExecutor extends ChainedCommandExecutor {
-    public ReflectiveCommandExecutor() {
+public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
+    public AnnotatedCommandExecutor() {
         try {
             register();
         } catch (ReflectiveOperationException e) {
