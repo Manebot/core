@@ -21,6 +21,11 @@ public enum ArtifactDependencyLevel {
     /**
      * Indicates a test dependency, only used for testing at run-time.
      */
-    TEST
+    TEST,
+
+    /**
+     * Typically ignored.
+     */
+    SYSTEM
 
 }
