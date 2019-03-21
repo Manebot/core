@@ -142,7 +142,7 @@ public interface Plugin {
          * @param <T> User-chosen type to bind the instance to.
          * @return Builder instance.
          */
-        <T> Builder instance(Function<PluginRegistration, T> instantiator);
+        <T> Builder instance(Class<T> instanceClass, Function<PluginRegistration, T> instantiator);
 
         /**
          * Calls the specified function when the Plugin is enabled.
