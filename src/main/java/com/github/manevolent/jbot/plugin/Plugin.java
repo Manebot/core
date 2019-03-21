@@ -2,14 +2,13 @@ package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.Artifact;
 import com.github.manevolent.jbot.artifact.ManifestIdentifier;
-import com.github.manevolent.jbot.command.CommandManager;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
+import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformConnection;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.Function;
 
 public interface Plugin {
@@ -45,6 +44,12 @@ public interface Plugin {
      * @return associated Platform instances.
      */
     Collection<Platform> getPlatforms();
+
+    /**
+     * Gets a collection of Databases registered by this plugin.
+     * @return collection of associated databases.
+     */
+    Collection<Database> getDatabases();
 
     /**
      * Gets the registered command labels for this plugin.
@@ -160,6 +165,14 @@ public interface Plugin {
          * @return Builder instance.
          */
         Builder onDisable(PluginFunction function);
+
+        /**
+         * Constructs a Database immediately.
+         * @param name Database name.
+         * @param func Function used to construct the database.
+         * @return Database instance.
+         */
+        Database database(String name, Function<Database.ModelConstructor, Database> func);
 
         /**
          * Builds a Plugin instance.
