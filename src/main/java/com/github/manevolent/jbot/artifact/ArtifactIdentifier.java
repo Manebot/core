@@ -127,6 +127,6 @@ public class ArtifactIdentifier extends ManifestIdentifier {
      * @return ArtifactIdentifier without a version component.
      */
     public ManifestIdentifier withoutVersion() {
-        return this;
+        return new ManifestIdentifier(getPackageId(), getArtifactId());
     }
 }
