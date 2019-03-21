@@ -2,8 +2,16 @@ package com.github.manevolent.jbot.artifact;
 
 public interface ArtifactDependency {
 
+    /**
+     * Gets the parent artifact in this relationship.
+     * @return Parent artifact.
+     */
     Artifact getParent();
 
+    /**
+     * Gets the dependent artifact in this relationship.
+     * @return Dependent artifact.
+     */
     Artifact getChild();
 
     /**
