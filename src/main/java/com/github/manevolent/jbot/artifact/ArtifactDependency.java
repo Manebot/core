@@ -12,4 +12,10 @@ public interface ArtifactDependency {
      */
     ArtifactDependencyLevel getType();
 
+    /**
+     * Finds if this is a required dependency.
+     * @return true if the dependency is required, false otherwise.
+     */
+    boolean isRequired();
+
 }
