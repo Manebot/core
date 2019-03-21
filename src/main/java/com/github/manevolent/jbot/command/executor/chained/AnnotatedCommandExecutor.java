@@ -4,6 +4,8 @@ import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgument;
 import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentNone;
+import com.github.manevolent.jbot.security.Permission;
+import com.github.manevolent.jbot.virtual.Virtual;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
@@ -89,6 +91,9 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
 
             chain.setExecutor((sender, label, args) -> {
                 try {
+                    if (commandDefinition.permission().length() > 0)
+                        Permission.checkPermission(commandDefinition.permission());
+
                     Object[] invocationArgs = new Object[args.length + 1];
                     System.arraycopy(args, 0, invocationArgs, 1, args.length);
                     invocationArgs[0] = sender;
@@ -106,6 +111,7 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
     @Target(ElementType.METHOD)
     public @interface Command {
         String description() default "";
+        String permission() default "";
     }
 
     @Retention(RetentionPolicy.RUNTIME)
