@@ -109,9 +109,7 @@ public interface Plugin {
          * @param executor CommandExecutor to bind this label to.
          * @return Builder instance.
          */
-        default Builder command(String label, CommandExecutor executor) {
-            return command(Collections.singleton(label), executor);
-        }
+        Builder command(String label, CommandExecutor executor);
 
         /**
          * Registers a command to this Plugin.
