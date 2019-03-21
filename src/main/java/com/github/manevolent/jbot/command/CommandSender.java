@@ -46,7 +46,8 @@ public abstract class CommandSender extends DefaultChatSender {
 
     @Override
     public String getDisplayName() {
-        return getUser().getDisplayName();
+        String displayName = getUser().getDisplayName();
+        return displayName == null ? getUsername() : displayName;
     }
 
     @Override
