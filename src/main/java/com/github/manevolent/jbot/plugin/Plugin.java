@@ -20,7 +20,7 @@ public interface Plugin {
      * @param <T> Type to return
      * @return Instance
      */
-    <T> T getInstance(Class<? extends T> instanceClass);
+    <T extends PluginReference> T getInstance(Class<? extends T> instanceClass);
 
     /**
      * Gets the registration used to map this Plugin object to the system.
@@ -142,7 +142,8 @@ public interface Plugin {
          * @param <T> User-chosen type to bind the instance to.
          * @return Builder instance.
          */
-        <T> Builder instance(Class<T> instanceClass, Function<PluginRegistration, T> instantiator);
+        <T extends PluginReference>
+        Builder instance(Class<T> instanceClass, Function<PluginRegistration, T> instantiator);
 
         /**
          * Calls the specified function when the Plugin is enabled.
