@@ -107,14 +107,6 @@ public interface Plugin {
          * Registers a command to this Plugin.
          * @param label global label to assign command to.
          * @param executor CommandExecutor to bind this label to.
-         * @return CommandRegistration instance.
-         */
-        CommandManager.Registration registerCommand(String label, CommandExecutor executor);
-
-        /**
-         * Registers a command to this Plugin.
-         * @param label global label to assign command to.
-         * @param executor CommandExecutor to bind this label to.
          * @return Builder instance.
          */
         default Builder command(String label, CommandExecutor executor) {
@@ -128,14 +120,8 @@ public interface Plugin {
          * @return Builder instance.
          */
         default Builder command(Collection<String> labels, CommandExecutor executor) {
-            CommandManager.Registration registration = null;
-
-            for (String label : labels) {
-                if (registration == null)
-                    registration = registerCommand(label, executor);
-                else
-                    registration = registration.alias(label);
-            }
+            for (String label : labels)
+                command(label, executor);
 
             return this;
         }
