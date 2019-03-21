@@ -16,6 +16,6 @@ public interface PluginEntry {
     /**
      * Destructs the Plugin's resources.
      */
-    void destruct();
+    void destruct(Plugin plugin);
 
 }
