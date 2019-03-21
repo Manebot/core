@@ -7,6 +7,7 @@ import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformConnection;
+import com.github.manevolent.jbot.platform.PlatformRegistration;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -134,7 +135,7 @@ public interface Plugin {
          * @param function Platform building function.
          * @return Builder instance.
          */
-        Builder platform(Function<Platform.Builder, PlatformConnection> function);
+        Builder platform(Function<Platform.Builder, PlatformRegistration> function);
 
         /**
          * Binds the specified class to an <i>instance</i>, which is a simple method of communicating functionality to
