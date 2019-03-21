@@ -11,7 +11,13 @@ public interface LocalArtifact extends Artifact {
      */
     File getFile();
 
+    @Override
+    default boolean hasObtained() {
+        return true;
+    }
+
     // Overload
+    @Override
     default URI getUri() {
         return getFile().toURI();
     }

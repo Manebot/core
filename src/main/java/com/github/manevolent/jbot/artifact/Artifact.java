@@ -40,6 +40,12 @@ public interface Artifact {
     URI getUri();
 
     /**
+     * Finds if the Artifact instance has been obtained.
+     * @return true if the artifact is obtained, false otherwise.
+     */
+    boolean hasObtained();
+
+    /**
      * Obtains this artifact locally.
      * @return Local artifact.
      */
