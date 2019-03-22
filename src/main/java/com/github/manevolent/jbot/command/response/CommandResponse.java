@@ -4,5 +4,15 @@ import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 
 public abstract class CommandResponse {
-    public abstract void respond(CommandSender sender) throws CommandExecutionException;
+    private final CommandSender sender;
+
+    protected CommandResponse(CommandSender sender) {
+        this.sender = sender;
+    }
+
+    public CommandSender getSender() {
+        return sender;
+    }
+
+    public abstract void send() throws CommandExecutionException;
 }

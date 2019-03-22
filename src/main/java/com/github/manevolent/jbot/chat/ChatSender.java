@@ -31,6 +31,22 @@ public interface ChatSender {
      * @param message message to add.
      */
     void sendMessage(String message);
+    /**
+     * Sends a text message to the sender.
+     * @param message PlainText message to send.
+     */
+    default void sendMessage(ChatMessage message) {
+        sendMessage(message.getMessage());
+    }
+
+    /**
+     * Sends a rich message to the sender.
+     * @param message Rich message to send.
+     * @throws UnsupportedOperationException if the conversation does not support rich messaging.
+     */
+    default void sendMessage(RichChatMessage message) throws UnsupportedOperationException {
+        getChat().sendMessage(message);
+    }
 
     /**
      * Ends the command buffer.

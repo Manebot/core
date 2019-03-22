@@ -5,22 +5,25 @@ import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
-public class CommandListResponse<T> extends CommandResponse {
-    public static final int DEFAULT_ELEMENTS_PER_PAGE = 6;
-
+public abstract class CommandListResponse<T> extends CommandResponse {
     private final int page;
     private final int totalElements;
     private final int elementsPerPage;
 
     private final ListAccessor<T> accessor;
-    private final ListElementResponder<T> responder;
+    private final ListElementFormatter<T> responder;
 
-    public CommandListResponse(int actualTotal,
+    public CommandListResponse(CommandSender sender,
+                               int actualTotal,
                                int page,
                                int elementsPerPage,
                                ListAccessor<T> accessor,
-                               ListElementResponder<T> responder) {
+                               ListElementFormatter<T> responder) {
+        super(sender);
+
         this.page = page;
         this.totalElements = actualTotal;
         this.elementsPerPage = elementsPerPage;
@@ -29,38 +32,27 @@ public class CommandListResponse<T> extends CommandResponse {
         this.responder = responder;
     }
 
-    public CommandListResponse(int actualTotal,
-                               int page,
-                               ListAccessor<T> accessor,
-                               ListElementResponder<T> responder) {
-        this(actualTotal, page, DEFAULT_ELEMENTS_PER_PAGE, accessor, responder);
+    public int getPage() {
+        return page;
     }
 
-    @Override
-    public void respond(CommandSender sender) throws CommandExecutionException {
-        int totalPages = (int) Math.ceil((double)totalElements / (double)elementsPerPage);
-        int elements = Math.min(accessor.size(), elementsPerPage);
-
-        if (elements < 0) throw new CommandExecutionException("Invalid page (" + totalPages + " pages).");
-        else if (elements == 0) throw new CommandExecutionException("No results found.");
-
-        sender.sendMessage("Discovered " + totalElements + " " + (totalElements == 1 ? "item" : "items")
-                        + " (showing " + elements + ", page " + page + " of " + totalPages + "):");
-
-        for (int i = 0; i < elements; i ++)
-            sender.sendMessage(" - " + responder.line(sender, accessor.get(i)).trim());
+    public int getTotalElements() {
+        return totalElements;
     }
 
-    public T single() throws CommandExecutionException {
-        if (accessor.size() <= 0)
-            throw new CommandArgumentException("No results found.");
-        else if (accessor.size() > 1)
-            throw new CommandArgumentException("More than 1 result found.");
-
-        return accessor.get(0);
+    public int getElementsPerPage() {
+        return elementsPerPage;
     }
 
-    public interface ListElementResponder<T> {
+    public ListAccessor<T> getAccessor() {
+        return accessor;
+    }
+
+    public ListElementFormatter<T> getResponder() {
+        return responder;
+    }
+
+    public interface ListElementFormatter<T> {
         String line(CommandSender sender, T o);
     }
 
@@ -69,11 +61,11 @@ public class CommandListResponse<T> extends CommandResponse {
         int size();
     }
 
-    private static final class DefaultListAccessor<T> implements ListAccessor<T> {
+    private static final class DirectListAccessor<T> implements ListAccessor<T> {
         private final int offset;
         private final List<T> baseList;
 
-        private DefaultListAccessor(List<T> baseList, int offset) {
+        private DirectListAccessor(List<T> baseList, int offset) {
             this.baseList = baseList;
             this.offset = offset;
         }
@@ -89,10 +81,10 @@ public class CommandListResponse<T> extends CommandResponse {
         }
     }
 
-    private static final class ShadowListAccessor<T> implements ListAccessor<T> {
+    private static final class VirtualListAccessor<T> implements ListAccessor<T> {
         private final List<T> baseList;
 
-        private ShadowListAccessor(List<T> baseList) {
+        private VirtualListAccessor(List<T> baseList) {
             this.baseList = baseList;
         }
 
@@ -107,45 +99,68 @@ public class CommandListResponse<T> extends CommandResponse {
         }
     }
 
-    /**
-     * Creates a direct, managed listing of the list type specified.
-     *
-     * @param baseList Base list to page from.
-     * @param elementsPerPage Elements per page.
-     * @param page Current page
-     * @param responder Responder for formatting
-     * @param <T> Type of element to page
-     * @return Response
-     */
-    public static <T> CommandListResponse<T> direct(List<T> baseList, int elementsPerPage, int page,
-                                                  ListElementResponder<T> responder) {
-        return new CommandListResponse<>(
-                baseList.size(), page, elementsPerPage,
-                new DefaultListAccessor<>(baseList, (page-1) * elementsPerPage),
-                responder
-        );
-    }
+    public static abstract class Builder<T> {
+        private int page = 1;
+        private int totalElements;
+        private int elementsPerPage = 6;
 
-    /**
-     * Creates a virtual, shadowed listing of the list type specified.
-     *
-     * @param pageList Base list to page from.
-     * @param elementsPerPage Imaginary elements per page.
-     * @param page Current page
-     * @param totalElements Total actual elements
-     * @param responder Responder for formatting
-     * @param <T> Type of element to page
-     * @return Response
-     */
-    public static <T> CommandListResponse<T> virtual(List<T> pageList,
-                                                     int elementsPerPage,
-                                                     int page,
-                                                     int totalElements,
-                                                     ListElementResponder<T> responder) {
-        return new CommandListResponse<>(
-                totalElements, page, elementsPerPage,
-                new ShadowListAccessor<>(pageList),
-                responder
-        );
+        private ListElementFormatter<T> responder;
+
+        private Supplier<ListAccessor<T>> accessorSupplier;
+
+        public Builder() { }
+
+        public int getPage() {
+            return page;
+        }
+
+        public Builder<T> page(int page) {
+            this.page = page;
+            return this;
+        }
+
+        public int getTotalElements() {
+            return totalElements;
+        }
+
+        public Builder<T> totalElements(int totalElements) {
+            this.totalElements = totalElements;
+            return this;
+        }
+
+        public int getElementsPerPage() {
+            return elementsPerPage;
+        }
+
+        public Builder<T> elementsPerPage(int elementsPerPage) {
+            this.elementsPerPage = elementsPerPage;
+            return this;
+        }
+
+        public Builder<T> direct(List<T> list) {
+            this.accessorSupplier = () -> new DirectListAccessor<>(list, (page-1) * elementsPerPage);
+            this.totalElements = list.size();
+            return this;
+        }
+
+        public Builder<T> virtual(List<T> list) {
+            this.accessorSupplier = () -> new VirtualListAccessor<>(list);
+            return this;
+        }
+
+        public ListElementFormatter<T> getResponder() {
+            return responder;
+        }
+
+        public Builder<T> responder(ListElementFormatter<T> responder) {
+            this.responder = responder;
+            return this;
+        }
+
+        public ListAccessor<T> createListAccessor() {
+            return accessorSupplier.get();
+        }
+
+        public abstract CommandListResponse<T> build();
     }
 }
