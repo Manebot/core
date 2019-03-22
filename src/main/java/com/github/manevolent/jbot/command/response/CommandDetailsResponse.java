@@ -101,7 +101,7 @@ public abstract class CommandDetailsResponse extends CommandResponse {
             return key;
         }
 
-        public Builder setKey(String key) {
+        public Builder key(String key) {
             this.key = key;
             return this;
         }
