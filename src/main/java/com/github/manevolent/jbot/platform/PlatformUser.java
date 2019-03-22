@@ -83,11 +83,19 @@ public interface PlatformUser {
     }
 
     /**
+     * Gets the user association for this platform user.
+     * @return UserAssociation instance.
+     */
+    default UserAssociation getAssociation() {
+        return getPlatform().getUserAssocation(this);
+    }
+
+    /**
      * Gets the user associated with this platform user.
-     * @return
+     * @return User instance.
      */
     default User getAssociatedUser() {
-        UserAssociation association = getPlatform().getUserAssocation(this);
+        UserAssociation association = getAssociation();
         if (association == null) return null;
         else return association.getUser();
     }
