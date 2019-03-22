@@ -17,6 +17,10 @@ public abstract class CommandManager {
             this.label = label;
         }
 
+        public String getLabel() {
+            return label;
+        }
+
         public Registration alias(String alias) {
             return registerExecutor(alias, new AliasedCommandExecutor(executor, label));
         }
