@@ -3,6 +3,7 @@ package com.github.manevolent.jbot.platform;
 import com.github.manevolent.jbot.plugin.Plugin;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
+import com.github.manevolent.jbot.user.UserGroup;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,14 @@ public interface Platform {
     PlatformRegistration getRegistration();
 
     /**
+     * Gets the default group assignment for users registered on this platform.
+     * @return Platform default user group, or null if no default is assigned.
+     */
+    default UserGroup getDefaultUserGroup() {
+        return null;
+    }
+
+    /**
      * Gets the platform's internal unique ID.
      *
      * @return platform ID.
@@ -35,7 +44,6 @@ public interface Platform {
     default boolean isConnected() {
         return getConnection() != null && getConnection().isConnected();
     }
-
 
     /**
      * Gets a specific assocation for this platform.
@@ -80,7 +88,7 @@ public interface Platform {
 
     /**
      * Gets the current plugin instance for this platform.
-     * @return Plugin instance of this platform.
+     * @return Plugin instance of this platform, or null if no plugin was associated with registering this Platform.
      */
     default Plugin getPlugin() {
         PlatformRegistration registration = getRegistration();
