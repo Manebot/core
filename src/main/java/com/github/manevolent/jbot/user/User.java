@@ -60,6 +60,29 @@ public interface User extends EntityType {
     Date getLastSeenDate();
 
     /**
+     * Sets the last date this user was seen.
+     *
+     * @param date last seen date.
+     */
+    void setLastSeenDate(Date date);
+
+    /**
+     * Adds this user to a specific user group.
+     * @param group UserGroup instance to add this user to.
+     */
+    default void addGroup(UserGroup group) {
+        group.addUser(this);
+    }
+
+    /**
+     * Removes this user from a specific user group.
+     * @param group UserGroup instance to remove this user from.
+     */
+    default void removeGroup(UserGroup group) {
+        group.removeUser(this);
+    }
+
+    /**
      * Finds the groups this user is a member of.
      * @return group collection.
      */
