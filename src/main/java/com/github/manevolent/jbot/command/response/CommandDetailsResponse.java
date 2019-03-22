@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.command.response;
 
+import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.command.CommandSender;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ public abstract class CommandDetailsResponse extends CommandResponse {
     private final String objectKey;
     private final Collection<Item> items;
 
-    public CommandDetailsResponse(CommandSender sender, String objectName, String objectKey, Collection<Item> items) {
+    public CommandDetailsResponse(ChatSender sender, String objectName, String objectKey, Collection<Item> items) {
         super(sender);
         this.objectName = objectName;
         this.objectKey = objectKey;

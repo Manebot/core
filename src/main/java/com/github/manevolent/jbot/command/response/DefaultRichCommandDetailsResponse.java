@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.command.response;
 
+import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.chat.DefaultRichChatMessage;
 import com.github.manevolent.jbot.chat.RichChatMessage;
 import com.github.manevolent.jbot.command.CommandSender;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class DefaultRichCommandDetailsResponse extends CommandDetailsResponse {
-    public DefaultRichCommandDetailsResponse(CommandSender sender,
+    public DefaultRichCommandDetailsResponse(ChatSender sender,
                                              String objectName, String objectKey,
                                              Collection<Item> items) {
         super(sender, objectName, objectKey, items);

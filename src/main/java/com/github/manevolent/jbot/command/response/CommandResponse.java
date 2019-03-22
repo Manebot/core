@@ -1,16 +1,17 @@
 package com.github.manevolent.jbot.command.response;
 
+import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 
 public abstract class CommandResponse {
-    private final CommandSender sender;
+    private final ChatSender sender;
 
-    protected CommandResponse(CommandSender sender) {
+    protected CommandResponse(ChatSender sender) {
         this.sender = sender;
     }
 
-    public CommandSender getSender() {
+    public ChatSender getSender() {
         return sender;
     }
 

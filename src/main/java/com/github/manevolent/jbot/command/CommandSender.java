@@ -42,32 +42,6 @@ public abstract class CommandSender extends DefaultChatSender {
      */
     public abstract User getUser();
 
-    /**
-     * Creates a list response to send to the command sender, opportunistically formatting as rich content.
-     * @param function Function providing a command response object from a builder.
-     * @param <T> List item type.
-     * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
-     */
-    public abstract <T> CommandListResponse<T> list(
-           Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
-    );
-
-    /**
-     * Creates a details response to send to the command sender, opportunistically formatting as rich content.
-     *
-     * Details are formatted as such:
-     *
-     *      ObjectName "ObjectKey" details:
-     *       Key: value
-     *       Key: [value1,value2,value3]
-     *
-     * @param function Function providing a command response object from a builder.
-     * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
-     */
-    public abstract CommandDetailsResponse details(
-            Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function
-    );
-
     @Override
     public String getUsername() {
         return getUser().getUsername();

@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.command.response;
 
+import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
@@ -16,7 +17,7 @@ public abstract class CommandListResponse<T> extends CommandResponse {
     private final ListAccessor<T> accessor;
     private final ListElementFormatter<T> responder;
 
-    public CommandListResponse(CommandSender sender,
+    public CommandListResponse(ChatSender sender,
                                int actualTotal,
                                int page,
                                int elementsPerPage,
@@ -53,7 +54,7 @@ public abstract class CommandListResponse<T> extends CommandResponse {
     }
 
     public interface ListElementFormatter<T> {
-        String line(CommandSender sender, T o);
+        String line(ChatSender sender, T o);
     }
 
     public interface ListAccessor<T> {

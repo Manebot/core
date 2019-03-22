@@ -1,12 +1,13 @@
 package com.github.manevolent.jbot.command.response;
 
+import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 
 import java.util.Collection;
 
 public class DefaultBasicCommandDetailsResponse extends CommandDetailsResponse {
-    public DefaultBasicCommandDetailsResponse(CommandSender sender,
+    public DefaultBasicCommandDetailsResponse(ChatSender sender,
                                               String objectName, String objectKey,
                                               Collection<Item> items) {
         super(sender, objectName, objectKey, items);

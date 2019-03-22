@@ -1,5 +1,11 @@
 package com.github.manevolent.jbot.chat;
 
+import com.github.manevolent.jbot.command.response.CommandDetailsResponse;
+import com.github.manevolent.jbot.command.response.CommandListResponse;
+
+import java.util.TimeZone;
+import java.util.function.Function;
+
 public interface ChatSender {
 
     /**
@@ -65,5 +71,40 @@ public interface ChatSender {
      * @return number of lines sent.
      */
     int flush();
+
+    /**
+     * Gets the timezone of the sender.
+     * @return Timezone.
+     */
+    default TimeZone getTimeZone() {
+        return TimeZone.getDefault();
+    }
+
+
+    /**
+     * Creates a list response to send to the command sender, opportunistically formatting as rich content.
+     * @param function Function providing a command response object from a builder.
+     * @param <T> List item type.
+     * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
+     */
+    <T> CommandListResponse<T> list(
+            Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
+    );
+
+    /**
+     * Creates a details response to send to the command sender, opportunistically formatting as rich content.
+     *
+     * Details are formatted as such:
+     *
+     *      ObjectName "ObjectKey" details:
+     *       Key: value
+     *       Key: [value1,value2,value3]
+     *
+     * @param function Function providing a command response object from a builder.
+     * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
+     */
+    CommandDetailsResponse details(
+            Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function
+    );
 
 }

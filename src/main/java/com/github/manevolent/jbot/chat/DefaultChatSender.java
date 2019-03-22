@@ -1,8 +1,12 @@
 package com.github.manevolent.jbot.chat;
 
+import com.github.manevolent.jbot.command.DefaultCommandSender;
+import com.github.manevolent.jbot.command.response.*;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 public class DefaultChatSender implements ChatSender {
     private final List<String> lines = new LinkedList<>();
@@ -38,6 +42,77 @@ public class DefaultChatSender implements ChatSender {
     }
 
 
+    @Override
+    public <T> CommandListResponse<T> list(
+            Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
+    ) {
+        CommandListResponse.Builder<T> builder;
+
+        if (getChat().canSendRichMessages()) {
+            builder = new CommandListResponse.Builder<T>() {
+                @Override
+                public CommandListResponse<T> build() {
+                    return new DefaultRichCommandListResponse<>(
+                            DefaultChatSender.this,
+                            getTotalElements(),
+                            getPage(),
+                            getElementsPerPage(),
+                            createListAccessor(),
+                            getResponder()
+                    );
+                }
+            };
+        } else {
+            builder = new CommandListResponse.Builder<T>() {
+                @Override
+                public CommandListResponse<T> build() {
+                    return new DefaultBasicCommandListResponse<>(
+                            DefaultChatSender.this,
+                            getTotalElements(),
+                            getPage(),
+                            getElementsPerPage(),
+                            createListAccessor(),
+                            getResponder()
+                    );
+                }
+            };
+        }
+
+        return function.apply(builder);
+    }
+
+    @Override
+    public CommandDetailsResponse details(Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function) {
+        CommandDetailsResponse.Builder builder;
+
+        if (getChat().canSendRichMessages()) {
+            builder = new CommandDetailsResponse.Builder() {
+                @Override
+                public CommandDetailsResponse build() {
+                    return new DefaultRichCommandDetailsResponse(
+                            DefaultChatSender.this,
+                            getName(),
+                            getKey(),
+                            getItems()
+                    );
+                }
+            };
+        } else {
+            builder = new CommandDetailsResponse.Builder() {
+                @Override
+                public CommandDetailsResponse build() {
+                    return new DefaultBasicCommandDetailsResponse(
+                            DefaultChatSender.this,
+                            getName(),
+                            getKey(),
+                            getItems()
+                    );
+                }
+            };
+        }
+
+        return function.apply(builder);
+    }
 
     /**
      * Opens the command buffer.
