@@ -124,7 +124,7 @@ public class Version implements Comparable<Version> {
 
     public static Version fromString(String versionString) {
         if (!versionString.contains(".")) // VCS commit #?
-            return new Version(0, 0, 0, versionString);
+            return new Version(-1, -1, -1, versionString);
 
         String[] parts = versionString.split("\\-", 2);
         String artifactId = parts.length == 2 ? parts[1] : null;

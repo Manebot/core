@@ -1,9 +1,17 @@
 package com.github.manevolent.jbot.command.executor.chained.argument;
 
+import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.github.manevolent.jbot.command.executor.chained.ChainPriority.LOW;
 
 public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
     private final String[] labels;
@@ -17,6 +25,10 @@ public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
         if (labels == null || labels.size() <= 0) throw new IllegalArgumentException("invalid labels");
         this.labels = new String[labels.size()];
         labels.toArray(this.labels);
+    }
+
+    public ChainedCommandArgumentSwitch(Argument argument) {
+        this(Arrays.asList(argument.labels()));
     }
 
     @Override
@@ -51,5 +63,12 @@ public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
         }
 
         return true;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentSwitch.class)
+    public @interface Argument {
+        String[] labels();
     }
 }
