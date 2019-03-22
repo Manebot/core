@@ -2,11 +2,17 @@ package com.github.manevolent.jbot.chat;
 
 import com.github.manevolent.jbot.command.response.CommandDetailsResponse;
 import com.github.manevolent.jbot.command.response.CommandListResponse;
+import com.github.manevolent.jbot.platform.PlatformUser;
 
-import java.util.TimeZone;
 import java.util.function.Function;
 
 public interface ChatSender {
+
+    /**
+     * Gets the platform user that is associated with this chat sender.
+     * @return PlatformUser instance.
+     */
+    PlatformUser getPlatformUser();
 
     /**
      * Gets the username of the command sender.
@@ -71,14 +77,6 @@ public interface ChatSender {
      * @return number of lines sent.
      */
     int flush();
-
-    /**
-     * Gets the timezone of the sender.
-     * @return Timezone.
-     */
-    default TimeZone getTimeZone() {
-        return TimeZone.getDefault();
-    }
 
 
     /**
