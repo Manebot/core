@@ -34,6 +34,7 @@ public class DefaultChatSender implements ChatSender {
 
     @Override
     public <T> CommandListResponse<T> list(
+            Class<T> type,
             Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
     ) {
         CommandListResponse.Builder<T> builder;

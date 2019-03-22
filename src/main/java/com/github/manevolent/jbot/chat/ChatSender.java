@@ -88,6 +88,7 @@ public interface ChatSender {
      * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
      */
     <T> CommandListResponse<T> list(
+            Class<T> type,
             Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
     );
 
