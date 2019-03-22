@@ -3,6 +3,7 @@ package com.github.manevolent.jbot.conversation;
 import com.github.manevolent.jbot.chat.Chat;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public interface ConversationProvider {
 
@@ -21,9 +22,17 @@ public interface ConversationProvider {
     Conversation getConversationByChat(Chat chat);
 
     /**
+     * Gets all known conversation Ids.
+     * @return immutable collection of Conversation Ids.
+     */
+    Collection<String> getConversationIds();
+
+    /**
      * Gets all known conversations.
      * @return immutable collection of Conversation instances.
      */
-    Collection<Conversation> getConversations();
+    default Collection<Conversation> getConversations() {
+        return getConversationIds().stream().map(this::getConversationById).collect(Collectors.toList());
+    }
 
 }
