@@ -118,19 +118,12 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
             }
 
             // Find a chain to use
-            prioritizedChainList.sort(
-                    (prioritizedChain, t1) ->
-                            prioritizedChain.getPriority().getOrdinal() > t1.getPriority().getOrdinal() ? 1 : -1
-            );
-
             chainMap.clear();
-
             ChainPriority bestPriority = prioritizedChainList
                     .stream()
                     .map(PrioritizedChain::getPriority)
                     .max(Comparator.naturalOrder())
                     .orElse(ChainPriority.NONE);
-
             for (PrioritizedChain chain : prioritizedChainList) {
                 if (chain.getPriority().compareTo(bestPriority) >= 0) {
                     if (chain.getChain().getChildren().size() <= 0) {
