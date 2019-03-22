@@ -3,6 +3,8 @@ package com.github.manevolent.jbot.command;
 import com.github.manevolent.jbot.command.executor.AliasedCommandExecutor;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 
+import java.util.Collection;
+
 public abstract class CommandManager {
 
     /**
@@ -30,6 +32,12 @@ public abstract class CommandManager {
      * @return CommandExecutor instance if one is found, null otherwise.
      */
     public abstract CommandExecutor getExecutor(String label);
+
+    /**
+     * Gets a collection of command registrations, essentially a tuple of executors to labels.
+     * @return immutable collection of command registrations.
+     */
+    public abstract Collection<Registration> getRegistrations();
 
     /**
      * Command Registrations are a fluent way of aliasing commands.
