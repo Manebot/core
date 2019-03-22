@@ -25,6 +25,13 @@ public interface UserGroup extends EntityType {
     Collection<User> getUsers();
 
     /**
+     * Sets the owner of this group.
+     * @param user user to set as the new owner of this group.
+     * @throws SecurityException if there is a security violation adding the user.
+     */
+    void setOwner(User user) throws SecurityException;
+
+    /**
      * Finds if the specified user is a member of this group.
      * @param user User to check in the group.
      * @return true if the user is a member of the group, false otherwise.
