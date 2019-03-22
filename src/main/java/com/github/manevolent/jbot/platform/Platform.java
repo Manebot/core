@@ -56,6 +56,18 @@ public interface Platform {
                 .filter(assoc -> assoc.getPlatformId().equals(id)).findFirst().orElse(null);
     }
 
+
+    /**
+     * Gets a specific assocation for this platform.
+     *
+     * @param user Platform-specific user to search for.
+     * @return user association if found on this platform, null otherwise.
+     */
+    default UserAssociation getUserAssocation(PlatformUser user) {
+        return getUserAssocation(user.getId());
+    }
+
+
     /**
      * Gets a set of user associations for the specified user.
      *

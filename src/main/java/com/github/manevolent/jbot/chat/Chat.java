@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.chat;
 
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformConnection;
+import com.github.manevolent.jbot.platform.PlatformUser;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
 
@@ -84,6 +85,14 @@ public interface Chat {
     void removeMember(String platformId);
 
     /**
+     * Removes, or kicks, a platform-specific user from this conversation.
+     * @param user Platform-specific Id to remove.
+     */
+    default void removeMember(PlatformUser user) {
+        removeMember(user.getId());
+    }
+
+    /**
      * Adds a user to this conversation.
      * @param user User to add.
      */
@@ -99,6 +108,10 @@ public interface Chat {
      */
     void addMember(String platformId);
 
+    default void addMember(PlatformUser user) {
+        addMember(user.getId());
+    }
+
     /**
      * Gets the last <i>n</i> messages in this chat.
      * @param max Maximum messages to return.
@@ -108,11 +121,20 @@ public interface Chat {
 
     /**
      * Finds if a given user is a member of this conversation.
-     * @param user User instance to search for in this conversation.
+     * @param user user instance to search for in this conversation.
      * @return true if the user is a member of this conversation, false otherwise.
      */
-    default boolean isMember(User user) {
-        return getMembers().contains(user);
+    default boolean isParticipant(User user) {
+        return getUsers().contains(user);
+    }
+
+    /**
+     * Finds if a given platform user is a member of this conversation.
+     * @param user platform user instance to search for in this conversation.
+     * @return true if the platform user is a member of this conversation, false otherwise.
+     */
+    default boolean isParticipant(PlatformUser user) {
+        return getPlatformUsers().contains(user);
     }
 
     /**
@@ -120,20 +142,26 @@ public interface Chat {
      *
      * @return immutable collection of users in this conversation.
      */
-    default Collection<User> getMembers() {
+    default Collection<User> getUsers() {
         return Collections.unmodifiableCollection(
-                getMemberAssociations().stream().map(UserAssociation::getUser).collect(Collectors.toList())
+                getUserAssociations().stream().map(UserAssociation::getUser).collect(Collectors.toList())
         );
     }
+
+    /**
+     * Gets platform-specific user participants.
+     * @return PlatformUser instances.
+     */
+    Collection<PlatformUser> getPlatformUsers();
 
     /**
      * Gets the member user associations for this conversation.
      *
      * @return immutable collection of member user associations in this conversation.
      */
-    default Collection<UserAssociation> getMemberAssociations() {
+    default Collection<UserAssociation> getUserAssociations() {
         return Collections.unmodifiableCollection(
-                getPlatformMemberIds().stream()
+                getPlatformUserIds().stream()
                         .map(platformUserId -> getPlatform().getUserAssocation(platformUserId))
                         .filter(Objects::nonNull)
                         .filter(association -> association.getUser() != null)
@@ -146,7 +174,9 @@ public interface Chat {
      *
      * @return immutable collection of all members, in the form of platform-specific Ids.
      */
-    Collection<String> getPlatformMemberIds();
+    default Collection<String> getPlatformUserIds() {
+        return getPlatformUsers().stream().map(PlatformUser::getId).collect(Collectors.toList());
+    }
 
     /**
      * Finds if the conversation is private. Private conversations are conversations which are typically a direct

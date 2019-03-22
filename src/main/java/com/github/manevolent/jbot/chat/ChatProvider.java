@@ -33,7 +33,7 @@ public interface ChatProvider {
      * @return Private message conversation for the specified user, null if one cannot be found.
      */
     default Chat getPrivateChat(User user) {
-        return getChats().stream().filter(x -> x.isMember(user) && x.isPrivate()).findFirst().orElse(null);
+        return getChats().stream().filter(x -> x.isParticipant(user) && x.isPrivate()).findFirst().orElse(null);
     }
 
 }
