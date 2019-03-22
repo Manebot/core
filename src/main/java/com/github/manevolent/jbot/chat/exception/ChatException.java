@@ -1,7 +1,7 @@
 package com.github.manevolent.jbot.chat.exception;
 
 public class ChatException extends Exception {
-    public ChatException(Exception cause) {
+    public ChatException(Throwable cause) {
         super(cause);
     }
 

@@ -5,7 +5,7 @@ import com.github.manevolent.jbot.chat.exception.ChatException;
 public class CommandExecutionException extends ChatException {
     private final String message;
 
-    public CommandExecutionException(Exception cause) {
+    public CommandExecutionException(Throwable cause) {
         super(cause);
 
         if (cause != null)

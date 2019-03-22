@@ -100,8 +100,10 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
 
                     method.setAccessible(true);
                     method.invoke(this, invocationArgs);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                } catch (IllegalAccessException e) {
                     throw new CommandExecutionException(e);
+                } catch (InvocationTargetException ite) {
+                    throw new CommandExecutionException(ite.getTargetException());
                 }
             });
         }
