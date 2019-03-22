@@ -41,6 +41,32 @@ public interface Plugin {
     Collection<Plugin> getDependencies();
 
     /**
+     * Gets a dependent plugin by its manifest identifier.
+     * @param identifier manifest identifier to search for in this plugin's dependencies.
+     * @return Plugin instance representing the dependent plugin described by the given identifier.
+     */
+    default Plugin getDependentPlugin(ManifestIdentifier identifier) {
+        return getDependencies().stream()
+                .filter(dependentPlugin -> dependentPlugin
+                        .getArtifact().getIdentifier().withoutVersion().equals(identifier))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Depends on a plugin, enabling it if possible.
+     * @param identifier Identifier.
+     * @return Plugin instance of the desired dependency.
+     */
+    default Plugin depend(ManifestIdentifier identifier) throws PluginException {
+        Plugin plugin = getDependentPlugin(identifier);
+        if (plugin == null) throw new PluginException("Plugin not found: " + identifier);
+
+        plugin.setEnabled(true);
+        return plugin;
+    }
+
+    /**
      * Gets a list of platforms registered by this plugin.
      * @return associated Platform instances.
      */
