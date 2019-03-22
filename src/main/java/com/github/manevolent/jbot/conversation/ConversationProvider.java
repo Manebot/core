@@ -2,6 +2,8 @@ package com.github.manevolent.jbot.conversation;
 
 import com.github.manevolent.jbot.chat.Chat;
 
+import java.util.Collection;
+
 public interface ConversationProvider {
 
     /**
@@ -17,5 +19,11 @@ public interface ConversationProvider {
      * @return Conversation instance for the specified chat.
      */
     Conversation getConversationByChat(Chat chat);
+
+    /**
+     * Gets all known conversations.
+     * @return immutable collection of Conversation instances.
+     */
+    Collection<Conversation> getConversations();
 
 }
