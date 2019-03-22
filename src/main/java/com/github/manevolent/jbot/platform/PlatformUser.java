@@ -2,6 +2,7 @@ package com.github.manevolent.jbot.platform;
 
 import com.github.manevolent.jbot.chat.Chat;
 import com.github.manevolent.jbot.chat.ChatSender;
+import com.github.manevolent.jbot.chat.DefaultChatSender;
 import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.user.UserAssociation;
 
@@ -126,7 +127,9 @@ public interface PlatformUser {
      * @param chat Chat to use for responding to messages.
      * @return ChatSender instance.
      */
-    ChatSender createSender(Chat chat);
+    default ChatSender createSender(Chat chat){
+        return new DefaultChatSender(this, chat);
+    }
 
     enum Status {
         ONLINE,
