@@ -125,9 +125,14 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
 
             chainMap.clear();
 
-            ChainPriority bestPriority = null;
+            ChainPriority bestPriority = prioritizedChainList
+                    .stream()
+                    .map(PrioritizedChain::getPriority)
+                    .max(Comparator.naturalOrder())
+                    .orElse(ChainPriority.NONE);
+
             for (PrioritizedChain chain : prioritizedChainList) {
-                if (bestPriority == null || bestPriority == chain.getPriority()) {
+                if (chain.getPriority().compareTo(bestPriority) >= 0) {
                     if (chain.getChain().getChildren().size() <= 0) {
                         // Mark it as completed if it has no state arguments left
                         if (chain.getChainState().size() <= 0) completedChains.add(chain);
@@ -135,8 +140,7 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
                     }
 
                     chainMap.put(chain.getChain(), chain.chainState);
-                    bestPriority = chain.getPriority();
-                } else break;
+                }
             }
         }
 
