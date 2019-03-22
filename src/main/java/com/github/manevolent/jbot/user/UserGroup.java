@@ -25,6 +25,15 @@ public interface UserGroup extends EntityType {
     Collection<User> getUsers();
 
     /**
+     * Finds if the specified user is a member of this group.
+     * @param user User to check in the group.
+     * @return true if the user is a member of the group, false otherwise.
+     */
+    default boolean isMember(User user) {
+        return getUsers().contains(user);
+    }
+
+    /**
      * Adds a user to this group.
      * @param user user to add.
      * @throws SecurityException if there is a security violation adding the user.
