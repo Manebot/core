@@ -9,12 +9,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public class ChainedCommandArgumentFollowing extends ChainedCommandArgument {
-    public ChainedCommandArgumentFollowing() {
+public class CommandArgumentFollowing extends CommandArgument {
+    public CommandArgumentFollowing() {
 
     }
 
-    public ChainedCommandArgumentFollowing(Argument argument) {
+    public CommandArgumentFollowing(Argument argument) {
 
     }
 
@@ -34,17 +34,17 @@ public class ChainedCommandArgumentFollowing extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return false; // nothing can extend a following chain
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
-        return !(b instanceof ChainedCommandArgumentFollowing);
+    public boolean canCoexist(CommandArgument b) {
+        return !(b instanceof CommandArgumentFollowing);
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentFollowing.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentFollowing.class)
     public @interface Argument {}
 }

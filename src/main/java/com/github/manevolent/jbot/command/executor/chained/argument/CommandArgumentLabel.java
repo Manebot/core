@@ -9,15 +9,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public class ChainedCommandArgumentLabel extends ChainedCommandArgument {
+public class CommandArgumentLabel extends CommandArgument {
     private final String label;
 
-    public ChainedCommandArgumentLabel(String label) {
+    public CommandArgumentLabel(String label) {
         if (label == null || label.length() <= 0) throw new IllegalArgumentException("invalid label");
         this.label = label;
     }
 
-    public ChainedCommandArgumentLabel(Argument argument) {
+    public CommandArgumentLabel(Argument argument) {
         this.label = argument.label();
     }
 
@@ -38,18 +38,18 @@ public class ChainedCommandArgumentLabel extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true; // anything can extend this
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
+    public boolean canCoexist(CommandArgument b) {
         return true;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentLabel.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentLabel.class)
     public @interface Argument {
         String label();
     }

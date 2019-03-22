@@ -3,8 +3,8 @@ package com.github.manevolent.jbot.command.executor.chained.argument;
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
 
-public class ChainedCommandArgumentNone extends ChainedCommandArgument {
-    public ChainedCommandArgumentNone() {
+public class CommandArgumentNone extends CommandArgument {
+    public CommandArgumentNone() {
 
     }
 
@@ -20,12 +20,12 @@ public class ChainedCommandArgumentNone extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return false;
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
-        return !(b instanceof ChainedCommandArgumentNone);
+    public boolean canCoexist(CommandArgument b) {
+        return !(b instanceof CommandArgumentNone);
     }
 }

@@ -11,23 +11,21 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.manevolent.jbot.command.executor.chained.ChainPriority.LOW;
-
-public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
+public class CommandArgumentSwitch extends CommandArgument {
     private final String[] labels;
 
-    public ChainedCommandArgumentSwitch(String... labels) {
+    public CommandArgumentSwitch(String... labels) {
         if (labels == null || labels.length <= 0) throw new IllegalArgumentException("invalid labels");
         this.labels = labels;
     }
 
-    public ChainedCommandArgumentSwitch(List<String> labels) {
+    public CommandArgumentSwitch(List<String> labels) {
         if (labels == null || labels.size() <= 0) throw new IllegalArgumentException("invalid labels");
         this.labels = new String[labels.size()];
         labels.toArray(this.labels);
     }
 
-    public ChainedCommandArgumentSwitch(Argument argument) {
+    public CommandArgumentSwitch(Argument argument) {
         this(Arrays.asList(argument.labels()));
     }
 
@@ -50,14 +48,14 @@ public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true; // anything can extend this
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
-        if (b instanceof ChainedCommandArgumentFollowing) return false;
-        else if (b instanceof ChainedCommandArgumentSwitch) {
+    public boolean canCoexist(CommandArgument b) {
+        if (b instanceof CommandArgumentFollowing) return false;
+        else if (b instanceof CommandArgumentSwitch) {
             //if (Collections.disjoint(Arrays.asList(labels), Arrays.asList(((ChainedCommandArgumentSwitch) b).labels)))
             //    return false;
         }
@@ -67,7 +65,7 @@ public class ChainedCommandArgumentSwitch extends ChainedCommandArgument {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentSwitch.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentSwitch.class)
     public @interface Argument {
         String[] labels();
     }

@@ -1,23 +1,23 @@
 package com.github.manevolent.jbot.command.executor.chained;
 
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgument;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgument;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class CommandChain {
-    private final ChainedCommandArgument argument;
+    private final CommandArgument argument;
     private final List<CommandChain> children = new LinkedList<>();
 
     private String description = null;
     private CommandChain parent = null;
     private ChainExecutor executor;
 
-    public CommandChain(ChainedCommandArgument argument) {
+    public CommandChain(CommandArgument argument) {
         this.argument = argument;
     }
 
-    public ChainedCommandArgument getArgument() {
+    public CommandArgument getArgument() {
         return argument;
     }
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
+public class CommandArgumentInterval extends CommandArgument {
     private final IntervalTime[] intervals = new IntervalTime[]
             {
                     new IntervalTime(1, new String[] {"s", "sec", "second"}),
@@ -19,11 +19,11 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
                     new IntervalTime(604800, new String[] {"w", "wk", "week"})
             };
 
-    public ChainedCommandArgumentInterval() {
+    public CommandArgumentInterval() {
 
     }
 
-    public ChainedCommandArgumentInterval(Argument argument) {
+    public CommandArgumentInterval(Argument argument) {
 
     }
 
@@ -63,13 +63,13 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true; // anything can extend this
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
-        return !(b instanceof ChainedCommandArgumentInterval);
+    public boolean canCoexist(CommandArgument b) {
+        return !(b instanceof CommandArgumentInterval);
     }
 
     private static class IntervalTime {
@@ -84,6 +84,6 @@ public class ChainedCommandArgumentInterval extends ChainedCommandArgument {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentInterval.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentInterval.class)
     public @interface Argument {}
 }

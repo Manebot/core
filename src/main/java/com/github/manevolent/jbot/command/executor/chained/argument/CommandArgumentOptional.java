@@ -4,16 +4,16 @@ import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
 
-public class ChainedCommandArgumentOptional extends ChainedCommandArgument {
+public class CommandArgumentOptional extends CommandArgument {
     private final Optional<?> defaultObj;
-    private final ChainedCommandArgument argument;
+    private final CommandArgument argument;
 
-    public ChainedCommandArgumentOptional(ChainedCommandArgument argument, Optional<?> defaultObj) {
+    public CommandArgumentOptional(CommandArgument argument, Optional<?> defaultObj) {
         this.argument = argument;
         this.defaultObj = defaultObj;
     }
 
-    public ChainedCommandArgumentOptional(ChainedCommandArgument argument, Object defaultObj) {
+    public CommandArgumentOptional(CommandArgument argument, Object defaultObj) {
         this(argument, (state) -> defaultObj);
     }
 
@@ -42,12 +42,12 @@ public class ChainedCommandArgumentOptional extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true;
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
+    public boolean canCoexist(CommandArgument b) {
         return true;
     }
 

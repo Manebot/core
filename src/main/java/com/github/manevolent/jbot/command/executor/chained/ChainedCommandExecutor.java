@@ -4,7 +4,7 @@ import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgument;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgument;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 public abstract class ChainedCommandExecutor implements CommandExecutor {
     private final CommandChain root = new CommandChain(null);
 
-    protected CommandChain withArguments(ChainedCommandArgument... arguments) {
+    protected CommandChain withArguments(CommandArgument... arguments) {
         return withArguments(Arrays.asList(arguments));
     }
 
-    protected CommandChain withArguments(Collection<ChainedCommandArgument> arguments) {
+    protected CommandChain withArguments(Collection<CommandArgument> arguments) {
         if (arguments.size() <= 0) throw new IllegalArgumentException("argument length cannot be <= 0");
 
         CommandChain chain = this.root;
-        for (ChainedCommandArgument argument : arguments) chain.addChild(chain = new CommandChain(argument));
+        for (CommandArgument argument : arguments) chain.addChild(chain = new CommandChain(argument));
 
         return chain;
     }

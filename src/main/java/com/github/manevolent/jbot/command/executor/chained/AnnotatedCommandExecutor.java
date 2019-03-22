@@ -2,10 +2,9 @@ package com.github.manevolent.jbot.command.executor.chained;
 
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgument;
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentNone;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgument;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentNone;
 import com.github.manevolent.jbot.security.Permission;
-import com.github.manevolent.jbot.virtual.Virtual;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
@@ -31,7 +30,7 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
             if (commandDefinition == null) continue;
 
             // Argument parsing
-            Collection<ChainedCommandArgument> arguments = new LinkedList<>();
+            Collection<CommandArgument> arguments = new LinkedList<>();
             Parameter[] parameters = method.getParameters();
             Parameter commandSenderParameter = null;
 
@@ -71,18 +70,18 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
                             "argument parameter annotation not found extending " + Argument.class.getName()
                     );
 
-                Class<? extends ChainedCommandArgument> argumentClass = argument.type();
+                Class<? extends CommandArgument> argumentClass = argument.type();
 
-                Constructor<? extends ChainedCommandArgument> argumentConstructor = argumentClass.getConstructor(
+                Constructor<? extends CommandArgument> argumentConstructor = argumentClass.getConstructor(
                         argumentAnnotation.annotationType()
                 );
 
-                ChainedCommandArgument instance = argumentConstructor.newInstance(argumentAnnotation);
+                CommandArgument instance = argumentConstructor.newInstance(argumentAnnotation);
 
                 arguments.add(instance);
             }
 
-            if (arguments.size() <= 0) arguments.add(new ChainedCommandArgumentNone());
+            if (arguments.size() <= 0) arguments.add(new CommandArgumentNone());
 
             CommandChain chain = withArguments(arguments);
 
@@ -119,6 +118,6 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.ANNOTATION_TYPE)
     public @interface Argument {
-        Class<? extends ChainedCommandArgument> type();
+        Class<? extends CommandArgument> type();
     }
 }

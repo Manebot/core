@@ -9,27 +9,41 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public class ChainedCommandArgumentNumeric extends ChainedCommandArgument {
-    public ChainedCommandArgumentNumeric() {
+public class CommandArgumentPage extends CommandArgument {
+    public CommandArgumentPage() {
 
     }
 
-    public ChainedCommandArgumentNumeric(Argument argument) {
+    public CommandArgumentPage(Argument argument) {
 
     }
 
     @Override
     public String getHelpString() {
-        return "[#]";
+        return "[Page:#]";
     }
+
 
     @Override
     public ChainPriority cast(ChainState state) {
         String next = state.next();
-        if (next == null) return ChainPriority.NONE;
+        if (next == null) {
+            state.extend(1, (Integer)1);
+            return ChainPriority.HIGH;
+        }
+
+        String s = state.next();
 
         try {
-            state.extend(1, Double.parseDouble(state.next()));
+            if (!s.startsWith("page:")) return ChainPriority.NONE;
+            state.extend(1, Integer.parseInt(s.replace("page:", "")));
+            return ChainPriority.HIGH;
+        } catch (NumberFormatException ex) {
+        }
+
+        try {
+            if (!s.startsWith("p:")) return ChainPriority.NONE;
+            state.extend(1, Integer.parseInt(s.replace("p:", "")));
             return ChainPriority.HIGH;
         } catch (NumberFormatException ex) {
         }
@@ -38,17 +52,17 @@ public class ChainedCommandArgumentNumeric extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true; // anything can extend this
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
+    public boolean canCoexist(CommandArgument b) {
         return true;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentNumeric.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentPage.class)
     public @interface Argument {}
 }

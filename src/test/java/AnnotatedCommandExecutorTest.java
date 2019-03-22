@@ -1,8 +1,8 @@
 import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentLabel;
-import com.github.manevolent.jbot.command.executor.chained.argument.ChainedCommandArgumentString;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentLabel;
+import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentString;
 import junit.framework.TestCase;
 
 
@@ -15,8 +15,8 @@ public class AnnotatedCommandExecutorTest extends TestCase {
         CommandExecutor executor = new AnnotatedCommandExecutor() {
             @Command(description = "test description")
             public void test(CommandSender sender,
-                             @ChainedCommandArgumentLabel.Argument(label = "test") String test,
-                             @ChainedCommandArgumentString.Argument(label = "anything") String anything) {
+                             @CommandArgumentLabel.Argument(label = "test") String test,
+                             @CommandArgumentString.Argument(label = "anything") String anything) {
                 System.err.println(test + ", " + anything);
             }
 

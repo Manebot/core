@@ -11,20 +11,20 @@ import java.lang.annotation.Target;
 
 import static com.github.manevolent.jbot.command.executor.chained.ChainPriority.LOW;
 
-public class ChainedCommandArgumentString extends ChainedCommandArgument {
+public class CommandArgumentString extends CommandArgument {
     private final String label;
     private final ChainPriority priority;
 
-    public ChainedCommandArgumentString(String label) {
+    public CommandArgumentString(String label) {
         this(label, LOW);
     }
 
-    public ChainedCommandArgumentString(String label, ChainPriority priority) {
+    public CommandArgumentString(String label, ChainPriority priority) {
         this.label = label;
         this.priority = priority;
     }
 
-    public ChainedCommandArgumentString(Argument argument) {
+    public CommandArgumentString(Argument argument) {
         this.label = argument.label();
         this.priority = argument.priority();
     }
@@ -44,18 +44,18 @@ public class ChainedCommandArgumentString extends ChainedCommandArgument {
     }
 
     @Override
-    public boolean canExtend(ChainedCommandArgument b) {
+    public boolean canExtend(CommandArgument b) {
         return true; // anything can extend this
     }
 
     @Override
-    public boolean canCoexist(ChainedCommandArgument b) {
+    public boolean canCoexist(CommandArgument b) {
         return true;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    @AnnotatedCommandExecutor.Argument(type = ChainedCommandArgumentString.class)
+    @AnnotatedCommandExecutor.Argument(type = CommandArgumentString.class)
     public @interface Argument {
         String label();
         ChainPriority priority() default LOW;
