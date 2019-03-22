@@ -24,4 +24,16 @@ public interface Conversation extends EntityType {
      */
     Chat getChat();
 
+    /**
+     * Finds if this conversation is connected to a chat object.
+     *
+     * If this is true, getChat() should not be null.
+     *
+     * @return true if getChat() is not null, and is reporting connectivity such that getChat().isConnected() == true.
+     */
+    default boolean isConnected() {
+        Chat chat = getChat();
+        return chat != null && chat.isConnected();
+    }
+
 }
