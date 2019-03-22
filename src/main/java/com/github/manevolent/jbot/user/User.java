@@ -87,7 +87,17 @@ public interface User extends EntityType {
      * Finds the groups this user is a member of.
      * @return group collection.
      */
-    Collection<UserGroup> getGroups();
+    default Collection<UserGroup> getGroups() {
+        return getMembership().stream().map(UserGroupMembership::getGroup).collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a collection of individual memberships, which is more definite than getUsers(), providing more specific
+     * information about membership.
+     *
+     * @return immutable collection of user group membership records.
+     */
+    Collection<UserGroupMembership> getMembership();
 
     /**
      * Get a list of connections that associate this user with platforms.
