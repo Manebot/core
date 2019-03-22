@@ -5,6 +5,7 @@ import com.github.manevolent.jbot.command.DefaultCommandSender;
 import com.github.manevolent.jbot.conversation.Conversation;
 import com.github.manevolent.jbot.entity.EntityType;
 import com.github.manevolent.jbot.platform.Platform;
+import com.github.manevolent.jbot.platform.PlatformUser;
 
 import java.util.Collection;
 import java.util.Date;
@@ -162,11 +163,13 @@ public interface User extends EntityType {
      * Creates a command sender for the specified user.
      *
      * @param conversation Conversation to create a command sender for.
+     * @param platformUser platform specific user instance to associate the new command sender with.
      * @return CommandSender instance.
      * @throws SecurityException
      */
-    default CommandSender createSender(Conversation conversation) throws SecurityException {
-        return new DefaultCommandSender(conversation, this);
+    default CommandSender createSender(Conversation conversation, PlatformUser platformUser)
+            throws SecurityException {
+        return new DefaultCommandSender(conversation, platformUser, this);
     }
 
     /**

@@ -7,6 +7,7 @@ import com.github.manevolent.jbot.chat.DefaultChatSender;
 import com.github.manevolent.jbot.command.response.CommandDetailsResponse;
 import com.github.manevolent.jbot.command.response.CommandListResponse;
 import com.github.manevolent.jbot.conversation.Conversation;
+import com.github.manevolent.jbot.platform.PlatformUser;
 import com.github.manevolent.jbot.user.User;
 
 import java.util.Iterator;
@@ -15,12 +16,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public abstract class CommandSender extends DefaultChatSender {
-    public CommandSender(String username, String displayName, Chat chat) {
-        super(username, displayName, chat);
-    }
-
-    public CommandSender(String username, Chat chat) {
-        super(username, chat);
+    public CommandSender(PlatformUser user, Chat chat) {
+        super(user, chat);
     }
 
     /**

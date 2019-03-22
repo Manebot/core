@@ -17,13 +17,15 @@ public interface ChatSender {
     /**
      * Gets the username of the command sender.
      */
-    String getUsername();
+    default String getUsername() {
+        return getPlatformUser().getId();
+    }
 
     /**
      * Gets the display name of the command sender.
      */
     default String getDisplayName() {
-        return getUsername();
+        return getPlatformUser().getNickname();
     }
 
     /**

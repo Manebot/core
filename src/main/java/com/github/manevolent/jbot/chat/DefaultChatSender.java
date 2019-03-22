@@ -1,7 +1,7 @@
 package com.github.manevolent.jbot.chat;
 
-import com.github.manevolent.jbot.command.DefaultCommandSender;
 import com.github.manevolent.jbot.command.response.*;
+import com.github.manevolent.jbot.platform.PlatformUser;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,27 +13,17 @@ public class DefaultChatSender implements ChatSender {
     private final Object bufferLock = new Object();
     private volatile boolean buffered = false;
 
-    private final String username, displayName;
+    private final PlatformUser user;
     private final Chat chat;
 
-    public DefaultChatSender(String username, String displayName, Chat chat) {
-        this.username = username;
-        this.displayName = displayName;
+    public DefaultChatSender(PlatformUser user, Chat chat) {
+        this.user = user;
         this.chat = chat;
     }
 
-    public DefaultChatSender(String username, Chat chat) {
-        this(username, username, chat);
-    }
-
     @Override
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
+    public PlatformUser getPlatformUser() {
+        return user;
     }
 
     @Override
