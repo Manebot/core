@@ -30,7 +30,7 @@ public interface SearchResult<T> {
      *
      * @return maximum page size.
      */
-    long getPageSize();
+    int getPageSize();
 
     /**
      * Gets the page number that the associated result set expresses.

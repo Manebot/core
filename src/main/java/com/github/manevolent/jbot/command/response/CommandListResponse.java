@@ -10,16 +10,16 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 public abstract class CommandListResponse<T> extends CommandResponse {
-    private final int page;
-    private final int totalElements;
+    private final long page;
+    private final long totalElements;
     private final int elementsPerPage;
 
     private final ListAccessor<T> accessor;
     private final ListElementFormatter<T> responder;
 
     public CommandListResponse(ChatSender sender,
-                               int actualTotal,
-                               int page,
+                               long actualTotal,
+                               long page,
                                int elementsPerPage,
                                ListAccessor<T> accessor,
                                ListElementFormatter<T> responder) {
@@ -33,11 +33,11 @@ public abstract class CommandListResponse<T> extends CommandResponse {
         this.responder = responder;
     }
 
-    public int getPage() {
+    public long getPage() {
         return page;
     }
 
-    public int getTotalElements() {
+    public long getTotalElements() {
         return totalElements;
     }
 
@@ -66,25 +66,25 @@ public abstract class CommandListResponse<T> extends CommandResponse {
 
     public interface ListAccessor<T> {
         T get(int resultOffset);
-        int size();
+        long size();
     }
 
     private static final class DirectListAccessor<T> implements ListAccessor<T> {
-        private final int offset;
+        private final long offset;
         private final List<T> baseList;
 
-        private DirectListAccessor(List<T> baseList, int offset) {
+        private DirectListAccessor(List<T> baseList, long offset) {
             this.baseList = baseList;
             this.offset = offset;
         }
 
         @Override
         public T get(int resultOffset) {
-            return baseList.get(offset + resultOffset);
+            return baseList.get((int) (offset + resultOffset));
         }
 
         @Override
-        public int size() {
+        public long size() {
             return baseList.size() - offset;
         }
     }
@@ -102,14 +102,14 @@ public abstract class CommandListResponse<T> extends CommandResponse {
         }
 
         @Override
-        public int size() {
+        public long size() {
             return baseList.size();
         }
     }
 
     public static abstract class Builder<T> {
-        private int page = 1;
-        private int totalElements;
+        private long page = 1;
+        private long totalElements;
         private int elementsPerPage = 6;
 
         private ListElementFormatter<T> responder = (sender, o) -> o.toString();
@@ -118,20 +118,20 @@ public abstract class CommandListResponse<T> extends CommandResponse {
 
         public Builder() { }
 
-        public int getPage() {
+        public long getPage() {
             return page;
         }
 
-        public Builder<T> page(int page) {
+        public Builder<T> page(long page) {
             this.page = page;
             return this;
         }
 
-        public int getTotalElements() {
+        public long getTotalElements() {
             return totalElements;
         }
 
-        public Builder<T> totalElements(int totalElements) {
+        public Builder<T> totalElements(long totalElements) {
             this.totalElements = totalElements;
             return this;
         }
@@ -146,7 +146,7 @@ public abstract class CommandListResponse<T> extends CommandResponse {
         }
 
         public Builder<T> direct(List<T> list) {
-            this.accessorSupplier = () -> new DirectListAccessor<>(list, (page-1) * elementsPerPage);
+            this.accessorSupplier = () -> new DirectListAccessor<>(list, (page-1L) * elementsPerPage);
             this.totalElements = list.size();
             return this;
         }
