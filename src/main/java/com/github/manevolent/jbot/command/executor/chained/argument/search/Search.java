@@ -214,16 +214,16 @@ public class Search {
                 } else {
                     escape = true;
                 }
-            } else
+            } else {
                 builder.append(c);
+                escape = false;
+            }
 
             return true; // need more
         }
     }
 
     private static class CommandParser extends AbstractParser {
-        static final char ASSOCIATED_CHARACTER = '"';
-
         private final StringBuilder builder = new StringBuilder();
 
         protected CommandParser(SearchOperator operator, LexicalClause clause) {
@@ -280,8 +280,7 @@ public class Search {
             this.requireClosingToken = requireClosingToken;
         }
 
-        @Override
-        public void complete() {
+        private void completeIntl() {
             // Attempt to end the current parser.
             if (parser != null) parser.complete();
 
@@ -290,8 +289,16 @@ public class Search {
         }
 
         @Override
+        public void complete() {
+            if (requireClosingToken) throw new IllegalArgumentException("Unexpected end of clause");
+
+            completeIntl();
+        }
+
+        @Override
         public boolean interpret(char c) throws IllegalArgumentException {
-            if (parser == null) {
+            boolean parseExternally = parser == null || (parser instanceof CommandParser && c == closingCharacter);
+            if (parseExternally) {
                 // Skip whitespaces
                 if (Character.isWhitespace(c)) return true; // continue parsing
 
@@ -320,7 +327,7 @@ public class Search {
                         break;
                     case closingCharacter: // Close current clause parser
                         if (!requireClosingToken) throw new IllegalArgumentException("Unexpected end of clause");
-                        complete();
+                        completeIntl();
                         return false;
                     default:
                         parser = new CommandParser(nextOperator, getClause());
