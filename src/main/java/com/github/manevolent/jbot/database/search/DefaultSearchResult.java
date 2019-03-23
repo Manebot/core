@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.search;
+package com.github.manevolent.jbot.database.search;
 
 import java.util.List;
 

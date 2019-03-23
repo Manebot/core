@@ -4,6 +4,7 @@ import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecu
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;
 import com.github.manevolent.jbot.command.executor.chained.ChainState;
 import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgument;
+import com.github.manevolent.jbot.database.search.Search;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

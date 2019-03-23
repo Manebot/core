@@ -1,6 +1,4 @@
-package com.github.manevolent.jbot.command.search;
-
-import com.github.manevolent.jbot.command.exception.CommandArgumentException;
+package com.github.manevolent.jbot.database.search;
 
 /**
  * Search predicates are lexically-parsed tokens that describe individual actions taken to build a JPA query clause.
@@ -17,5 +15,5 @@ public abstract class SearchPredicate {
         return argument;
     }
 
-    public abstract void handle(SearchHandler.Clause clause) throws CommandArgumentException;
+    public abstract void handle(SearchHandler.Clause clause) throws IllegalArgumentException;
 }

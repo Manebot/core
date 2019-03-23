@@ -1,6 +1,4 @@
-package com.github.manevolent.jbot.command.search;
-
-import com.github.manevolent.jbot.command.exception.CommandArgumentException;
+package com.github.manevolent.jbot.database.search;
 
 /**
  * Describes a lexically-parsed search argument, which is used to build a JPA query clause around a string text
@@ -12,9 +10,9 @@ public class SearchPredicateString extends SearchPredicate {
     }
 
     @Override
-    public void handle(SearchHandler.Clause clause) throws CommandArgumentException {
+    public void handle(SearchHandler.Clause clause) throws IllegalArgumentException {
         SearchArgumentHandler handler = clause.getSearchHandler().getStringHandler();
-        if (handler == null) throw new CommandArgumentException("This search does not handle string arguments.");
+        if (handler == null) throw new IllegalArgumentException("This search does not handle string arguments.");
 
         clause.addExpression(
                 getArgument().getOperator(),

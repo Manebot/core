@@ -1,6 +1,5 @@
-package com.github.manevolent.jbot.command.search;
+package com.github.manevolent.jbot.database.search;
 
-import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 import com.github.manevolent.jbot.database.Database;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -71,9 +70,9 @@ public interface SearchHandler<T> {
      * @param maxResults Maximum page result count
      * @return Immutable list of entities found by the search.
      * @throws SQLException if there was a SQL exception executing a completed or incomplete search.
-     * @throws CommandArgumentException if the arguments provided by the <i>search</i> argument were invalid.
+     * @throws IllegalArgumentException if the arguments provided by the <i>search</i> argument were invalid.
      */
-    SearchResult<T> search(Search search, int maxResults) throws SQLException, CommandArgumentException;
+    SearchResult<T> search(Search search, int maxResults) throws SQLException, IllegalArgumentException;
 
     /**
      * Builds SearchHandlers.
@@ -156,9 +155,9 @@ public interface SearchHandler<T> {
         /**
          * Pops a clause off of the stack.
          * @return clause instance.
-         * @throws CommandArgumentException if no clause is able to be popped.
+         * @throws IllegalArgumentException if no clause is able to be popped.
          */
-        Clause<T> pop() throws CommandArgumentException;
+        Clause<T> pop() throws IllegalArgumentException;
 
     }
 

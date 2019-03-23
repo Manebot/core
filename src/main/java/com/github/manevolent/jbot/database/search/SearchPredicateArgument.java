@@ -1,6 +1,4 @@
-package com.github.manevolent.jbot.command.search;
-
-import com.github.manevolent.jbot.command.exception.CommandArgumentException;
+package com.github.manevolent.jbot.database.search;
 
 /**
  * Describes a lexically-parsed search argument, which is used to build a JPA query clause around an argument definition.
@@ -11,14 +9,14 @@ public class SearchPredicateArgument extends SearchPredicate {
     }
 
     @Override
-    public void handle(SearchHandler.Clause clause) throws CommandArgumentException {
+    public void handle(SearchHandler.Clause clause) throws IllegalArgumentException {
         SearchArgument argument = getArgument();
         if (argument.getValue().contains(":")) {
             String[] args = argument.getValue().split("\\:", 2);
             String name = args[0];
 
             SearchArgumentHandler handler = clause.getSearchHandler().getArgumentHandler(name);
-            if (handler == null) throw new CommandArgumentException("Unexpected argument: \"" + name + "\".");
+            if (handler == null) throw new IllegalArgumentException("Unexpected argument: \"" + name + "\".");
 
             clause.addExpression(
                     getArgument().getOperator(),
@@ -33,7 +31,7 @@ public class SearchPredicateArgument extends SearchPredicate {
             String commandName = argument.getValue().toLowerCase();
 
             SearchArgumentHandler handler = clause.getSearchHandler().getCommandHandler(commandName);
-            if (handler == null) throw new CommandArgumentException("Unexpected command: \"" + commandName + "\".");
+            if (handler == null) throw new IllegalArgumentException("Unexpected command: \"" + commandName + "\".");
 
             clause.addExpression(
                     getArgument().getOperator(),

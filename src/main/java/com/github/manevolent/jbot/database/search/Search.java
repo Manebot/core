@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.search;
+package com.github.manevolent.jbot.database.search;
 
 import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 
@@ -98,7 +98,7 @@ public class Search {
         }
 
         @Override
-        public void handle(SearchHandler.Clause clause) throws CommandArgumentException {
+        public void handle(SearchHandler.Clause clause) throws IllegalArgumentException {
             SearchHandler.Clause searchClause = clause.push(operator);
             for (SearchPredicate action : actions) action.handle(searchClause);
             searchClause.pop();
