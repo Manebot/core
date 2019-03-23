@@ -21,7 +21,7 @@ public interface SearchResult<T> {
      * Gets the count of total results found in this result.
      * @return total result count.
      */
-    int getTotalResults();
+    long getTotalResults();
 
     /**
      * Gets the maximum size of the page offered by this search result.
@@ -30,20 +30,20 @@ public interface SearchResult<T> {
      *
      * @return maximum page size.
      */
-    int getPageSize();
+    long getPageSize();
 
     /**
      * Gets the page number that the associated result set expresses.
      * @return page number.
      */
-    int getPage();
+    long getPage();
 
     /**
      * Gets the total number of pages expressed by this search result.
      * @return page count.
      */
-    default int getTotalPages() {
-        return (int) Math.floor((double)getTotalResults() / (double)getPageSize());
+    default long getTotalPages() {
+        return (long) Math.floor((double)getTotalResults() / (double)getPageSize());
     }
 
     /**

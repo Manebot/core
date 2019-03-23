@@ -5,11 +5,11 @@ import java.util.List;
 public class DefaultSearchResult<T> implements SearchResult<T> {
     private final Search search;
     private final SearchHandler<T> handler;
-    private final int totalResults, pageSize, page;
+    private final long totalResults, pageSize, page;
     private final List<T> results;
 
     public DefaultSearchResult(Search search, SearchHandler<T> handler,
-                               int totalResults, int pageSize, int page, List<T> results) {
+                               long totalResults, long pageSize, long page, List<T> results) {
         this.search = search;
         this.handler = handler;
         this.totalResults = totalResults;
@@ -29,17 +29,17 @@ public class DefaultSearchResult<T> implements SearchResult<T> {
     }
 
     @Override
-    public int getTotalResults() {
+    public long getTotalResults() {
         return totalResults;
     }
 
     @Override
-    public int getPageSize() {
+    public long getPageSize() {
         return pageSize;
     }
 
     @Override
-    public int getPage() {
+    public long getPage() {
         return page;
     }
 
