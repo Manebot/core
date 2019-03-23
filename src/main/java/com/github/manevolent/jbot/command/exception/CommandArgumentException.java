@@ -2,7 +2,7 @@ package com.github.manevolent.jbot.command.exception;
 
 public class CommandArgumentException extends CommandExecutionException {
 
-    public CommandArgumentException(Exception cause) {
+    public CommandArgumentException(Throwable cause) {
         super(false, getMessage(cause));
     }
 
@@ -10,7 +10,11 @@ public class CommandArgumentException extends CommandExecutionException {
         super(false, "\u261B" + ' ' + message);
     }
 
-    private static String getMessage(Exception cause) {
+    public CommandArgumentException(String message, Throwable cause) {
+        super(false, "\u261B" + ' ' + message, cause);
+    }
+
+    private static String getMessage(Throwable cause) {
         if (cause != null)
             if (cause instanceof CommandExecutionException) {
                 return cause.getMessage();
