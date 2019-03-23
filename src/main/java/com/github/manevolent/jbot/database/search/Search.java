@@ -4,6 +4,7 @@ import com.github.manevolent.jbot.command.exception.CommandArgumentException;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -13,11 +14,13 @@ import java.util.LinkedList;
  * The structures represented by the <b>Search</b> class are transformed into database-friendly clauses by a
  * SearchHandler, using its SearchArgumentHandler bindings, which are defined by implementors of the API.
  */
-public class Search {
+public final class Search {
     private final LexicalClause rootLexicalClause;
+    private int page = 1;
 
-    private Search(LexicalClause rootLexicalClause) {
+    private Search(LexicalClause rootLexicalClause, int page) {
         this.rootLexicalClause = rootLexicalClause;
+        this.page = page;
     }
 
     /**
@@ -27,6 +30,10 @@ public class Search {
      */
     public LexicalClause getLexicalClause() {
         return rootLexicalClause;
+    }
+
+    public int getPage() {
+        return page;
     }
 
     public interface LexicalClause {
@@ -61,7 +68,6 @@ public class Search {
          * @return true if the clause can pop, false otherwise.
          */
         boolean canPop();
-
     }
 
     private static class PushedLexicalClause extends SearchPredicate implements LexicalClause {
@@ -71,15 +77,18 @@ public class Search {
 
         PushedLexicalClause(LexicalClause parent, SearchOperator operator) {
             super(null);
-            this.parent = parent;
 
+            this.parent = parent;
             this.operator = operator;
         }
 
-        public LexicalClause push(SearchOperator operator) {
-            PushedLexicalClause clause = new PushedLexicalClause(parent, operator);
+        public LexicalClause push(PushedLexicalClause clause) {
             addPredicate(clause);
             return clause;
+        }
+
+        public LexicalClause push(SearchOperator operator) {
+            return push(new PushedLexicalClause(parent, operator));
         }
 
         @Override
@@ -106,35 +115,29 @@ public class Search {
 
         @Override
         public Collection<SearchPredicate> getActions() {
-            return Collections.unmodifiableCollection(actions);
+            return actions;
+        }
+
+        SearchPredicate getLastAction() {
+            return getActions().stream().reduce((first, second) -> second).orElse(null);
         }
     }
 
-    public static class Builder implements LexicalClause {
-        private final Collection<SearchPredicate> actions = new LinkedList<>();
+    public static class Builder extends PushedLexicalClause implements LexicalClause {
+        private int page;
 
-        Builder() { }
+        Builder() {
+            super(null, SearchOperator.UNSPECIFIED);
+        }
 
         public Search build() {
             // Simply return a new Search object around the root lexical clause (this)
-            return new Search(this);
+            return new Search(this, page);
         }
 
         @Override
-        public void addPredicate(SearchPredicate predicate) {
-            actions.add(predicate);
-        }
-
-        @Override
-        public Collection<SearchPredicate> getActions() {
-            return Collections.unmodifiableCollection(actions);
-        }
-
-        @Override
-        public PushedLexicalClause push(SearchOperator operator) {
-            PushedLexicalClause clause = new PushedLexicalClause(this, operator);
-            addPredicate(clause);
-            return clause;
+        public LexicalClause push(SearchOperator operator) {
+            return push(new PushedLexicalClause(this, operator));
         }
 
         @Override
@@ -145,6 +148,15 @@ public class Search {
         @Override
         public boolean canPop() {
             return false;
+        }
+
+        public int getPage() {
+            return page;
+        }
+
+        public Builder page(int page) {
+            this.page = page;
+            return this;
         }
     }
 
@@ -360,11 +372,8 @@ public class Search {
      * @throws IllegalArgumentException if there was a problem interpreting the given query string.
      */
     public static Search parse(String queryString) throws IllegalArgumentException {
-        Search.Builder builder = new Search.Builder(); // Lexical storage
-        LexicalClause clause = builder; // redundant, but leaving for clarity of this unboxing
-
-        // if not unspecified, will throw exception
-        LexicalParser parser = new ClauseParser(SearchOperator.UNSPECIFIED, clause, false);
+        Search.Builder builder = new Search.Builder();
+        LexicalParser parser = new ClauseParser(SearchOperator.UNSPECIFIED, builder, false);
 
         // Iterate over all characters in the query string.
         for (char c : queryString.toCharArray())
@@ -372,6 +381,35 @@ public class Search {
 
         // Attempt completion
         parser.complete();
+
+        // Bit of a hack... search for "page" argument at the very end of the parser.
+        PushedLexicalClause thisClause = builder;
+        while (true) {
+            SearchPredicate nextClause = thisClause.getLastAction();
+            if ((nextClause instanceof PushedLexicalClause))
+                thisClause = (PushedLexicalClause) nextClause;
+            else
+                break;
+        }
+
+        Iterator<SearchPredicate> predicateIterator = thisClause.getActions().iterator();
+        while (true) {
+            SearchPredicate predicate = predicateIterator.next();
+            if (!predicateIterator.hasNext()) {
+                if (predicate instanceof SearchPredicateArgument) {
+                    String text = predicate.getArgument().getValue();
+                    if (text.startsWith("page:")) {
+                        builder.page(Integer.parseInt(text.substring(5)));
+                        predicateIterator.remove();
+                    } else if (text.startsWith("p:")) {
+                        builder.page(Integer.parseInt(text.substring(2)));
+                        predicateIterator.remove();
+                    }
+                }
+
+                break;
+            }
+        }
 
         // Build Search object
         return builder.build();
