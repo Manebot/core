@@ -124,7 +124,8 @@ public final class Search {
     }
 
     public static class Builder extends PushedLexicalClause implements LexicalClause {
-        private int page;
+        private int page = 1; // default page is 1, of course
+
 
         Builder() {
             super(null, SearchOperator.UNSPECIFIED);
