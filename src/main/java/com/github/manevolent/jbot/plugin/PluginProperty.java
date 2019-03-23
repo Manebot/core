@@ -6,9 +6,9 @@ package com.github.manevolent.jbot.plugin;
 public interface PluginProperty {
 
     /**
-     * Gets the plugin associated with this property.
+     * Gets the plugin registration associated with this property.
      */
-    Plugin getPlugin();
+    PluginRegistration getPluginRegistration();
 
     /**
      * Gets the unique name of this property.
