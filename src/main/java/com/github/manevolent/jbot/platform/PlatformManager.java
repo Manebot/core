@@ -34,6 +34,14 @@ public interface PlatformManager {
     Platform.Builder buildPlatform();
 
     /**
+     * Constructs a new builder for a Platform.
+     *
+     * @param plugin plugin this platform is intended to be used by.
+     * @return Builder instance to construct a Platform.
+     */
+    Platform.Builder buildPlatform(Plugin plugin);
+
+    /**
      * Unregisters a platform registration from the system.
      * @param registration Platform registration instance to unregister.
      */
