@@ -8,9 +8,9 @@ com.github.manevolent.jbot.command.exception
 com.github.manevolent.jbot.command.executor
 com.github.manevolent.jbot.command.executor.chained
 com.github.manevolent.jbot.command.executor.chained.argument
-com.github.manevolent.jbot.command.executor.chained.argument.search
 com.github.manevolent.jbot.command.executor.routed
 com.github.manevolent.jbot.command.response
+com.github.manevolent.jbot.command.search
 com.github.manevolent.jbot.conversation
 com.github.manevolent.jbot.database
 com.github.manevolent.jbot.entity

@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.executor.chained.argument.search;
+package com.github.manevolent.jbot.command.search;
 
 /**
  * Search operators are lexically-parsed tokens that indicate the type of operation (include, exclude, or merge) that

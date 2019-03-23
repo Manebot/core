@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.executor.chained.argument.search;
+package com.github.manevolent.jbot.command.search;
 
 public final class SearchArgument {
     private final SearchOperator operator;

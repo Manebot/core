@@ -1,6 +1,6 @@
 package com.github.manevolent.jbot.database;
 
-import com.github.manevolent.jbot.command.executor.chained.argument.search.SearchHandler;
+import com.github.manevolent.jbot.command.search.SearchHandler;
 
 import javax.persistence.EntityManager;
 import java.sql.SQLException;

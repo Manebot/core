@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.executor.chained.argument.search;
+package com.github.manevolent.jbot.command.search;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;

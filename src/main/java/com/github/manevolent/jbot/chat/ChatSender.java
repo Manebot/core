@@ -1,6 +1,6 @@
 package com.github.manevolent.jbot.chat;
 
-import com.github.manevolent.jbot.command.executor.chained.argument.search.SearchResult;
+import com.github.manevolent.jbot.command.search.SearchResult;
 import com.github.manevolent.jbot.command.response.CommandDetailsResponse;
 import com.github.manevolent.jbot.command.response.CommandListResponse;
 import com.github.manevolent.jbot.platform.PlatformUser;

@@ -1,4 +1,4 @@
-import com.github.manevolent.jbot.command.executor.chained.argument.search.Search;
+import com.github.manevolent.jbot.command.search.Search;
 import junit.framework.TestCase;
 
 public class SearchTest extends TestCase {

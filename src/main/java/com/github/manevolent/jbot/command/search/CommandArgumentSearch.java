@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.executor.chained.argument.search;
+package com.github.manevolent.jbot.command.search;
 
 import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
 import com.github.manevolent.jbot.command.executor.chained.ChainPriority;

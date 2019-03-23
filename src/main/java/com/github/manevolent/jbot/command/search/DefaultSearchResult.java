@@ -1,4 +1,4 @@
-package com.github.manevolent.jbot.command.executor.chained.argument.search;
+package com.github.manevolent.jbot.command.search;
 
 import java.util.List;
 
