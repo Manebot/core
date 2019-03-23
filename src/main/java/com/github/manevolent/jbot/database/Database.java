@@ -1,8 +1,11 @@
 package com.github.manevolent.jbot.database;
 
+import com.github.manevolent.jbot.command.executor.chained.argument.search.SearchHandler;
+
 import javax.persistence.EntityManager;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.function.Function;
 
 public interface Database extends AutoCloseable {
 
@@ -146,6 +149,31 @@ public interface Database extends AutoCloseable {
      * @return Session instance.
      */
     EntityManager openSession();
+
+    /**
+     * Creates a search, which accepts certain arguments to construct results in queryable commands.
+     * @param entityClass Search entity class.
+     * @param <T> search entity type
+     * @return Search builder instance.
+     * @throws IllegalArgumentException if the entity is not registered to this database.
+     */
+    <T> SearchHandler.Builder<T> createSearchHandler(Class<T> entityClass) throws IllegalArgumentException;
+
+    /**
+     * Creates a search, which accepts certain arguments to construct results in queryable commands.
+     * @param entityClass Search entity class.
+     * @param function Search builder function.
+     * @param <T> search entity type
+     * @return Search instance.
+     * @throws IllegalArgumentException if the entity is not registered to this database.
+     */
+    default <T> SearchHandler<T> createSearchHandler(
+            Class<T> entityClass,
+            Function<SearchHandler.Builder<T>,
+            SearchHandler<T>> function
+    ) throws IllegalArgumentException {
+        return function.apply(createSearchHandler(entityClass));
+    }
 
     /**
      * Database model constructor.

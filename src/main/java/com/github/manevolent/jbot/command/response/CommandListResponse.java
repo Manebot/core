@@ -57,6 +57,13 @@ public abstract class CommandListResponse<T> extends CommandResponse {
         String line(ChatSender sender, T o);
     }
 
+    public static class DefaultListElementFormatter<T> implements ListElementFormatter<T> {
+        @Override
+        public String line(ChatSender sender, T o) {
+            return o.toString();
+        }
+    }
+
     public interface ListAccessor<T> {
         T get(int resultOffset);
         int size();

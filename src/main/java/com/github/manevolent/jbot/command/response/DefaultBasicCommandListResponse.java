@@ -4,8 +4,11 @@ import com.github.manevolent.jbot.chat.ChatSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 
 public class DefaultBasicCommandListResponse<T> extends CommandListResponse<T> {
-    public DefaultBasicCommandListResponse(ChatSender sender, int actualTotal, int page,
-                                           int elementsPerPage, ListAccessor<T> accessor,
+    public DefaultBasicCommandListResponse(ChatSender sender,
+                                           int actualTotal,
+                                           int page,
+                                           int elementsPerPage,
+                                           ListAccessor<T> accessor,
                                            ListElementFormatter<T> responder) {
         super(sender, actualTotal, page, elementsPerPage, accessor, responder);
     }

@@ -1,5 +1,6 @@
 package com.github.manevolent.jbot.chat;
 
+import com.github.manevolent.jbot.command.executor.chained.argument.search.SearchResult;
 import com.github.manevolent.jbot.command.response.CommandDetailsResponse;
 import com.github.manevolent.jbot.command.response.CommandListResponse;
 import com.github.manevolent.jbot.platform.PlatformUser;
@@ -87,10 +88,35 @@ public interface ChatSender {
      * @param <T> List item type.
      * @return CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
      */
-    <T> CommandListResponse<T> list(
-            Class<T> type,
-            Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
-    );
+    <T> CommandListResponse<T> list(Class<T> type,
+                                    Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function);
+
+    /**
+     * Constructs a list response on the given search object and associated chat sender.
+     *
+     * Has a default implementation for ease-of-use, via the <b>virtual</b> list accessor system, used for paged
+     * results where more results exist virtually outside the application (such as, in the case of a search). This
+     * is used to improve performance and lower overhead when searching over millions of rows, for example.
+     *
+     * @param type List item type.
+     * @param result Search result object, obtained from a <B>SearchHandler</B> class.
+     * @param <T> List item type.
+     * @return  CommandResponse object corresponding to the desired message; contains <b>send()</b> method to dispatch.
+     */
+    default <T> CommandListResponse<T> list(Class<T> type,
+                                            SearchResult<T> result,
+                                            CommandListResponse.ListElementFormatter<T> formatter) {
+        return list(
+                type,
+                builder -> builder
+                        .virtual(result.getResults())
+                        .responder(formatter)
+                        .elementsPerPage(result.getPageSize())
+                        .totalElements(result.getTotalResults())
+                        .page(result.getPage())
+                        .build()
+        );
+    }
 
     /**
      * Creates a details response to send to the command sender, opportunistically formatting as rich content.
