@@ -72,11 +72,11 @@ public interface EntityType {
     }
 
     default void checkPermission(Permission permission, Grant fallback) throws SecurityException {
-        if (!hasPermission(permission, fallback)) throw new SecurityException(permission.getNode());
+        if (!hasPermission(permission, fallback)) throw new SecurityException("Access denied (" +permission.getNode() +")");
     }
 
     default void checkPermission(String node, Grant fallback) throws SecurityException {
-        if (!hasPermission(node, fallback)) throw new SecurityException(node);
+        if (!hasPermission(node, fallback)) throw new SecurityException("Access denied (" +node +")");
     }
 
 }

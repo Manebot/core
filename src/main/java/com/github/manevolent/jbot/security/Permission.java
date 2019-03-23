@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.security;
 
 import com.github.manevolent.jbot.command.exception.CommandAccessException;
+import com.github.manevolent.jbot.user.User;
 import com.github.manevolent.jbot.virtual.Virtual;
 import com.github.manevolent.jbot.virtual.VirtualProcess;
 import com.google.common.collect.MapMaker;
@@ -80,13 +81,14 @@ public final class Permission {
                     " is not member of virtual subsystem"
             );
 
-        if (currentProcess.getUser() == null)
+        User user = currentProcess.getUser();
+        if (user == null)
             throw new IllegalStateException(
                     Thread.currentThread().toString() +
                     " is member of virtual subsystem, but is not logged in"
             );
 
-        currentProcess.getUser().checkPermission(permission);
+        user.checkPermission(permission);
     }
 
     /**
