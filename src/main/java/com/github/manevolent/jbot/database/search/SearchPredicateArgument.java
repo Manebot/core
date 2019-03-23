@@ -21,6 +21,7 @@ public class SearchPredicateArgument extends SearchPredicate {
             clause.addExpression(
                     getArgument().getOperator(),
                     handler.handle(
+                            clause.getRoot(),
                             clause.getCriteriaBuilder(),
                             new SearchArgument(
                                     argument.getOperator(),
@@ -36,6 +37,7 @@ public class SearchPredicateArgument extends SearchPredicate {
             clause.addExpression(
                     getArgument().getOperator(),
                     handler.handle(
+                            clause.getRoot(),
                             clause.getCriteriaBuilder(),
                             new SearchArgument(
                                     argument.getOperator(), commandName

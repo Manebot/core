@@ -16,7 +16,7 @@ public class SearchPredicateString extends SearchPredicate {
 
         clause.addExpression(
                 getArgument().getOperator(),
-                handler.handle(clause.getCriteriaBuilder(), getArgument())
+                handler.handle(clause.getRoot(), clause.getCriteriaBuilder(), getArgument())
         );
     }
 }

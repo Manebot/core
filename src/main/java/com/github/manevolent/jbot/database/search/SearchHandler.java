@@ -4,6 +4,7 @@ import com.github.manevolent.jbot.database.Database;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
@@ -131,6 +132,12 @@ public interface SearchHandler<T> {
          * @return search handler.
          */
         SearchHandler<T> getSearchHandler();
+
+        /**
+         * Gets the root of this clause.
+         * @return root instance.
+         */
+        Root getRoot();
 
         /**
          * Gets the criteria builder instances associated with this execution.
