@@ -63,20 +63,20 @@ public interface EntityType {
         return grant == ALLOW;
     }
 
-    default void checkPermission(Permission permission) throws CommandAccessException {
+    default void checkPermission(Permission permission) throws SecurityException {
         checkPermission(permission, DENY);
     }
 
-    default void checkPermission(String node) throws CommandAccessException {
+    default void checkPermission(String node) throws SecurityException {
         checkPermission(Permission.get(node), DENY);
     }
 
-    default void checkPermission(Permission permission, Grant fallback) throws CommandAccessException {
-        if (!hasPermission(permission, fallback)) throw new CommandAccessException(permission.getNode());
+    default void checkPermission(Permission permission, Grant fallback) throws SecurityException {
+        if (!hasPermission(permission, fallback)) throw new SecurityException(permission.getNode());
     }
 
-    default void checkPermission(String node, Grant fallback) throws CommandAccessException {
-        if (!hasPermission(node, fallback)) throw new CommandAccessException(node);
+    default void checkPermission(String node, Grant fallback) throws SecurityException {
+        if (!hasPermission(node, fallback)) throw new SecurityException(node);
     }
 
 }

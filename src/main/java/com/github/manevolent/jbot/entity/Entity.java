@@ -49,7 +49,7 @@ public interface Entity {
      * @param node permission node to grant.
      * @param type type of grant to supply.
      */
-    GrantedPermission setPermission(String node, Grant type);
+    GrantedPermission setPermission(String node, Grant type) throws SecurityException;
 
     /**
      * Removes a specific permission from this entity.

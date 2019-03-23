@@ -45,11 +45,11 @@ public final class Permission {
         }
     }
 
-    public static void checkPermission(String node) throws IllegalStateException, CommandAccessException {
+    public static void checkPermission(String node) throws IllegalStateException, SecurityException {
         checkPermission(get(node));
     }
 
-    public static void checkPermission(Permission permission) throws IllegalStateException, CommandAccessException {
+    public static void checkPermission(Permission permission) throws IllegalStateException, SecurityException {
         VirtualProcess currentProcess = Virtual.getInstance().currentProcess();
         if (currentProcess == null)
             throw new IllegalStateException(
