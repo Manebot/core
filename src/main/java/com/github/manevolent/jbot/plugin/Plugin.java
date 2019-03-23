@@ -86,12 +86,6 @@ public interface Plugin {
     Collection<String> getCommands();
 
     /**
-     * Gets the plugin properties for this plugin.
-     * @return immutable collection of plugin properties.
-     */
-    Collection<PluginProperty> getProperties();
-
-    /**
      * Gets the value for a specific plugin property.
      * @param name name of the property to require.
      * @return property value.
@@ -108,7 +102,9 @@ public interface Plugin {
      * @param name name of the property to require.
      * @return property value, or null if it is not defined.
      */
-    String getProperty(String name);
+    default String getProperty(String name) {
+        return getRegistration().getProperty(name);
+    }
 
     /**
      * Gets the value for a specific plugin property.
