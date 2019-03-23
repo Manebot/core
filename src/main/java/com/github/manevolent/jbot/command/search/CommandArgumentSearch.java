@@ -53,12 +53,6 @@ public class CommandArgumentSearch extends CommandArgument {
         return (!(b instanceof CommandArgumentSearch));
     }
 
-    private enum ParserMode {
-        WAITING,
-        IN_STRING,
-        IN_COMMAND
-    }
-
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
     @AnnotatedCommandExecutor.Argument(type = CommandArgumentSearch.class)
