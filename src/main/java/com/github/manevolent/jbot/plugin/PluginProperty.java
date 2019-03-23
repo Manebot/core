@@ -6,6 +6,13 @@ package com.github.manevolent.jbot.plugin;
 public interface PluginProperty {
 
     /**
+     * Gets the plugin instance associated with this property.
+     */
+    default Plugin getPlugin() {
+        return getPluginRegistration().getInstance();
+    }
+
+    /**
      * Gets the plugin registration associated with this property.
      */
     PluginRegistration getPluginRegistration();
