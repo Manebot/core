@@ -41,7 +41,7 @@ public final class Permission {
      */
     public static Permission get(String node) {
         synchronized (referenceMap) {
-            return referenceMap.computeIfAbsent(node, Permission::new);
+            return referenceMap.computeIfAbsent(node.toLowerCase(), Permission::new);
         }
     }
 
