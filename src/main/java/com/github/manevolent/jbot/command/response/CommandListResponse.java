@@ -105,7 +105,7 @@ public abstract class CommandListResponse<T> extends CommandResponse {
         private int totalElements;
         private int elementsPerPage = 6;
 
-        private ListElementFormatter<T> responder;
+        private ListElementFormatter<T> responder = (sender, o) -> o.toString();
 
         private Supplier<ListAccessor<T>> accessorSupplier;
 
