@@ -29,6 +29,18 @@ public interface UserManager {
     User getUserByDisplayName(String displayName);
 
     /**
+     * Gets a collection of all user bans.
+     * @return user ban collection.
+     */
+    Collection<UserBan> getBans();
+
+    /**
+     * Gets a collection of all current bans.
+     * @return current bans.
+     */
+    Collection<UserBan> getCurrentBans();
+
+    /**
      * Gets all users on the system.
      * @return Collection representing all users on the system.
      */

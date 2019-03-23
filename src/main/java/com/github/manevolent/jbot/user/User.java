@@ -106,6 +106,33 @@ public interface User extends EntityType {
     Collection<UserAssociation> getAssociations();
 
     /**
+     * Gets a list of all previous bans on record for this user.
+     * @return immutable collection of user ban history.
+     */
+    Collection<UserBan> getBans();
+
+    /**
+     * Gets a list of all previous bans issued by this user.
+     * @return immutable collection of user ban issuance history.
+     */
+    Collection<UserBan> getIssuedBans();
+
+    /**
+     * Gets the current ban on record for the user.
+     * @return ban instance.
+     */
+    UserBan getBan();
+
+    /**
+     * Bans the user until the specified date
+     * @param reason ban reason, may be null.
+     * @param end date the ban should end.
+     * @return UserBan instance.
+     * @throws SecurityException if there was a security violation creating the ban.
+     */
+    UserBan ban(String reason, Date end) throws SecurityException;
+
+    /**
      * Gets a user association by platform and ID.
      * @param platform Platform to search for
      * @param id ID to search for.
