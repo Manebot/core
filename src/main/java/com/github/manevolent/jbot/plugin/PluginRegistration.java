@@ -42,10 +42,9 @@ public interface PluginRegistration {
     /**
      * Sets if the plugin should auto-start.
      * @param autoStart true if the plugin should auto-start.
-     * @return true if the plugin should auto-start, false otherwise.
      * @throws SecurityException if there was a security violation setting the property.
      */
-    boolean setAutoStart(boolean autoStart) throws SecurityException;
+    void setAutoStart(boolean autoStart) throws SecurityException;
 
     /**
      * Finds if the plugin will auto-start.
