@@ -110,8 +110,13 @@ public interface Platform {
 
 
     abstract class Builder {
+        private final Plugin plugin;
         private String id, name;
         private PlatformConnection connection;
+
+        public Builder(Plugin plugin) {
+            this.plugin = plugin;
+        }
 
         public String getId() {
             return id;
@@ -162,5 +167,9 @@ public interface Platform {
          * @return AssignedPlatform instance.
          */
         public abstract PlatformRegistration register(Plugin plugin);
+
+        public Plugin getPlugin() {
+            return plugin;
+        }
     }
 }

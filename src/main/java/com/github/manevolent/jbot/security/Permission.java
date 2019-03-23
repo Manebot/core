@@ -45,10 +45,33 @@ public final class Permission {
         }
     }
 
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param node node to check.
+     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
+     * @throws SecurityException if the user associated with the current thread does not have the permission node.
+     */
     public static void checkPermission(String node) throws IllegalStateException, SecurityException {
         checkPermission(get(node));
     }
 
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param node node to check.
+     * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
+     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
+     * @throws SecurityException if the user associated with the current thread does not have the permission node.
+     */
+    public static void checkPermission(String node, Grant defaultGrant) throws IllegalStateException, SecurityException {
+        checkPermission(get(node), defaultGrant);
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param permission Permission instance to check.
+     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
+     * @throws SecurityException if the user associated with the current thread does not have the permission node.
+     */
     public static void checkPermission(Permission permission) throws IllegalStateException, SecurityException {
         VirtualProcess currentProcess = Virtual.getInstance().currentProcess();
         if (currentProcess == null)
@@ -64,5 +87,29 @@ public final class Permission {
             );
 
         currentProcess.getUser().checkPermission(permission);
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param permission Permission instance to check.
+     * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
+     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
+     * @throws SecurityException if the user associated with the current thread does not have the permission node.
+     */
+    public static void checkPermission(Permission permission, Grant defaultGrant) throws IllegalStateException, SecurityException {
+        VirtualProcess currentProcess = Virtual.getInstance().currentProcess();
+        if (currentProcess == null)
+            throw new IllegalStateException(
+                    Thread.currentThread().toString() +
+                            " is not member of virtual subsystem"
+            );
+
+        if (currentProcess.getUser() == null)
+            throw new IllegalStateException(
+                    Thread.currentThread().toString() +
+                            " is member of virtual subsystem, but is not logged in"
+            );
+
+        currentProcess.getUser().checkPermission(permission, defaultGrant);
     }
 }

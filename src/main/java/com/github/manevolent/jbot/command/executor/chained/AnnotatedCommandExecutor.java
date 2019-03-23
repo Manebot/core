@@ -4,7 +4,10 @@ import com.github.manevolent.jbot.command.CommandSender;
 import com.github.manevolent.jbot.command.exception.CommandExecutionException;
 import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgument;
 import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentNone;
+import com.github.manevolent.jbot.security.Grant;
+import com.github.manevolent.jbot.security.GrantedPermission;
 import com.github.manevolent.jbot.security.Permission;
+import com.github.manevolent.jbot.virtual.Virtual;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
@@ -90,8 +93,9 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
 
             chain.setExecutor((sender, label, args) -> {
                 try {
-                    if (commandDefinition.permission().length() > 0)
-                        Permission.checkPermission(commandDefinition.permission());
+                    if (commandDefinition.permission().length() > 0) {
+                        Permission.checkPermission(commandDefinition.permission(), commandDefinition.defaultGrant());
+                    }
 
                     Object[] invocationArgs = new Object[args.length + 1];
                     System.arraycopy(args, 0, invocationArgs, 1, args.length);
@@ -111,8 +115,25 @@ public abstract class AnnotatedCommandExecutor extends ChainedCommandExecutor {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     public @interface Command {
+        /**
+         * Description of this command, used in command help.
+         * @return description.
+         */
         String description() default "";
+
+        /**
+         * Permission to check for when this command is execute.
+         * @return permission node, blank for no permission checking.
+         */
         String permission() default "";
+
+        /**
+         * Default grant behavior of <b>permission</b> property.  When set to Grant.DENY, permission is assumed
+         * denied when no permission is set on the user.  When set to Grant.ALLOW, command execution is allowed unless
+         * the user explicitly has a defined Grant.DENY permission grant matching the command's required node.
+         * @return default grant behavior.
+         */
+        Grant defaultGrant() default Grant.DENY;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

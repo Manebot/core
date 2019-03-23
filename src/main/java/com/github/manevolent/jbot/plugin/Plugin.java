@@ -8,6 +8,7 @@ import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.platform.Platform;
 import com.github.manevolent.jbot.platform.PlatformConnection;
 import com.github.manevolent.jbot.platform.PlatformRegistration;
+import com.github.manevolent.jbot.property.Property;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -83,6 +84,43 @@ public interface Plugin {
      * @return registered commands.
      */
     Collection<String> getCommands();
+
+    /**
+     * Gets the plugin properties for this plugin.
+     * @return immutable collection of plugin properties.
+     */
+    Collection<PluginProperty> getProperties();
+
+    /**
+     * Gets the value for a specific plugin property.
+     * @param name name of the property to require.
+     * @return property value.
+     * @throws IllegalArgumentException if the property is not defined, or is defined null.
+     */
+    default String requireProperty(String name) throws IllegalArgumentException {
+        String value = getProperty(name);
+        if (value == null) throw new IllegalArgumentException("Missing required property: " + name);
+        return value;
+    }
+
+    /**
+     * Gets the value for a specific plugin property.
+     * @param name name of the property to require.
+     * @return property value, or null if it is not defined.
+     */
+    String getProperty(String name);
+
+    /**
+     * Gets the value for a specific plugin property.
+     * @param name name of the property to obtain.
+     * @param defaultValue default value when no value does exist.
+     * @return property value, or <b>defaultValue</b> if the property does not yet exist, or is defined null.
+     */
+    default String getProperty(String name, String defaultValue) {
+        String value = getProperty(name);
+        if (value == null) return defaultValue;
+        else return value;
+    }
 
     /**
      * Gets this plugin's name.  This is typically the lowercase <b>artifactId</b> of the plugin.
