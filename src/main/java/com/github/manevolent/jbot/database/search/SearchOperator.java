@@ -7,7 +7,8 @@ package com.github.manevolent.jbot.database.search;
 public enum SearchOperator {
     INCLUDE('~'), // OR
     EXCLUDE('-'), // AND NOT
-    MERGE('+');   // AND
+    MERGE('+'),   // AND
+    UNSPECIFIED('?');
 
     private final char character;
 
@@ -21,17 +22,5 @@ public enum SearchOperator {
 
     public char getCharacter() {
         return character;
-    }
-
-    /**
-     * Finds a search operator by its character.
-     * @param c Search operator character.
-     * @return Search operator instance.
-     */
-    public static SearchOperator fromOperator(char c) {
-        for (SearchOperator operator : values())
-            if (operator.getCharacter() == c) return operator;
-
-        throw new IllegalArgumentException("Unexpected search operator: " +c);
     }
 }

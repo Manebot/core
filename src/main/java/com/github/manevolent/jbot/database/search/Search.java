@@ -267,7 +267,7 @@ public class Search {
         /**
          * Operator to apply to the next <b>LexicalParser</b> instantiated.
          */
-        private SearchOperator nextOperator = SearchOperator.getDefault();
+        private SearchOperator nextOperator = SearchOperator.UNSPECIFIED; // otherwise will throw exception
 
         /**
          * Count of handled parsers.  Used to know if we should allow a search operator token or not.
@@ -275,7 +275,7 @@ public class Search {
         private int handled = 0;
 
         protected ClauseParser(SearchOperator operator, LexicalClause clause, boolean requireClosingToken) {
-            super(null, clause.push(operator));
+            super(SearchOperator.UNSPECIFIED, clause.push(operator));
 
             this.requireClosingToken = requireClosingToken;
         }
@@ -362,7 +362,9 @@ public class Search {
     public static Search parse(String queryString) throws IllegalArgumentException {
         Search.Builder builder = new Search.Builder(); // Lexical storage
         LexicalClause clause = builder; // redundant, but leaving for clarity of this unboxing
-        LexicalParser parser = new ClauseParser(null, clause, false); // if not null, will throw exception
+
+        // if not unspecified, will throw exception
+        LexicalParser parser = new ClauseParser(SearchOperator.UNSPECIFIED, clause, false);
 
         // Iterate over all characters in the query string.
         for (char c : queryString.toCharArray())
