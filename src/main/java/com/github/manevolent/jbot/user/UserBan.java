@@ -34,4 +34,15 @@ public interface UserBan {
      */
     Date getEnd();
 
+    /**
+     * Finds if the ban has been pardoned.
+     * @return true if the ban was pardoned, false otherwise.
+     */
+    boolean isPardoned();
+
+    /**
+     * Pardons the ban.
+     */
+    void pardon() throws SecurityException;
+
 }
