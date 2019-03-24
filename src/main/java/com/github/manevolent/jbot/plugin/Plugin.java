@@ -12,6 +12,7 @@ import com.github.manevolent.jbot.property.Property;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 public interface Plugin {
 
@@ -123,6 +124,8 @@ public interface Plugin {
      * @return Plugin's name.
      */
     String getName();
+
+    Logger getLogger();
 
     /**
      * Sets this artifact's enabled state.
