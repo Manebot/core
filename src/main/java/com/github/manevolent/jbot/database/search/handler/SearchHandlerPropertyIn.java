@@ -12,8 +12,8 @@ public class SearchHandlerPropertyIn extends SearchHandlerEntityProperty {
     private final Function<Root, Path> subPathFinder;
 
     public SearchHandlerPropertyIn(Function<Root, Path> pathFinder,
-                                   Class<?> joiningType,
                                    Function<Root, Path> subPathFinder,
+                                   Class<?> joiningType,
                                    SearchArgumentHandler handler) {
         super(pathFinder);
 
@@ -23,8 +23,8 @@ public class SearchHandlerPropertyIn extends SearchHandlerEntityProperty {
     }
 
     public SearchHandlerPropertyIn(String property,
-                                   Class<?> joiningType,
                                    Function<Root, Path> subPathFinder,
+                                   Class<?> joiningType,
                                    SearchArgumentHandler handler) {
         super(property);
 
