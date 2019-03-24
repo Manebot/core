@@ -170,12 +170,29 @@ public interface Plugin {
         Builder listen(EventListener listener);
 
         /**
+         * Gets a plugin property.
+         * @param name property name.
+         * @return property instance.
+         */
+        PluginProperty getProperty(String name);
+
+        /**
+         * Registers a command to this Plugin.
+         * @param label global label to assign command to.
+         * @param executor CommandExecutor constructor function to bind this label to when a registration is created.
+         * @return Builder instance.
+         */
+        Builder command(String label, Function<PluginRegistration, CommandExecutor> executor);
+
+        /**
          * Registers a command to this Plugin.
          * @param label global label to assign command to.
          * @param executor CommandExecutor to bind this label to.
          * @return Builder instance.
          */
-        Builder command(String label, CommandExecutor executor);
+        default Builder command(String label, CommandExecutor executor) {
+            return command(label, (registration) -> executor);
+        }
 
         /**
          * Registers a command to this Plugin.
