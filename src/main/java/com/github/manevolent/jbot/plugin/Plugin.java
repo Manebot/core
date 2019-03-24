@@ -187,6 +187,13 @@ public interface Plugin {
         PluginProperty getProperty(String name);
 
         /**
+         * Require that the specified identifier plugin is included, and enabled.
+         * @param identifier ManifestIdentifier of a plugin to require.
+         * @return Builder instance.
+         */
+        Builder require(ManifestIdentifier identifier);
+
+        /**
          * Registers a command to this Plugin.
          * @param label global label to assign command to.
          * @param executor CommandExecutor constructor function to bind this label to when a registration is created.
