@@ -18,6 +18,18 @@ public interface Artifact {
     ArtifactManifest getManifest();
 
     /**
+     * Gets the artifact's extension.
+     * @return extension.
+     */
+    String getExtension();
+
+    /**
+     * Gets the artifact's classifier.
+     * @return artifact classifier
+     */
+    String getClassifier();
+
+    /**
      * Finds if this artifact is out-of-date (i.e. a newer version exists)
      * @return true if this artifact is out-of-date, false otherwise.
      */
