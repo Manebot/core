@@ -18,7 +18,7 @@ public class SearchPredicateArgument extends SearchPredicate {
             SearchArgumentHandler handler = clause.getSearchHandler().getArgumentHandler(name);
             if (handler == null) throw new IllegalArgumentException("Unexpected argument: \"" + name + "\".");
 
-            clause.addExpression(
+            clause.addPredicate(
                     getArgument().getOperator(),
                     handler.handle(
                             clause.getRoot(),
@@ -34,7 +34,7 @@ public class SearchPredicateArgument extends SearchPredicate {
             SearchArgumentHandler handler = clause.getSearchHandler().getCommandHandler(commandName);
             if (handler == null) throw new IllegalArgumentException("Unexpected command: \"" + commandName + "\".");
 
-            clause.addExpression(
+            clause.addPredicate(
                     getArgument().getOperator(),
                     handler.handle(
                             clause.getRoot(),

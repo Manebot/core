@@ -14,7 +14,7 @@ public class SearchPredicateString extends SearchPredicate {
         SearchArgumentHandler handler = clause.getSearchHandler().getStringHandler();
         if (handler == null) throw new IllegalArgumentException("This search does not handle string arguments.");
 
-        clause.addExpression(
+        clause.addPredicate(
                 getArgument().getOperator(),
                 handler.handle(clause.getRoot(), clause.getCriteriaBuilder(), getArgument())
         );

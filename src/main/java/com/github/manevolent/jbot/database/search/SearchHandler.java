@@ -4,6 +4,7 @@ import com.github.manevolent.jbot.database.Database;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.SQLException;
 import java.util.function.Consumer;
@@ -146,11 +147,11 @@ public interface SearchHandler<T> {
         CriteriaBuilder getCriteriaBuilder();
 
         /**
-         * Adds an expression to the query within the current predicate.
+         * Adds a predicate to the query.
          * @param operator operator used for this expression.
-         * @param expression expression to push.
+         * @param predicate predicate to push.
          */
-        void addExpression(SearchOperator operator, Expression<Boolean> expression);
+        void addPredicate(SearchOperator operator, Predicate predicate);
 
         /**
          * Pushes a new clause onto the stack.

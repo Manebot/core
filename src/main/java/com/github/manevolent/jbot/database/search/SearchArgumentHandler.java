@@ -1,7 +1,7 @@
 package com.github.manevolent.jbot.database.search;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -9,5 +9,5 @@ import javax.persistence.criteria.Root;
  * a JPA query from lexically-parsed <b>SearchArguments</b>.  These are called by a SearchHandler implementation.
  */
 public interface SearchArgumentHandler {
-    Expression<Boolean> handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value);
+    Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value);
 }
