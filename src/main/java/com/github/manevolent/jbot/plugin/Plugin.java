@@ -46,6 +46,12 @@ public interface Plugin {
     Collection<Plugin> getDependencies();
 
     /**
+     * Gets a collection of plugins depending on this plugin.
+     * @return Plugin dependers.
+     */
+    Collection<Plugin> getDependers();
+
+    /**
      * Gets a dependent plugin by its manifest identifier.
      * @param identifier manifest identifier to search for in this plugin's dependencies.
      * @return Plugin instance representing the dependent plugin described by the given identifier.
@@ -194,6 +200,13 @@ public interface Plugin {
         Builder require(ManifestIdentifier identifier);
 
         /**
+         * Adds an event listener that is fired when a plugin depends on this plugin.
+         * @param pluginConsumer Plugin consumer to fire when a dependency is loaded.
+         * @return Builder instance.
+         */
+        Builder onDepend(Consumer<Plugin> pluginConsumer);
+
+        /**
          * Registers a command to this Plugin.
          * @param label global label to assign command to.
          * @param executor CommandExecutor constructor function to bind this label to when a registration is created.
@@ -238,7 +251,7 @@ public interface Plugin {
          * Instances are defined when a plugin is successfully enabled and has configured other features,
          * such as Platforms.
          *
-         * @param instantiator instantiator function. Called during Plugin enable, cleared at disable.
+         * @param instantiator instantiator function: load() called during Plugin enable, unload() at disable.
          * @param <T> User-chosen type to bind the instance to.
          * @return Builder instance.
          */
