@@ -21,7 +21,7 @@ public interface PluginLoader {
     /**
      * Finds a list of plugin artifact dependencies for a given plugin artifact.
      * @param artifact Plugin artifact to find dependencies for.
-     * @return immutable collection of artifact dependencies.
+     * @return immutable collection of plugin dependencies.
      */
     Collection<ArtifactDependency> getDependencies(Artifact artifact);
 

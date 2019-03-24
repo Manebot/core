@@ -41,7 +41,7 @@ public interface PluginManager {
      * @param identifier Plugin ArtifactIdentifier to find dependencies for.
      * @return immutable collection of artifact dependencies.
      */
-    Collection<PluginDependency> getDependencies(ArtifactIdentifier identifier);
+    Collection<ArtifactDependency> getDependencies(ArtifactIdentifier identifier);
 
     /**
      * Adds a plugin to the system.
