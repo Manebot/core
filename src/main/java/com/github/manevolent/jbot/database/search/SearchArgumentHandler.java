@@ -10,4 +10,13 @@ import javax.persistence.criteria.Root;
  */
 public interface SearchArgumentHandler {
     Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value);
+
+    default SearchArgumentHandler not() {
+        return new SearchArgumentHandler() {
+            @Override
+            public Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value) {
+                return this.handle(root, criteriaBuilder, value).not();
+            }
+        };
+    }
 }
