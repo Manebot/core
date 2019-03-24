@@ -58,6 +58,12 @@ public interface PluginRegistration {
     Collection<PluginProperty> getProperties();
 
     /**
+     * Changes the version of this plugin.
+     * @param version version to change to.
+     */
+    void setVersion(String version);
+
+    /**
      * Gets the value for a specific plugin property.
      * @param name name of the property to require.
      * @return property value, or null if it is not defined.
