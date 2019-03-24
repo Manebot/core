@@ -31,11 +31,9 @@ public class ManifestIdentifier {
      */
     public ManifestIdentifier(String packageId, String artifactId) {
         if (packageId == null) throw new NullPointerException("packageId");
-        assertLowercase(packageId);
         this.packageId = packageId;
 
         if (artifactId == null) throw new NullPointerException("artifactId");
-        assertLowercase(artifactId);
         this.artifactId = artifactId;
     }
 
@@ -91,16 +89,7 @@ public class ManifestIdentifier {
      * @return true if the artifact identifiers are equal, false otherwise.
      */
     public boolean equals(ManifestIdentifier b) {
-        return packageId.equals(b.packageId) && artifactId.equals(b.artifactId);
-    }
-
-    private static void assertLowercase(String string) {
-        if (string == null) return;
-
-        for (int idx = 0; idx < string.length(); idx ++) {
-            if (Character.isUpperCase(string.charAt(idx)))
-                throw new IllegalArgumentException("string is not lowercase");
-        }
+        return packageId.equalsIgnoreCase(b.packageId) && artifactId.equalsIgnoreCase(b.artifactId);
     }
 
     /**
