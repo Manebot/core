@@ -282,6 +282,10 @@ public interface Plugin {
             this.registration = registration;
         }
 
+        public Plugin getPlugin() {
+            return getRegistration().getInstance();
+        }
+
         public PluginRegistration getRegistration() {
             return registration;
         }
