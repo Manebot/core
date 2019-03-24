@@ -15,7 +15,10 @@ public interface PluginEntry {
 
     /**
      * Destructs the Plugin's resources.
+     * @throws UnsupportedOperationException if the plugin doesn't support destructing completely.
      */
-    void destruct(Plugin plugin);
+    default void destruct(Plugin plugin) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
 
 }

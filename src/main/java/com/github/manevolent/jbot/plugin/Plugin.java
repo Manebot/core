@@ -6,11 +6,14 @@ import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.database.Database;
 import com.github.manevolent.jbot.event.EventListener;
 import com.github.manevolent.jbot.platform.Platform;
-import com.github.manevolent.jbot.platform.PlatformConnection;
 import com.github.manevolent.jbot.platform.PlatformRegistration;
-import com.github.manevolent.jbot.property.Property;
+import com.github.manevolent.jbot.virtual.Virtual;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -125,6 +128,10 @@ public interface Plugin {
      */
     String getName();
 
+    /**
+     * Gets the logger associated with this plugin.
+     * @return Logger instance.
+     */
     Logger getLogger();
 
     /**
@@ -185,7 +192,7 @@ public interface Plugin {
          * @param executor CommandExecutor constructor function to bind this label to when a registration is created.
          * @return Builder instance.
          */
-        Builder command(String label, Function<PluginRegistration, CommandExecutor> executor);
+        Builder command(String label, Function<Future, CommandExecutor> executor);
 
         /**
          * Registers a command to this Plugin.
@@ -229,7 +236,7 @@ public interface Plugin {
          * @return Builder instance.
          */
         <T extends PluginReference>
-        Builder instance(Class<T> instanceClass, Function<PluginRegistration, T> instantiator);
+        Builder instance(Class<T> instanceClass, Function<Future, T> instantiator);
 
         /**
          * Calls the specified function when the Plugin is enabled.
@@ -264,7 +271,32 @@ public interface Plugin {
     }
 
     interface PluginFunction {
-        void call() throws PluginException;
+        void call(Future future) throws PluginException;
     }
 
+    class Future {
+        private final PluginRegistration registration;
+        private final List<Consumer<PluginRegistration>> postTasks = new ArrayList<>();
+
+        public Future(PluginRegistration registration) {
+            this.registration = registration;
+        }
+
+        public PluginRegistration getRegistration() {
+            return registration;
+        }
+
+        public void after(Consumer<PluginRegistration> registrationConsumer) {
+            postTasks.add(registrationConsumer);
+        }
+
+        public void afterAsync(Consumer<PluginRegistration> registrationConsumer) {
+            postTasks.add((registration) ->
+                    Virtual.getInstance().create(() -> registrationConsumer.accept(registration)).start());
+        }
+
+        public Collection<Consumer<PluginRegistration>> getTasks() {
+            return Collections.unmodifiableCollection(postTasks);
+        }
+    }
 }
