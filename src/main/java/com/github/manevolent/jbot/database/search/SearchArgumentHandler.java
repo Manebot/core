@@ -15,7 +15,7 @@ public interface SearchArgumentHandler {
         return new SearchArgumentHandler() {
             @Override
             public Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value) {
-                return this.handle(root, criteriaBuilder, value).not();
+                return SearchArgumentHandler.this.handle(root, criteriaBuilder, value).not();
             }
         };
     }
