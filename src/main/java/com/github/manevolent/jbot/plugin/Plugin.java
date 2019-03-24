@@ -40,6 +40,12 @@ public interface Plugin {
     Artifact getArtifact();
 
     /**
+     * Gets a collection of required dependencies associated with this plugin.
+     * @return Required plugin dependencies.
+     */
+    Collection<Plugin> getRequiredDependencies();
+
+    /**
      * Gets a collection of dependencies associated with this plugin.
      * @return Plugin dependencies.
      */
