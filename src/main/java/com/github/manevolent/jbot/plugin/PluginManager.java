@@ -37,10 +37,19 @@ public interface PluginManager {
     Collection<PluginRegistration> getPlugins();
 
     /**
+     * Finds all dependencies for a specific plugin artifact identifier.
+     * @param identifier Plugin ArtifactIdentifier to find dependencies for.
+     * @return immutable collection of artifact dependencies.
+     */
+    Collection<PluginDependency> getDependencies(ArtifactIdentifier identifier);
+
+    /**
      * Adds a plugin to the system.
      *
      * @param artifactIdentifier Plugin ArtifactIdentifier to add.
      * @return PluginRegistration instance that was installed.
+     * @throws IllegalArgumentException if there is a problem obtaining a plugin from the given artifact identifier
+     * @throws PluginLoadException if there is a problem loading the plugin
      */
     PluginRegistration install(ArtifactIdentifier artifactIdentifier)
             throws IllegalArgumentException, PluginLoadException;
