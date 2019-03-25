@@ -32,6 +32,14 @@ public interface PluginRegistration {
     Plugin getInstance();
 
     /**
+     * Finds if this registration is installed to the parent plugin manager..
+     * @return true if the registration is installed, false otherwise.
+     */
+    default boolean isInstalled() {
+        return getPluginManager().isInstalled(getIdentifier());
+    }
+
+    /**
      * Finds if the plugin is loaded into the system.
      * @return true if the plugin is loaded, false otherwise.
      */

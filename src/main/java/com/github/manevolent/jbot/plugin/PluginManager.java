@@ -64,6 +64,13 @@ public interface PluginManager {
     boolean uninstall(PluginRegistration registration);
 
     /**
+     * Finds if the specified artifact identifier is installed.
+     * @param artifactIdentifier artifact identifier to check.
+     * @return true if the identifier is installed, false otherwise.
+     */
+    boolean isInstalled(ArtifactIdentifier artifactIdentifier);
+
+    /**
      * Finds a previously installed plugin by its artifact identifier.
      *
      * @param id artifact identifier
