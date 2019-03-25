@@ -10,6 +10,8 @@ before_script:
   # Replace the repository name in the configuration.yml to the correct one.
   - sed -i 's,MAVEN_REPO_KEY,'"$MAVEN_REPO_KEY"',g' configuration.yml
 build:
+  tags:
+    - maven
   script:
     # Run the MVN command
     - ./jfrog rt mvn "clean install" configuration.yml --build-name=gitlabci-maven-artifactory --build-number=$CI_JOB_ID
