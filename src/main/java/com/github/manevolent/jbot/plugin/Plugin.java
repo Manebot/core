@@ -1,6 +1,7 @@
 package com.github.manevolent.jbot.plugin;
 
 import com.github.manevolent.jbot.artifact.Artifact;
+import com.github.manevolent.jbot.artifact.ArtifactDependency;
 import com.github.manevolent.jbot.artifact.ManifestIdentifier;
 import com.github.manevolent.jbot.command.executor.CommandExecutor;
 import com.github.manevolent.jbot.database.Database;
@@ -58,10 +59,22 @@ public interface Plugin {
     Collection<Plugin> getDependencies();
 
     /**
+     * Gets a collection of plugins artifact dependencies of this plugin.
+     * @return Plugin artifact dependencies.
+     */
+    Collection<ArtifactDependency> getArtifactDependencies();
+
+    /**
      * Gets a collection of plugins depending on this plugin.
      * @return Plugin dependers.
      */
     Collection<Plugin> getDependers();
+
+    /**
+     * Gets a collection of plugins artifact dependers of this plugin.
+     * @return Plugin artifact dependers.
+     */
+    Collection<ArtifactDependency> getArtifactDependers();
 
     /**
      * Gets a dependent plugin by its manifest identifier.
