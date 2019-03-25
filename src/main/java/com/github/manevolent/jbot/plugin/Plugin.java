@@ -46,6 +46,12 @@ public interface Plugin {
     Collection<Plugin> getRequiredDependencies();
 
     /**
+     * Gets the type of plugin this plugin is assuming.
+     * @return plugin type.
+     */
+    PluginType getType();
+
+    /**
      * Gets a collection of dependencies associated with this plugin.
      * @return Plugin dependencies.
      */
@@ -287,6 +293,13 @@ public interface Plugin {
          * @return Database instance.
          */
         Database database(String name, Function<Database.ModelConstructor, Database> func);
+
+        /**
+         * Plugin type
+         * @param type type
+         * @return Builder instance
+         */
+        Builder type(PluginType type);
 
         /**
          * Builds a Plugin instance.
