@@ -9,11 +9,11 @@ public class VersionTest extends TestCase {
 
     public void testParser() throws Exception {
         assertEquals("1.0.0-abcdefg", Version.fromString("1.0.0-abcdefg").toString());
-        assertEquals("1.0.0-abcdefg", Version.fromString("1.0-abcdefg").toString());
-        assertEquals("1.0.0-abcdefg", Version.fromString("1-abcdefg").toString());
+        assertEquals("1.0-abcdefg", Version.fromString("1.0-abcdefg").toString());
+        assertEquals("1-abcdefg", Version.fromString("1-abcdefg").toString());
         assertEquals("1.0.0", Version.fromString("1.0.0").toString());
-        assertEquals("1.0.0", Version.fromString("1.0").toString());
-        assertEquals("1.0.0", Version.fromString("1").toString());
+        assertEquals("1.0", Version.fromString("1.0").toString());
+        assertEquals("1", Version.fromString("1").toString());
     }
 
 }
