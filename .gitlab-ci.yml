@@ -2,7 +2,7 @@ image: maven:latest
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-  - .m2/
+  - /usr/local/maven
   
 before_script:
   # Install JFrog CLI
@@ -11,7 +11,7 @@ before_script:
   - ./jfrog rt config --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --password=$ARTIFACTORY_PASS
   - ./jfrog rt c show
   # Set the M2_HOME environment variable
-  - export M2_HOME=.m2/
+  - export M2_HOME=/usr/local/maven
   # Replace the repository name in the configuration.yml to the correct one.
   - sed -i 's,MAVEN_REPO_KEY,'"$MAVEN_REPO_KEY"',g' configuration.yml
 build:
