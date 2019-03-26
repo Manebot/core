@@ -10,10 +10,6 @@ cache:
     - .m2/repository/
     - target/
     
-build:
-  tags:
-    - maven
-    
 stages:
   - build
   - test
@@ -22,7 +18,8 @@ stages:
 
 codebuild:
   tags:
-    - build      
+    - build
+    - maven
   stage: build
   script: 
     - mvn compile
@@ -30,6 +27,7 @@ codebuild:
 codetest:
   tags:
     - build
+    - maven
   stage: test
   script:
     - mvn $MAVEN_CLI_OPTS test
@@ -37,6 +35,7 @@ codetest:
 codepackage:
   tags:
     - build
+    - maven
   stage: package
   script:
     - mvn $MAVEN_CLI_OPTS package -Dmaven.test.skip=true
@@ -46,7 +45,7 @@ codepackage:
 
 codedeploy:
   tags:
-    - build
+    - maven
   stage: deploy
   script:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.test.skip=true
