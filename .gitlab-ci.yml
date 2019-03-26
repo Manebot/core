@@ -18,7 +18,6 @@ stages:
 
 codebuild:
   tags:
-    - build
     - maven
   stage: build
   script: 
@@ -26,7 +25,6 @@ codebuild:
 
 codetest:
   tags:
-    - build
     - maven
   stage: test
   script:
@@ -34,7 +32,6 @@ codetest:
 
 codepackage:
   tags:
-    - build
     - maven
   stage: package
   script:
