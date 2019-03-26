@@ -4,9 +4,38 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>Team Lixo public release repository</name>
+            <url>https://maven.teamlixo.net/repository/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>public-releases</id>
+            <name>Team Lixo public release repository</name>
+            <url>https://maven.teamlixo.net/repository/public-releases/</url>
+            <uniqueVersion>true</uniqueVersion>
+        </repository>
+        <snapshotRepository>
+            <id>public-snapshots</id>
+            <name>Team Lixo public release snapshots</name>
+            <url>https://maven.teamlixo.net/repository/public-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <groupId>com.github.manevolent</groupId>
     <artifactId>jbot-core</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.6-SNAPSHOT</version>
 
     <build>
         <plugins>
