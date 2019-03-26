@@ -13,7 +13,8 @@ before_script:
   # Set the M2_HOME environment variable
   - export M2_HOME=/usr/share/maven
   # Replace the repository name in the configuration.yml to the correct one.
-  - sed -i 's,MAVEN_REPO_KEY,'"$MAVEN_REPO_KEY"',g' configuration.yml
+  - sed -i 's,MAVEN_SNAPSHOT_REPO_KEY,'"$MAVEN_SNAPSHOT_REPO_KEY"',g' configuration.yml
+  - sed -i 's,MAVEN_RELEASE_REPO_KEY,'"$MAVEN_RELEASE_REPO_KEY"',g' configuration.yml
 build:
   tags:
     - maven
