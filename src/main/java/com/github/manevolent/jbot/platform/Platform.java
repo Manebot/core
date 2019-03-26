@@ -163,11 +163,14 @@ public interface Platform {
 
         /**
          * Registers this platform, returning an assigned platform instance capable of managing the platform assignment.
-         * @param plugin Plugin to assign this platform to.
          * @return AssignedPlatform instance.
          */
-        public abstract PlatformRegistration register(Plugin plugin);
+        public abstract PlatformRegistration register();
 
+        /**
+         * Gets the instance of the plugin that this platform will be registered to.
+         * @return plugin instance.
+         */
         public Plugin getPlugin() {
             return plugin;
         }

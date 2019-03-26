@@ -36,7 +36,7 @@ public class Version implements Comparable<Version> {
     }
 
     public int getComponent(int index) {
-        if (components.length < index) return 0;
+        if (components.length <= index) return 0;
         else return components[index];
     }
 

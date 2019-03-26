@@ -14,6 +14,9 @@ public class VersionTest extends TestCase {
         assertEquals("1.0.0", Version.fromString("1.0.0").toString());
         assertEquals("1.0", Version.fromString("1.0").toString());
         assertEquals("1", Version.fromString("1").toString());
+
+        assertEquals(Version.fromString("1.0.0.0.0").compareTo(Version.fromString("1.0.0.0")), 0);
+        assertEquals(Version.fromString("1.0.0.0").compareTo(Version.fromString("1.0.0.0.0")), 0);
     }
 
 }
