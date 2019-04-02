@@ -33,7 +33,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <groupId>com.github.manevolent</groupId>
+    <groupId>io.manebot</groupId>
     <artifactId>manebot-core</artifactId>
     <version>0.1.6.1</version>
 
