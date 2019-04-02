@@ -1,8 +1,8 @@
-import com.github.manevolent.jbot.command.CommandSender;
-import com.github.manevolent.jbot.command.executor.CommandExecutor;
-import com.github.manevolent.jbot.command.executor.chained.AnnotatedCommandExecutor;
-import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentLabel;
-import com.github.manevolent.jbot.command.executor.chained.argument.CommandArgumentString;
+import io.manebot.command.CommandSender;
+import io.manebot.command.executor.CommandExecutor;
+import io.manebot.command.executor.chained.AnnotatedCommandExecutor;
+import io.manebot.command.executor.chained.argument.CommandArgumentLabel;
+import io.manebot.command.executor.chained.argument.CommandArgumentString;
 import junit.framework.TestCase;
 
 

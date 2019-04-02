@@ -1,4 +1,4 @@
-import com.github.manevolent.jbot.database.search.Search;
+import io.manebot.database.search.Search;
 import junit.framework.TestCase;
 
 public class SearchTest extends TestCase {

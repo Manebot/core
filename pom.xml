@@ -34,8 +34,8 @@
     </distributionManagement>
 
     <groupId>com.github.manevolent</groupId>
-    <artifactId>jbot-core</artifactId>
-    <version>0.1.6.1-SNAPSHOT</version>
+    <artifactId>manebot-core</artifactId>
+    <version>0.1.6.1</version>
 
     <build>
         <plugins>
