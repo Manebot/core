@@ -5,6 +5,7 @@ import io.manebot.command.response.CommandDetailsResponse;
 import io.manebot.command.response.CommandListResponse;
 import io.manebot.platform.PlatformUser;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -46,7 +47,13 @@ public interface ChatSender {
      * Adds a message to the command buffer or sends a message.
      * @param message message to add.
      */
-    void sendMessage(String message);
+    Collection<ChatMessage> sendMessage(String message);
+
+    /**
+     * Adds a message to the command buffer or sends a message.
+     * @param function function to provide a formatted message.
+     */
+    ChatMessage sendFormattedMessage(Consumer<TextBuilder> function);
 
     /**
      * Sends a message to the sender.
@@ -58,21 +65,21 @@ public interface ChatSender {
 
     /**
      * Ends the command buffer.
-     * @return number of lines sent.
+     * @return ChatMessage generated.
      */
-    int end();
+    ChatMessage end();
 
     /**
      * Sends several messages to the remote.
      * @param messages Messages to get.
      */
-    void sendMessage(String... messages);
+    Collection<ChatMessage> sendMessage(String... messages);
 
     /**
      * Flushes the buffer.
-     * @return number of lines sent.
+     * @return ChatMessage generated.
      */
-    int flush();
+    ChatMessage flush();
 
 
     /**

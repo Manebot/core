@@ -14,6 +14,9 @@ public class DefaultRichCommandDetailsResponse extends CommandDetailsResponse {
     @Override
     public void send() {
         getSender().getChat().sendMessage(builder -> {
+            if (builder.getChat().getFormat().shouldMention(getSender().getPlatformUser()))
+                builder.message(textBuilder -> textBuilder.appendMention(getSender().getPlatformUser()));
+
             builder.embed(embedBuilder -> {
                 if (getObjectName() != null && getObjectKey() != null) {
                     embedBuilder.title(getObjectName() + " \"" + getObjectKey() + "\" details");
@@ -24,7 +27,7 @@ public class DefaultRichCommandDetailsResponse extends CommandDetailsResponse {
                 }
 
                 for (Item item : getItems())
-                    embedBuilder.field(item.getKey(), item.getValue(), true);
+                    embedBuilder.field(item.getKey(), item.getValue());
             });
         });
     }

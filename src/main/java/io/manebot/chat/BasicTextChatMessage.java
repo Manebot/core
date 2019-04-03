@@ -52,14 +52,14 @@ public class BasicTextChatMessage extends AbstractTextChatMessage {
         }
 
         @Override
-        public Builder embed(Consumer<ChatEmbed.Builder> function) {
-            throw new UnsupportedOperationException();
+        public ChatMessage.Builder rawMessage(String message) {
+            this.message = message;
+            return this;
         }
 
         @Override
-        public Builder message(String message) {
-            this.message = message;
-            return this;
+        public Builder embed(Consumer<ChatEmbed.Builder> function) {
+            throw new UnsupportedOperationException();
         }
 
         public String getMessage() {

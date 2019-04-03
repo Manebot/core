@@ -77,7 +77,7 @@ public abstract class CommandDetailsResponse extends CommandResponse {
         @Override
         public String getValue() {
             if (strings.size() <= 0) return "(none)";
-            else return "[" + String.join(",", strings) + "]";
+            else return "[" + String.join(", ", strings) + "]";
         }
     }
 

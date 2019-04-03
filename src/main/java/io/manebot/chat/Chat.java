@@ -173,7 +173,10 @@ public interface Chat {
      */
     default Collection<User> getUsers() {
         return Collections.unmodifiableCollection(
-                getUserAssociations().stream().map(UserAssociation::getUser).collect(Collectors.toList())
+                getUserAssociations().stream()
+                        .map(UserAssociation::getUser)
+                        .distinct()
+                        .collect(Collectors.toList())
         );
     }
 
@@ -219,8 +222,25 @@ public interface Chat {
      * @param message PlainText message to get.
      * @return ChatMessage instance of the created message.
      */
+    default ChatMessage sendRawMessage(String message) {
+        return sendFormattedMessage(format -> format.appendRaw(message));
+    }
+
+    /**
+     * Sends a simple text message to the conversation.
+     * @param message PlainText message to get.
+     * @return ChatMessage instance of the created message.
+     */
     default ChatMessage sendMessage(String message) {
-        return sendMessage(builder -> builder.message(message));
+        return sendFormattedMessage(format -> format.append(message));
+    }
+
+    /**
+     * Adds a message to the command buffer or sends a message.
+     * @param function function to provide a formatted message.
+     */
+    default ChatMessage sendFormattedMessage(Consumer<TextBuilder> function) {
+        return sendMessage(builder -> builder.message(function));
     }
 
     /**
@@ -255,10 +275,34 @@ public interface Chat {
     default boolean canSendMessages() { return true; }
 
     /**
-     * Finds if the bot can get richly-built messages in this conversation.
+     * Finds if this chat can send embedded messages in this conversation.
      * @return true if the bot can get rich messages, false otherwise.
      */
-    default boolean canSendRichMessages() { return false; }
+    default boolean canSendEmbeds() { return false; }
+
+    /**
+     * Gets the formatter associated with this chat.  <b>ChatFormatter</b>s are used to apply rich styles to text.
+     * @return ChatFormatter instance.
+     */
+    default TextFormat getFormat() {
+        return TextFormat.BASIC;
+    }
+
+    /**
+     * Creates a new text builder for the chat's format.
+     * @return TextBuilder instance.
+     */
+    default TextBuilder text() {
+        return new DefaultTextBuilder(this, getFormat());
+    }
+
+    /**
+     * Finds if this chat supports formatting messages.
+     * @return true if the chat supports formatting messages.
+     */
+    default boolean canFormatMessages() {
+        return getFormat() != TextFormat.BASIC;
+    }
 
     /**
      * Finds if the bot can receive messages in this conversation.
@@ -286,6 +330,8 @@ public interface Chat {
      * @return ReceivedChatMessage instance of the parsed command, null if there is no command detected.
      */
     default ChatMessage parseCommand(ChatMessage message) {
+        if (message.getMessage() == null) return null;
+
         for (Character prefix : getCommandPrefixes()) {
             if (prefix == null) return null;
 

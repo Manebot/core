@@ -21,10 +21,17 @@ public class DefaultBasicCommandListResponse<T> extends CommandListResponse<T> {
         if (elements < 0) throw new CommandExecutionException("Invalid page (" + totalPages + " pages).");
         else if (elements == 0) throw new CommandExecutionException("No results found.");
 
-        getSender().sendMessage("Discovered " + getTotalElements() + " " + (getTotalElements() == 1 ? "item" : "items")
-                + " (showing " + elements + ", page " + getPage() + " of " + totalPages + "):");
+        getSender().sendMessage(
+                "Discovered " + getTotalElements() + " " + (getTotalElements() == 1 ? "item" : "items")
+                        + " (showing " + elements + ", page " + getPage() + " of " + totalPages + ")" + ":"
+        );
 
-        for (int i = 0; i < elements; i ++)
-            getSender().sendMessage(" - " + getResponder().line(getSender(), getAccessor().get(i)).trim());
+        for (int i = 0; i < elements; i ++) {
+            int finalI = i;
+            getSender().sendFormattedMessage(builder -> {
+                builder.append(" - ");
+                getResponder().line(builder, getAccessor().get(finalI));
+            });
+        }
     }
 }

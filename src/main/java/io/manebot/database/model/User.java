@@ -96,8 +96,9 @@ public class User extends TimedRow implements io.manebot.user.User {
     @JoinColumn(name = "privateConversationId")
     private Conversation conversation;
 
+    @Override
     public String getDisplayName() {
-        return displayName == null ? username : displayName;
+        return displayName == null || displayName.length() <= 0 ? username : displayName;
     }
 
     @Override
@@ -127,8 +128,17 @@ public class User extends TimedRow implements io.manebot.user.User {
         }));
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    @Override
+    public void setDisplayName(String displayName) throws IllegalArgumentException {
+        try {
+            this.displayName = database.executeTransaction(s -> {
+                User user = s.find(User.class, getUserId());
+                user.displayName = displayName;
+                return displayName;
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -3,15 +3,13 @@ package io.manebot.chat;
 import io.manebot.command.response.*;
 import io.manebot.platform.PlatformUser;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DefaultChatSender implements ChatSender {
-    private final List<String> lines = new LinkedList<>();
     private final Object bufferLock = new Object();
-    private volatile boolean buffered = false;
+    private TextBuilder buffer;
 
     private final PlatformUser user;
     private final Chat chat;
@@ -38,7 +36,7 @@ public class DefaultChatSender implements ChatSender {
     ) {
         CommandListResponse.Builder<T> builder;
 
-        if (getChat().canSendRichMessages()) {
+        if (getChat().canSendEmbeds()) {
             builder = new CommandListResponse.Builder<T>() {
                 @Override
                 public CommandListResponse<T> build() {
@@ -75,7 +73,7 @@ public class DefaultChatSender implements ChatSender {
     public CommandDetailsResponse details(Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function) {
         CommandDetailsResponse.Builder builder;
 
-        if (getChat().canSendRichMessages()) {
+        if (getChat().canSendEmbeds()) {
             builder = new CommandDetailsResponse.Builder() {
                 @Override
                 public CommandDetailsResponse build() {
@@ -110,85 +108,91 @@ public class DefaultChatSender implements ChatSender {
      */
     public boolean begin() {
         synchronized (bufferLock) {
-            if (buffered) return false;
-            else return buffered = true;
+            if (buffer != null) return false;
+            else {
+                buffer = chat.text();
+                return true;
+            }
         }
     }
 
     /**
      * Adds a message to the command buffer or sends a message.
-     * @param message message to add.
+     * @param message text to add.
      */
-    public void sendMessage(String message) {
-        message = getDisplayName().trim() + " -> " + formatMessage(message);
+    public Collection<ChatMessage> sendMessage(String message) {
+        String[] split = message.replace("\r", "").split("\n");
+        Collection<ChatMessage> chatMessages = new LinkedList<>();
+        for (String single : split) {
+            ChatMessage chatMessage = sendFormattedMessage(textBuilder -> textBuilder.append(single));
+            if (chatMessage != null) chatMessages.add(chatMessage);
+        }
+        return chatMessages;
+    }
+
+    @Override
+    public ChatMessage sendFormattedMessage(Consumer<TextBuilder> function) {
+        Consumer<TextBuilder> consumer = textBuilder -> {
+            textBuilder =
+                    (textBuilder.getFormat().shouldMention(user) ?
+                        textBuilder.appendMention(user) :
+                        textBuilder.append(getDisplayName().trim()))
+                        .append(" -> ");
+
+            function.accept(textBuilder);
+        };
+
         synchronized (bufferLock) {
-            if (buffered) {
-
-                lines.add(message);
-
-            } else getChat().sendMessage(message);
+            if (buffer != null) {
+                if (buffer.hasContent()) buffer.newLine();
+                consumer.accept(buffer);
+                return null;
+            } else {
+                return getChat().sendFormattedMessage(consumer);
+            }
         }
     }
 
     /**
      * Ends the command buffer.
-     * @return number of lines sent.
+     * @return number of flushes accomplished.
      */
-    public int end() {
-        int c = 0;
-        StringBuilder builder = new StringBuilder();
-
+    public ChatMessage end() {
         synchronized (bufferLock) {
-            if (!buffered) return 0;
-
-            Iterator<String> iterator = lines.iterator();
-
-            while (iterator.hasNext()) {
-                builder.append(iterator.next());
-                if (iterator.hasNext()) builder.append("\n");
-                c++;
-                iterator.remove();
+            if (buffer != null && buffer.hasContent()) {
+                ChatMessage chatMessage = getChat().sendRawMessage(buffer.build());
+                buffer = null;
+                return chatMessage;
             }
-
-            buffered = false;
         }
 
-        String result = builder.toString();
-        if (result.length() > 0) getChat().sendMessage(result);
-
-        return c;
+        return null;
     }
 
     /**
      * Sends several messages to the remote.
      * @param messages Messages to get.
+     * @return last ChatMessage genearted.
      */
-    public void sendMessage(String... messages) {
-        for (String s : messages) sendMessage(s);
+    public Collection<ChatMessage> sendMessage(String... messages) {
+        Collection<ChatMessage> chatMessages = new ArrayList<>(messages.length);
+        for (String s : messages)
+            chatMessages.addAll(sendMessage(s));
+        return chatMessages;
     }
 
     /**
      * Flushes the buffer.
      */
-    public int flush() {
-        int c;
-
+    public ChatMessage flush() {
         synchronized (bufferLock) {
-            if (buffered) {
-                c = end();
+            if (buffer != null) {
+                ChatMessage chatMessage = end();
                 begin();
+                return chatMessage;
             } else {
-                c = 0;
+                return null;
             }
         }
-
-        return c;
-    }
-
-    public static final String formatMessage(String message) {
-        return message
-                .replace("\n", " ")
-                .replace("\r", " ")
-                .replace("\t", " ");
     }
 }

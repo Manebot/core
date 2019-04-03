@@ -1,6 +1,7 @@
 package io.manebot.command.response;
 
 import io.manebot.chat.ChatSender;
+import io.manebot.chat.TextBuilder;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -50,13 +51,13 @@ public abstract class CommandListResponse<T> extends CommandResponse {
     }
 
     public interface ListElementFormatter<T> {
-        String line(ChatSender sender, T o);
+        void line(TextBuilder builder, T o);
     }
 
     public static class DefaultListElementFormatter<T> implements ListElementFormatter<T> {
         @Override
-        public String line(ChatSender sender, T o) {
-            return o.toString();
+        public void line(TextBuilder builder, T o) {
+            builder.append(o.toString());
         }
     }
 

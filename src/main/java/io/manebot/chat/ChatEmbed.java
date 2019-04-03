@@ -10,6 +10,7 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
+import java.util.function.Consumer;
 
 public interface ChatEmbed {
 
@@ -125,6 +126,8 @@ public interface ChatEmbed {
 
     interface Builder {
 
+        Chat getChat();
+
         /**
          * Sets the thumbnail of the chat message.
          * @param thumbnail Thumbnail.
@@ -133,25 +136,85 @@ public interface ChatEmbed {
         Builder thumbnail(ChatEmbed.ImageElement thumbnail);
 
         /**
+         * Sets the raw title of this builder.
+         * @param title title to set.
+         * @return Builder instance.
+         */
+        Builder titleRaw(String title);
+
+        /**
          * Sets the title of this builder.
          * @param title title to set.
          * @return Builder instance.
          */
-        Builder title(String title);
+        default Builder title(String title) {
+            return title(builder -> builder.append(title));
+        }
 
         /**
-         * Sets the text message that this message encapsulates.
+         * Sets the title of this builder.
+         * @param textBuilder text builder to use when building a title.
+         * @return Builder instance.
+         */
+        default Builder title(Consumer<TextBuilder> textBuilder) {
+            TextBuilder builder = getChat().text();
+            textBuilder.accept(builder);
+            return titleRaw(builder.build());
+        }
+
+        /**
+         * Sets the raw text message that this embed encapsulates.
+         * @param message message to set.
+         * @return Builder instance.
+         */
+        Builder descriptionRaw(String message);
+
+        /**
+         * Sets the text message that this embed encapsulates.
          * @param message message to get.
          * @return Builder instance.
          */
-        Builder description(String message);
+        default Builder description(String message) {
+            return description(textBuilder -> textBuilder.append(message));
+        }
 
         /**
-         * Sets the footer message.
-         * @param message footer message.
+         * Sets the text message that this embed encapsulates.
+         * @param textBuilder message to set.
          * @return Builder instance.
          */
-        Builder footer(String message);
+        default Builder description(Consumer<TextBuilder> textBuilder) {
+            TextBuilder builder = getChat().text();
+            textBuilder.accept(builder);
+            return descriptionRaw(builder.build());
+        }
+
+        /**
+         * Sets the raw footer of the embed.
+         * @param footer raw footer to set.
+         * @return Builder instance.
+         */
+        Builder footerRaw(String footer);
+
+        /**
+         * Sets the text message that this embed encapsulates.
+         * @param message footer to set.
+         * @return Builder instance.
+         */
+        default Builder footer(String message) {
+            return footer(textBuilder -> textBuilder.append(message));
+        }
+
+        /**
+         * Sets the footer of the embed.
+         * @param textBuilder text builder to set footer from.
+         * @return Builder instance.
+         */
+        default Builder footer(Consumer<TextBuilder> textBuilder) {
+            TextBuilder builder = getChat().text();
+            textBuilder.accept(builder);
+            return footerRaw(builder.build());
+        }
 
         /**
          * Sets the timestamp of this embed.
@@ -181,7 +244,7 @@ public interface ChatEmbed {
          * @return Builder instance.
          */
         default Builder field(String name, String value) {
-            return field(name, value, false);
+            return field(name, textBuilder -> textBuilder.append(value));
         }
 
         /**
@@ -191,7 +254,51 @@ public interface ChatEmbed {
          * @param inline inline
          * @return Builder instance.
          */
-        Builder field(String name, String value, boolean inline);
+        default Builder field(String name, String value, boolean inline) {
+            return field(name, textBuilder -> textBuilder.append(value), inline);
+        }
+
+        /**
+         * Adds a field to the embed.
+         * @param name field name to add.
+         * @param value field value to add.
+         * @return Builder instance.
+         */
+        default Builder field(String name, Consumer<TextBuilder> value) {
+            TextBuilder builder = getChat().text();
+            value.accept(builder);
+            return fieldRaw(name, builder.build());
+        }
+
+        /**
+         * Adds a field to the embed.
+         * @param name field name to add.
+         * @param value field value to add.
+         * @param inline inline
+         * @return Builder instance.
+         */
+        default Builder field(String name, Consumer<TextBuilder> value, boolean inline) {
+            TextBuilder builder = getChat().text();
+            value.accept(builder);
+            return fieldRaw(name, builder.build(), inline);
+        }
+
+        /**
+         * Adds a field to the embed.
+         * @param name field name to add.
+         * @param value raw field value to add.
+         * @return Builder instance.
+         */
+        Builder fieldRaw(String name, String value);
+
+        /**
+         * Adds a field to the embed.
+         * @param name field name to add.
+         * @param value raw field value to add.
+         * @param inline inline
+         * @return Builder instance.
+         */
+        Builder fieldRaw(String name, String value, boolean inline);
 
     }
 }

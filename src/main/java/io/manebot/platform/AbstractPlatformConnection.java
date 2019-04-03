@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -20,17 +21,29 @@ public abstract class AbstractPlatformConnection implements PlatformConnection {
     /**
      * Clears the chat map, used to persist Chat objects in the Platform.
      */
-    protected void clearChatMap() {
+    protected final void clearChatMap() {
         chatMap.clear();
     }
 
     /**
      * Clears the user map, used to persist PlatformUser objects in the Platform.
      */
-    protected void clearUserMap() {
+    protected final void clearUserMap() {
         userMap.clear();
     }
 
+    // Default behavior here
+    @Override
+    public void disconnect() {
+        clearChatMap();
+        clearUserMap();
+    }
+
+    /**
+     * Loads a user by its ID.
+     * @param id PlatformUser ID to load.
+     * @return PlatformUser instance loaded, null otherwise.
+     */
     protected abstract PlatformUser loadUserById(String id);
 
     /**
@@ -40,16 +53,30 @@ public abstract class AbstractPlatformConnection implements PlatformConnection {
      */
     protected abstract Chat loadChatById(String id);
 
-    // Default behavior here
-    @Override
-    public void disconnect() {
-        clearChatMap();
-        clearUserMap();
+    protected final PlatformUser getCachedUserById(String id) {
+        return userMap.get(id);
+    }
+
+    protected final Chat getCachedChatById(String id) {
+        return chatMap.get(id);
+    }
+
+    protected final PlatformUser getCachedUserById(String id, Function<String, PlatformUser> function) {
+        return userMap.computeIfAbsent(id, function);
+    }
+
+    protected final Chat getCachedChatById(String id, Function<String, Chat> function) {
+        return chatMap.computeIfAbsent(id, function);
     }
 
     @Override
     public Chat getChat(String id) {
-        return chatMap.computeIfAbsent(id, this::loadChatById);
+        return getCachedChatById(id, this::loadChatById);
+    }
+
+    @Override
+    public PlatformUser getPlatformUser(String id) {
+        return userMap.computeIfAbsent(id, this::loadUserById);
     }
 
     @Override
@@ -60,11 +87,6 @@ public abstract class AbstractPlatformConnection implements PlatformConnection {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList())
         );
-    }
-
-    @Override
-    public PlatformUser getPlatformUser(String id) {
-        return userMap.computeIfAbsent(id, this::loadUserById);
     }
 
     @Override

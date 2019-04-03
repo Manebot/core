@@ -10,10 +10,18 @@ import java.util.function.Consumer;
 public interface ChatMessage {
 
     /**
-     * Gets the user-friendly chat message string for this message.
+     * Gets the raw chat message string for this message.
      * @return message string.
      */
     String getMessage();
+
+    /**
+     * Gets the user-friendly chat message string for this message.
+     * @return message string.
+     */
+    default String getRawMessage() {
+        return getMessage();
+    }
 
     /**
      * Gets a collection of embeds associated with this chat message.
@@ -38,7 +46,7 @@ public interface ChatMessage {
      * @return edited message.
      */
     default ChatMessage edit(String message) {
-        return edit(builder -> builder.message(message));
+        return edit(builder -> builder.message(format -> format.append(message)));
     }
 
     /**
@@ -97,11 +105,31 @@ public interface ChatMessage {
         Chat getChat();
 
         /**
-         * Sets the message to get on this chat message.
-         * @param message message to get.
+         * Sets the raw message to get on this chat message.
+         * @param message raw message to set.
          * @return Builder instance.
          */
-        Builder message(String message);
+        Builder rawMessage(String message);
+
+        /**
+         * Sets the message to get on this chat message.
+         * @param message message to set.
+         * @return Builder instance.
+         */
+        default Builder message(String message) {
+            return message(textBuilder -> textBuilder.append(message));
+        }
+
+        /**
+         * Sets the message to get on this chat message.
+         * @param function message formatter function to use.
+         * @return Builder instance.
+         */
+        default Builder message(Consumer<TextBuilder> function) {
+            TextBuilder textBuilder = getChat().text();
+            function.accept(textBuilder);
+            return rawMessage(textBuilder.build());
+        }
 
         /**
          * Appends an abstract embed to the message.

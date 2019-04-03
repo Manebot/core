@@ -21,19 +21,29 @@ public class DefaultRichCommandListResponse<T> extends CommandListResponse<T> {
         if (elements < 0) throw new CommandExecutionException("Invalid page (" + totalPages + " pages).");
         else if (elements == 0) throw new CommandExecutionException("No results found.");
 
-        getSender().sendMessage(builder ->
-            builder.embed(embedBuilder -> {
-                embedBuilder
-                        .title("Discovered " + getTotalElements() + " " + (getTotalElements() == 1 ? "item" : "items"))
-                        .footer("showing " + elements + ", page " + getPage() + " of " + totalPages);
+        getSender().sendMessage(
+                builder -> {
+                    if (builder.getChat().getFormat().shouldMention(getSender().getPlatformUser()))
+                        builder.message(textBuilder -> textBuilder.appendMention(getSender().getPlatformUser()));
 
-                embedBuilder.description(
-                        String.join("\n",
-                                IntStream.range(0, (int)elements).boxed()
-                                        .map(i -> " - " + getResponder().line(getSender(), getAccessor().get(i)))
-                                        .collect(Collectors.toList()))
-                );
-            })
+                    builder.embed(embedBuilder -> {
+                        embedBuilder.title(
+                                "Discovered " +
+                                        getTotalElements() + " " +
+                                        (getTotalElements() == 1 ? "item" : "items")
+                        );
+
+                        embedBuilder.description(textBuilder -> {
+                            for (int i = 0; i < elements; i++) {
+                                if (i > 0) textBuilder.newLine();
+                                textBuilder.append("- ");
+                                getResponder().line(textBuilder, getAccessor().get(i));
+                            }
+                        });
+
+                        embedBuilder.footer("showing " + elements + ", page " + getPage() + " of " + totalPages);
+                    });
+                }
         );
     }
 }
