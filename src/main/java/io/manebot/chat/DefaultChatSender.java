@@ -36,7 +36,7 @@ public class DefaultChatSender implements ChatSender {
     ) {
         CommandListResponse.Builder<T> builder;
 
-        if (getChat().canSendEmbeds()) {
+        if (canSendEmbeds()) {
             builder = new CommandListResponse.Builder<T>() {
                 @Override
                 public CommandListResponse<T> build() {
@@ -73,7 +73,7 @@ public class DefaultChatSender implements ChatSender {
     public CommandDetailsResponse details(Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function) {
         CommandDetailsResponse.Builder builder;
 
-        if (getChat().canSendEmbeds()) {
+        if (canSendEmbeds()) {
             builder = new CommandDetailsResponse.Builder() {
                 @Override
                 public CommandDetailsResponse build() {
@@ -108,30 +108,26 @@ public class DefaultChatSender implements ChatSender {
      */
     public boolean begin() {
         synchronized (bufferLock) {
-            if (buffer != null) return false;
+            if (buffer != null)
+                return false;
             else {
-                buffer = chat.text();
+                buffer = getChat().text();
                 return true;
             }
         }
     }
 
-    /**
-     * Adds a message to the command buffer or sends a message.
-     * @param message text to add.
-     */
+    @Override
     public Collection<ChatMessage> sendMessage(String message) {
         String[] split = message.replace("\r", "").split("\n");
         Collection<ChatMessage> chatMessages = new LinkedList<>();
-        for (String single : split) {
-            ChatMessage chatMessage = sendFormattedMessage(textBuilder -> textBuilder.append(single));
-            if (chatMessage != null) chatMessages.add(chatMessage);
-        }
+        for (String single : split)
+            chatMessages.addAll(sendFormattedMessage(textBuilder -> textBuilder.append(single)));
         return chatMessages;
     }
 
     @Override
-    public ChatMessage sendFormattedMessage(Consumer<TextBuilder> function) {
+    public Collection<ChatMessage> sendFormattedMessage(Consumer<TextBuilder> function) {
         Consumer<TextBuilder> consumer = textBuilder -> {
             textBuilder =
                     (textBuilder.getFormat().shouldMention(user) ?
@@ -146,52 +142,57 @@ public class DefaultChatSender implements ChatSender {
             if (buffer != null) {
                 if (buffer.hasContent()) buffer.newLine();
                 consumer.accept(buffer);
-                return null;
+                return Collections.emptyList();
             } else {
                 return getChat().sendFormattedMessage(consumer);
             }
         }
     }
 
-    /**
-     * Ends the command buffer.
-     * @return number of flushes accomplished.
-     */
-    public ChatMessage end() {
-        synchronized (bufferLock) {
-            if (buffer != null && buffer.hasContent()) {
-                ChatMessage chatMessage = getChat().sendRawMessage(buffer.build());
-                buffer = null;
-                return chatMessage;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Sends several messages to the remote.
-     * @param messages Messages to get.
-     * @return last ChatMessage genearted.
-     */
-    public Collection<ChatMessage> sendMessage(String... messages) {
+    @Override
+    public Collection<ChatMessage> sendMessages(String... messages) {
         Collection<ChatMessage> chatMessages = new ArrayList<>(messages.length);
         for (String s : messages)
             chatMessages.addAll(sendMessage(s));
         return chatMessages;
     }
 
+    @Override
+    public boolean canSendEmbeds() {
+        return getChat().canSendEmbeds();
+    }
+
+    /**
+     * Ends the command buffer.
+     * @return number of flushes accomplished.
+     */
+    public Collection<ChatMessage> end() {
+        synchronized (bufferLock) {
+            if (buffer != null && buffer.hasContent()) {
+                try {
+                    return getChat().sendRawMessage(buffer.build());
+                } finally {
+                    buffer = null;
+                }
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
     /**
      * Flushes the buffer.
      */
-    public ChatMessage flush() {
+    public Collection<ChatMessage> flush() {
         synchronized (bufferLock) {
             if (buffer != null) {
-                ChatMessage chatMessage = end();
-                begin();
-                return chatMessage;
+                try {
+                    return end();
+                } finally {
+                    begin();
+                }
             } else {
-                return null;
+                return Collections.emptyList();
             }
         }
     }

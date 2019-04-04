@@ -13,6 +13,6 @@ public @interface EventHandler {
      * The event handler's priority.
      * @return Priority. HIGHEST executes first, while LOWEST executes last.
      */
-    public EventPriority priority() default EventPriority.NORMAL;
+    EventPriority priority() default EventPriority.NORMAL;
 
 }

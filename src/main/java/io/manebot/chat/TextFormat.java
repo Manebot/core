@@ -6,11 +6,14 @@ import java.util.EnumSet;
 
 public interface TextFormat {
 
-    TextFormat BASIC = new TextFormat() {};
+    TextFormat BASIC = new TextFormat() {
+        @Override
+        public boolean shouldMention(PlatformUser user) {
+            return false;
+        }
+    };
 
-    default boolean shouldMention(PlatformUser user) {
-        return this != BASIC;
-    }
+    boolean shouldMention(PlatformUser user);
 
     default String mention(Chat target) {
         return target.getName();

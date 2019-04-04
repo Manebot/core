@@ -44,8 +44,8 @@ public interface Bot {
     }
 
     /**
-     * Gets the system default user registration.
-     * @return default user registration.
+     * Gets the system default user registration handler.
+     * @return default user registration instance.
      */
     UserRegistration getDefaultUserRegistration();
 

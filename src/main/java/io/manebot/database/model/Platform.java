@@ -5,6 +5,7 @@ import io.manebot.user.User;
 import io.manebot.user.UserAssociation;
 
 import javax.persistence.*;
+import java.sql.SQLException;
 import java.util.Collection;
 
 @javax.persistence.Entity
@@ -41,6 +42,9 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     @Column(length = 64, nullable = false)
     private String id;
 
+    @Column()
+    private boolean registrationAllowed = true;
+
     public int getPlatformId() {
         return platformId;
     }
@@ -53,6 +57,23 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean isRegistrationAllowed() {
+        return registrationAllowed;
+    }
+
+    @Override
+    public void setRegistrationAllowed(boolean allowed) {
+        try {
+            this.registrationAllowed = database.executeTransaction(s -> {
+                Platform platform = s.find(Platform.class, getId());
+                return platform.registrationAllowed = allowed;
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

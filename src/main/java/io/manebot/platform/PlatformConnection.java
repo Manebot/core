@@ -41,7 +41,7 @@ public interface PlatformConnection {
 
     /**
      * Gets the default user registration system for this platform.
-     * @return platform user registration.
+     * @return platform user registration.  If <i>null</i>, this defaults to Bot.getDefaultUserRegistration().
      */
     default UserRegistration getUserRegistration() {
         return null;

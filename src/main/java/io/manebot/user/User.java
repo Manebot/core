@@ -1,5 +1,8 @@
 package io.manebot.user;
 
+import io.manebot.chat.ChatMessage;
+import io.manebot.chat.ChatMessageReceiver;
+import io.manebot.chat.ChatSender;
 import io.manebot.command.CommandSender;
 import io.manebot.command.DefaultCommandSender;
 import io.manebot.conversation.Conversation;
@@ -9,6 +12,8 @@ import io.manebot.platform.PlatformUser;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -183,20 +188,6 @@ public interface User extends EntityType {
     boolean removeAssociation(Platform platform, String id);
 
     /**
-     * Gets the bot's private conversation with this user.
-     *
-     * @return Private conversation, null if none exists.
-     */
-    Conversation getPrivateConversation();
-
-    /**
-     * Sets the bot's private conversation with this user.
-     *
-     * @param conversation private conversation, or null to unset.
-     */
-    void setPrivateConversation(Conversation conversation);
-
-    /**
      * Creates a command sender for the specified user.
      *
      * @param conversation Conversation to create a command sender for.
@@ -221,5 +212,28 @@ public interface User extends EntityType {
      * @return true if the type was changed.
      */
     boolean setType(UserType type);
+
+    /**
+     * Broadcasts the specified message receiver to the user.
+     * @param sender ChatSender to broadcast, constructing messages for each broadcast endpoint for the user.
+     * @return collection of all broadcast messages.
+     */
+    Collection<ChatMessage> broadcastMessage(Function<ChatSender, Collection<ChatMessage>> sender);
+
+    /**
+     * Gets the current user prompt.
+     * @return user prompt instance if one exists, null otherwise.
+     */
+    UserPrompt getPrompt();
+
+    /**
+     * Constructs and assigns a user prompt for this user. UserPrompts are completed on the thread of the user after
+     * they have been manually confirmed by the target user.
+     *
+     * @param consumer Consumer of a UserPrompt.Builder instance.
+     * @return constructed UserPrompt instance.
+     * @throws IllegalStateException if there is a state issue constructing the prompt.
+     */
+    UserPrompt prompt(Consumer<UserPrompt.Builder> consumer) throws IllegalStateException;
 
 }

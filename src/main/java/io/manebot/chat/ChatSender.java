@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface ChatSender {
+public interface ChatSender extends ChatMessageReceiver {
 
     /**
      * Gets the platform user that is associated with this chat sender.
@@ -44,43 +44,21 @@ public interface ChatSender {
     boolean begin();
 
     /**
-     * Adds a message to the command buffer or sends a message.
-     * @param message message to add.
-     */
-    Collection<ChatMessage> sendMessage(String message);
-
-    /**
-     * Adds a message to the command buffer or sends a message.
-     * @param function function to provide a formatted message.
-     */
-    ChatMessage sendFormattedMessage(Consumer<TextBuilder> function);
-
-    /**
-     * Sends a message to the sender.
-     * @param function function to use to build the chat message.
-     */
-    default ChatMessage sendMessage(Consumer<ChatMessage.Builder> function) {
-        return getChat().sendMessage(function);
-    }
-
-    /**
      * Ends the command buffer.
      * @return ChatMessage generated.
      */
-    ChatMessage end();
-
-    /**
-     * Sends several messages to the remote.
-     * @param messages Messages to get.
-     */
-    Collection<ChatMessage> sendMessage(String... messages);
+    Collection<ChatMessage> end();
 
     /**
      * Flushes the buffer.
      * @return ChatMessage generated.
      */
-    ChatMessage flush();
+    Collection<ChatMessage> flush();
 
+    @Override
+    default Collection<ChatMessage> sendMessage(Consumer<ChatMessage.Builder> function) {
+        return getChat().sendMessage(function);
+    }
 
     /**
      * Creates a list response to get to the command sender, opportunistically formatting as rich content.

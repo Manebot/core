@@ -13,7 +13,7 @@ import java.sql.SQLException;
         },
         uniqueConstraints = {@UniqueConstraint(columnNames ={"platformId","id"})}
 )
-public class UserAssociation implements io.manebot.user.UserAssociation {
+public class UserAssociation extends TimedRow implements io.manebot.user.UserAssociation {
     @Transient
     private final io.manebot.database.Database database;
     public UserAssociation(io.manebot.database.Database database) {
@@ -46,12 +46,6 @@ public class UserAssociation implements io.manebot.user.UserAssociation {
     @ManyToOne(optional = false)
     @JoinColumn(name = "platformId")
     private Platform platform;
-
-    @Column(nullable = false)
-    private int created;
-
-    @Column(nullable = true)
-    private Integer updated;
 
     public int getUserAssociationId() {
         return userAssociationId;
@@ -95,22 +89,6 @@ public class UserAssociation implements io.manebot.user.UserAssociation {
 
     public void setPlatform(Platform platform) {
         this.platform = platform;
-    }
-
-    public int getCreated() {
-        return created;
-    }
-
-    public void setCreated(int created) {
-        this.created = created;
-    }
-
-    public Integer getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(int updated) {
-        this.updated = updated;
     }
 
     @Override

@@ -5,6 +5,7 @@ import io.manebot.platform.PlatformConnection;
 import io.manebot.platform.PlatformUser;
 import io.manebot.user.User;
 import io.manebot.user.UserAssociation;
+import io.manebot.user.UserRegistration;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public interface Chat {
+public interface Chat extends ChatMessageReceiver {
 
     /**
      * Gets the platform connection associated with facilitating this conversation.
@@ -21,6 +22,14 @@ public interface Chat {
      */
     default PlatformConnection getPlatformConnection() {
         return getPlatform().getConnection();
+    }
+
+    /**
+     * Gets the user registration handler associated with this chat.
+     * @return user registration instance.
+     */
+    default UserRegistration getUserRegistration() {
+        return getPlatformConnection().getUserRegistration();
     }
 
     /**
@@ -217,38 +226,6 @@ public interface Chat {
      */
     boolean isPrivate();
 
-    /**
-     * Sends a simple text message to the conversation.
-     * @param message PlainText message to get.
-     * @return ChatMessage instance of the created message.
-     */
-    default ChatMessage sendRawMessage(String message) {
-        return sendFormattedMessage(format -> format.appendRaw(message));
-    }
-
-    /**
-     * Sends a simple text message to the conversation.
-     * @param message PlainText message to get.
-     * @return ChatMessage instance of the created message.
-     */
-    default ChatMessage sendMessage(String message) {
-        return sendFormattedMessage(format -> format.append(message));
-    }
-
-    /**
-     * Adds a message to the command buffer or sends a message.
-     * @param function function to provide a formatted message.
-     */
-    default ChatMessage sendFormattedMessage(Consumer<TextBuilder> function) {
-        return sendMessage(builder -> builder.message(function));
-    }
-
-    /**
-     * Sends a simple text message to the conversation.
-     * @param function function providing a platform-specific chat message to get.
-     * @return ChatMessage instance of the created message.
-     */
-    ChatMessage sendMessage(Consumer<ChatMessage.Builder> function);
 
     /**
      * Finds if it is possible to change the typing status in this chat.
@@ -274,19 +251,12 @@ public interface Chat {
      */
     default boolean canSendMessages() { return true; }
 
-    /**
-     * Finds if this chat can send embedded messages in this conversation.
-     * @return true if the bot can get rich messages, false otherwise.
-     */
-    default boolean canSendEmbeds() { return false; }
 
     /**
      * Gets the formatter associated with this chat.  <b>ChatFormatter</b>s are used to apply rich styles to text.
      * @return ChatFormatter instance.
      */
-    default TextFormat getFormat() {
-        return TextFormat.BASIC;
-    }
+    TextFormat getFormat();
 
     /**
      * Creates a new text builder for the chat's format.
@@ -330,14 +300,14 @@ public interface Chat {
      * @return ReceivedChatMessage instance of the parsed command, null if there is no command detected.
      */
     default ChatMessage parseCommand(ChatMessage message) {
-        if (message.getMessage() == null) return null;
+        String raw = message.getRawMessage();
+
+        if (raw == null) return null;
 
         for (Character prefix : getCommandPrefixes()) {
             if (prefix == null) return null;
 
-            if (message.getMessage().startsWith(prefix.toString()) &&
-                    message.getMessage().length() > 1 &&
-                    Character.isLetterOrDigit(message.getMessage().charAt(1))) {
+            if (raw.startsWith(prefix.toString()) && raw.length() > 1 && Character.isLetterOrDigit(raw.charAt(1))) {
                 final String substringedMessage = message.getMessage().substring(1);
 
                 return new ChatMessage() {

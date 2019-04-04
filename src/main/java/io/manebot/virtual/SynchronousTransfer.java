@@ -92,7 +92,7 @@ public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnabl
             return completed;
         }
 
-        public void complete(S object) throws InterruptedException {
+        public void complete(S object) {
             synchronized (lock) {
                 if (completed) throw new IllegalStateException("already completed");
                 future.complete(object);
@@ -100,7 +100,7 @@ public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnabl
             }
         }
 
-        public void completeExceptionally(Throwable ex) throws InterruptedException {
+        public void completeExceptionally(Throwable ex) {
             synchronized (lock) {
                 if (completed) throw new IllegalStateException("already completed");
                 future.completeExceptionally(ex);

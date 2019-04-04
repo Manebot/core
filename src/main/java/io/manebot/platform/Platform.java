@@ -37,6 +37,18 @@ public interface Platform {
     String getId();
 
     /**
+     * Finds if registration is allowed.
+     * @return true if registration is allowed, false otherwise.
+     */
+    boolean isRegistrationAllowed();
+
+    /**
+     * Sets if registration is allowed on this platform.
+     * @param allowed true if registration is allowed, false otherwise.
+     */
+    void setRegistrationAllowed(boolean allowed);
+
+    /**
      * Finds if the platform is currently connected.
      *
      * @return true if the platform is connected, false otherwise.
@@ -56,7 +68,6 @@ public interface Platform {
                 .filter(assoc -> assoc.getPlatformId().equals(id)).findFirst().orElse(null);
     }
 
-
     /**
      * Gets a specific assocation for this platform.
      *
@@ -66,7 +77,6 @@ public interface Platform {
     default UserAssociation getUserAssocation(PlatformUser user) {
         return getUserAssocation(user.getId());
     }
-
 
     /**
      * Gets a set of user associations for the specified user.

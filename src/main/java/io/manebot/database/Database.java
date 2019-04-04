@@ -1,6 +1,8 @@
 package io.manebot.database;
 
 import io.manebot.database.search.SearchHandler;
+import io.manebot.lambda.ThrowingConsumer;
+import io.manebot.lambda.ThrowingFunction;
 
 import javax.persistence.EntityManager;
 import java.sql.SQLException;
@@ -55,16 +57,14 @@ public interface Database extends AutoCloseable {
      *
      * @return User-defined result.
      */
-    default <T, E extends Throwable> T execute(Execution<T, E> function) throws E {
+    default <T, E extends Exception> T execute(ThrowingFunction<EntityManager, T, E> function) throws E {
         EntityManager session = null;
 
         try {
             session = openSession();
-
-            return function.execute(session);
+            return function.applyChecked(session);
         } finally {
-            if (session != null)
-                session.close();
+            if (session != null) session.close();
         }
     }
 
@@ -75,16 +75,14 @@ public interface Database extends AutoCloseable {
      *
      * @param function Function to execute.
      */
-    default <E extends Throwable> void execute(VoidExecution<E> function) throws E {
+    default <E extends Exception> void execute(ThrowingConsumer<EntityManager, E> function) throws E {
         EntityManager session = null;
 
         try {
             session = openSession();
-
-            function.execute(session);
+            function.acceptChecked(session);
         } finally {
-            if (session != null)
-                session.close();
+            if (session != null) session.close();
         }
     }
 
@@ -95,16 +93,14 @@ public interface Database extends AutoCloseable {
      * @param function Function to execute.
      * @throws SQLException failure to execute <b>function</b> or transactional behavior.
      */
-    default <E extends Throwable> void executeTransaction(VoidExecution<E> function) throws SQLException {
+    default <E extends Exception> void executeTransaction(ThrowingConsumer<EntityManager, E> function)
+            throws SQLException {
         EntityManager session = null;
 
         try {
             session = openSession();
-
             session.getTransaction().begin();
-
-            function.execute(session);
-
+            function.acceptChecked(session);
             session.getTransaction().commit();
         } catch (Throwable e) {
             if (session != null && session.getTransaction().isActive())
@@ -112,8 +108,7 @@ public interface Database extends AutoCloseable {
 
             throw new SQLException("Problem executing transaction", e);
         } finally {
-            if (session != null)
-                session.close();
+            if (session != null) session.close();
         }
     }
     /**
@@ -124,19 +119,16 @@ public interface Database extends AutoCloseable {
      * @return User-defined result.
      * @throws SQLException failure to execute <b>function</b> or transactional behavior.
      */
-    default <T, E extends Throwable> T executeTransaction(Execution<T, E> function) throws SQLException {
+    default <T, E extends Exception> T executeTransaction(ThrowingFunction<EntityManager, T, E> function)
+            throws SQLException {
         EntityManager session = null;
         T o;
 
         try {
             session = openSession();
-
             session.getTransaction().begin();
-
-            o = function.execute(session);
-
+            o = function.apply(session);
             session.getTransaction().commit();
-
             return o;
         } catch (Throwable e) {
             if (session != null && session.getTransaction().isActive())
@@ -258,14 +250,6 @@ public interface Database extends AutoCloseable {
          */
         Database define();
 
-    }
-
-    interface VoidExecution<E extends Throwable> {
-        void execute(EntityManager entityManager) throws E;
-    }
-
-    interface Execution<T, E extends Throwable> {
-        T execute(EntityManager entityManager) throws E;
     }
 
 }
