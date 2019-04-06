@@ -224,7 +224,7 @@ public interface Plugin {
          * @param listener event listener to bind.
          * @return Builder instance.
          */
-        Builder listen(EventListener listener);
+        Builder addListener(EventListener listener);
 
         /**
          * Gets a plugin property.
@@ -250,10 +250,10 @@ public interface Plugin {
         /**
          * Registers a command to this Plugin.
          * @param label global label to assign command to.
-         * @param executor CommandExecutor constructor function to bind this label to when a registration is created.
+         * @param function CommandExecutor constructor function to bind this label to when a registration is created.
          * @return Builder instance.
          */
-        Builder command(String label, Function<Future, CommandExecutor> executor);
+        Builder addCommand(String label, Function<Future, CommandExecutor> function);
 
         /**
          * Registers a command to this Plugin.
@@ -261,8 +261,8 @@ public interface Plugin {
          * @param executor CommandExecutor to bind this label to.
          * @return Builder instance.
          */
-        default Builder command(String label, CommandExecutor executor) {
-            return command(label, (registration) -> executor);
+        default Builder addCommand(String label, CommandExecutor executor) {
+            return addCommand(label, (registration) -> executor);
         }
 
         /**
@@ -271,19 +271,32 @@ public interface Plugin {
          * @param executor CommandExecutor to bind this label to.
          * @return Builder instance.
          */
-        default Builder command(Collection<String> labels, CommandExecutor executor) {
+        default Builder addCommand(Collection<String> labels, CommandExecutor executor) {
             for (String label : labels)
-                command(label, executor);
+                addCommand(label, executor);
+
+            return this;
+        }
+
+        /**
+         * Registers a command to this Plugin.
+         * @param labels labels to assign this command to.
+         * @param function CommandExecutor constructor function to bind this label to when a registration is created.
+         * @return Builder instance.
+         */
+        default Builder addCommand(Collection<String> labels, Function<Future, CommandExecutor> function) {
+            for (String label : labels)
+                addCommand(label, function);
 
             return this;
         }
 
         /**
          * Builds a platform for this Plugin instance.
-         * @param function Platform building function.
+         * @param consumer Platform building consumer.
          * @return Builder instance.
          */
-        Builder platform(Function<Platform.Builder, PlatformRegistration> function);
+        Builder addPlatform(Consumer<Platform.Builder> consumer);
 
         /**
          * Binds the specified class to an <i>instance</i>, which is a simple method of communicating functionality to
@@ -297,7 +310,7 @@ public interface Plugin {
          * @return Builder instance.
          */
         <T extends PluginReference>
-        Builder instance(Class<T> instanceClass, Function<Future, T> instantiator);
+        Builder setInstance(Class<T> instanceClass, Function<Future, T> instantiator);
 
         /**
          * Calls the specified function when the Plugin is enabled.
@@ -318,23 +331,17 @@ public interface Plugin {
         /**
          * Constructs a Database immediately.
          * @param name Database name.
-         * @param func Function used to construct the database.
+         * @param consumer Function used to construct the database parameters.
          * @return Database instance.
          */
-        Database database(String name, Function<Database.ModelConstructor, Database> func);
+        Database addDatabase(String name, Consumer<Database.ModelConstructor> consumer);
 
         /**
          * Plugin type
          * @param type type
          * @return Builder instance
          */
-        Builder type(PluginType type);
-
-        /**
-         * Builds a Plugin instance.
-         * @return Plugin instance.
-         */
-        Plugin build();
+        Builder setType(PluginType type);
 
     }
 

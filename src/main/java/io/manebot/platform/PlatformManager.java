@@ -4,6 +4,7 @@ import io.manebot.plugin.Plugin;
 import io.manebot.plugin.PluginException;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,34 +14,10 @@ public interface PlatformManager {
      * Registers a platform in the system, and automatically connects to it.
      * Registration may only occur if a system platform has not yet been assigned.
      *
-     * @param function Platform building function connection to call for registration.
+     * @param consumer Platform building function connection to call for registration.
      * @return Platform instance.
      */
-    default PlatformRegistration registerPlatform(Function<Platform.Builder, PlatformRegistration> function)
-            throws IllegalStateException, PluginException {
-        PlatformRegistration registration = function.apply(buildPlatform());
-
-        PlatformConnection connection = registration.getConnection();
-        if (connection != null)
-            connection.connect();
-
-        return registration;
-    }
-
-    /**
-     * Constructs a new builder for a Platform.
-     *
-     * @return Builder instance to construct a Platform.
-     */
-    Platform.Builder buildPlatform();
-
-    /**
-     * Constructs a new builder for a Platform.
-     *
-     * @param plugin plugin this platform is intended to be used by.
-     * @return Builder instance to construct a Platform.
-     */
-    Platform.Builder buildPlatform(Plugin plugin);
+    PlatformRegistration registerPlatform(Consumer<Platform.Builder> consumer);
 
     /**
      * Unregisters a platform registration from the system.

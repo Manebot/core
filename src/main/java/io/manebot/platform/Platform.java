@@ -120,19 +120,23 @@ public interface Platform {
 
 
     abstract class Builder {
-        private final Plugin plugin;
+        private Plugin plugin;
         private String id, name;
         private PlatformConnection connection;
 
-        public Builder(Plugin plugin) {
-            this.plugin = plugin;
-        }
+        public Builder() { }
+
+        /**
+         * Gets the plugin associated with the Builder's <b>id</b>, as previous set.
+         * @return
+         */
+        public abstract Platform getPlatform();
 
         public String getId() {
             return id;
         }
 
-        public Builder withId(String id) {
+        public Builder setId(String id) {
             if (this.id != null) throw new IllegalArgumentException("id is already set");
 
             this.id = id;
@@ -144,7 +148,7 @@ public interface Platform {
             return name == null ? id : name;
         }
 
-        public Builder withName(String name) {
+        public Builder setName(String name) {
             if (this.name != null) throw new IllegalArgumentException("name is already set");
 
             this.name = name;
@@ -152,17 +156,11 @@ public interface Platform {
             return this;
         }
 
-        /**
-         * Gets the plugin associated with the Builder's <b>id</b>, as previous set.
-         * @return
-         */
-        public abstract Platform getPlatform();
-
         public PlatformConnection getConnection() {
             return connection;
         }
 
-        public Builder withConnection(PlatformConnection connection) {
+        public Builder setConnection(PlatformConnection connection) {
             if (this.connection != null) throw new IllegalArgumentException("connection is already set");
 
             this.connection = connection;
@@ -171,17 +169,17 @@ public interface Platform {
         }
 
         /**
-         * Registers this platform, returning an assigned platform instance capable of managing the platform assignment.
-         * @return AssignedPlatform instance.
-         */
-        public abstract PlatformRegistration build();
-
-        /**
          * Gets the instance of the plugin that this platform will be registered to.
          * @return plugin instance.
          */
         public Plugin getPlugin() {
             return plugin;
+        }
+
+        public Builder setPlugin(Plugin plugin) {
+            if (this.plugin != null) throw new IllegalArgumentException("plugin", new IllegalStateException("already set"));
+            this.plugin = plugin;
+            return this;
         }
     }
 }

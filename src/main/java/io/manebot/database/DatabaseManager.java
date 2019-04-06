@@ -3,6 +3,7 @@ package io.manebot.database;
 import io.manebot.Bot;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface DatabaseManager {
@@ -35,6 +36,6 @@ public interface DatabaseManager {
      *
      * @return Database instance.
      */
-    Database defineDatabase(String name, Function<Database.ModelConstructor, Database> func);
+    Database defineDatabase(String name, Consumer<Database.ModelConstructor> func);
 
 }

@@ -211,7 +211,7 @@ public interface Database extends AutoCloseable {
          * @param database Database to depend on.
          * @return ModelConstructor instance.
          */
-        ModelConstructor depend(Database database);
+        ModelConstructor addDependency(Database database);
 
         /**
          * Registers an entity in the persistence system for this database.
@@ -242,13 +242,6 @@ public interface Database extends AutoCloseable {
          * @return ModelConstructor instance.
          */
         ModelConstructor setUpdateSchema(boolean updateSchema);
-
-        /**
-         * Defines the database in the persistence system.
-         *
-         * @return Database instance.
-         */
-        Database define();
 
     }
 
