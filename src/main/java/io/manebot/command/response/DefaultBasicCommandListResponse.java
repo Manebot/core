@@ -1,7 +1,11 @@
 package io.manebot.command.response;
 
+import io.manebot.chat.ChatMessage;
 import io.manebot.chat.ChatSender;
 import io.manebot.command.exception.CommandExecutionException;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class DefaultBasicCommandListResponse<T> extends CommandListResponse<T> {
     public DefaultBasicCommandListResponse(ChatSender sender,
@@ -14,7 +18,7 @@ public class DefaultBasicCommandListResponse<T> extends CommandListResponse<T> {
     }
 
     @Override
-    public void send() throws CommandExecutionException {
+    public Collection<ChatMessage> send() throws CommandExecutionException {
         long totalPages = (long) Math.ceil((double)getTotalElements() / (double)getElementsPerPage());
         long elements = Math.min(getAccessor().size(), getElementsPerPage());
 
@@ -26,12 +30,17 @@ public class DefaultBasicCommandListResponse<T> extends CommandListResponse<T> {
                         + " (showing " + elements + ", page " + getPage() + " of " + totalPages + ")" + ":"
         );
 
+        Collection<ChatMessage> chatMessages = new LinkedList<>();
+
         for (int i = 0; i < elements; i ++) {
             int finalI = i;
-            getSender().sendFormattedMessage(builder -> {
+
+            chatMessages.addAll(getSender().sendFormattedMessage(builder -> {
                 builder.append(" - ");
                 getResponder().line(builder, getAccessor().get(finalI));
-            });
+            }));
         }
+
+        return chatMessages;
     }
 }

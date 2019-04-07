@@ -1,5 +1,6 @@
 package io.manebot.chat;
 
+import io.manebot.command.exception.CommandExecutionException;
 import io.manebot.database.search.SearchResult;
 import io.manebot.command.response.CommandDetailsResponse;
 import io.manebot.command.response.CommandListResponse;
@@ -66,8 +67,9 @@ public interface ChatSender extends ChatMessageReceiver {
      * @param <T> List item type.
      * @return CommandResponse object corresponding to the desired message; contains <b>get()</b> method to dispatch.
      */
-    <T> CommandListResponse<T> list(Class<T> type,
-                                    Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function);
+    <T> Collection<ChatMessage> sendList(
+            Class<T> type,
+            Consumer<CommandListResponse.Builder<T>> function) throws CommandExecutionException;
 
     /**
      * Constructs a list response on the given search object and associated chat sender.
@@ -81,10 +83,11 @@ public interface ChatSender extends ChatMessageReceiver {
      * @param <T> List item type.
      * @return  CommandResponse object corresponding to the desired message; contains <b>get()</b> method to dispatch.
      */
-    default <T> CommandListResponse<T> list(Class<T> type,
-                                            SearchResult<T> result,
-                                            CommandListResponse.ListElementFormatter<T> formatter) {
-        return list(
+    default <T> Collection<ChatMessage> sendList(
+            Class<T> type,
+            SearchResult<T> result,
+            CommandListResponse.ListElementFormatter<T> formatter) throws CommandExecutionException {
+        return sendList(
                 type,
                 builder -> builder
                         .virtual(result.getResults())
@@ -92,7 +95,6 @@ public interface ChatSender extends ChatMessageReceiver {
                         .elementsPerPage(result.getPageSize())
                         .totalElements(result.getTotalResults())
                         .page(result.getPage())
-                        .build()
         );
     }
 
@@ -108,8 +110,7 @@ public interface ChatSender extends ChatMessageReceiver {
      * @param function Function providing a command response object from a builder.
      * @return CommandResponse object corresponding to the desired message; contains <b>get()</b> method to dispatch.
      */
-    CommandDetailsResponse details(
-            Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function
-    );
+    Collection<ChatMessage> sendDetails(Consumer<CommandDetailsResponse.Builder> function)
+        throws CommandExecutionException;
 
 }

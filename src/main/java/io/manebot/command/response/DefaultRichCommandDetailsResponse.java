@@ -1,5 +1,6 @@
 package io.manebot.command.response;
 
+import io.manebot.chat.ChatMessage;
 import io.manebot.chat.ChatSender;
 
 import java.util.Collection;
@@ -12,8 +13,8 @@ public class DefaultRichCommandDetailsResponse extends CommandDetailsResponse {
     }
 
     @Override
-    public void send() {
-        getSender().getChat().sendMessage(builder -> {
+    public Collection<ChatMessage> send() {
+        return getSender().getChat().sendMessage(builder -> {
             if (builder.getChat().getFormat().shouldMention(getSender().getPlatformUser()))
                 builder.message(textBuilder -> textBuilder.appendMention(getSender().getPlatformUser()));
 

@@ -1,8 +1,10 @@
 package io.manebot.command.response;
 
+import io.manebot.chat.ChatMessage;
 import io.manebot.chat.ChatSender;
 import io.manebot.command.exception.CommandExecutionException;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -14,14 +16,14 @@ public class DefaultRichCommandListResponse<T> extends CommandListResponse<T> {
     }
 
     @Override
-    public void send() throws CommandExecutionException {
+    public Collection<ChatMessage> send() throws CommandExecutionException {
         int totalPages = (int) Math.ceil((double)getTotalElements() / (double)getElementsPerPage());
         long elements = Math.min(getAccessor().size(), getElementsPerPage());
 
         if (elements < 0) throw new CommandExecutionException("Invalid page (" + totalPages + " pages).");
         else if (elements == 0) throw new CommandExecutionException("No results found.");
 
-        getSender().sendMessage(
+        return getSender().sendMessage(
                 builder -> {
                     if (builder.getChat().getFormat().shouldMention(getSender().getPlatformUser()))
                         builder.message(textBuilder -> textBuilder.appendMention(getSender().getPlatformUser()));

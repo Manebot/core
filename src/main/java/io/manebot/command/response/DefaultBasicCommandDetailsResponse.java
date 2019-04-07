@@ -1,9 +1,11 @@
 package io.manebot.command.response;
 
+import io.manebot.chat.ChatMessage;
 import io.manebot.chat.ChatSender;
 import io.manebot.command.exception.CommandExecutionException;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class DefaultBasicCommandDetailsResponse extends CommandDetailsResponse {
     public DefaultBasicCommandDetailsResponse(ChatSender sender,
@@ -13,7 +15,7 @@ public class DefaultBasicCommandDetailsResponse extends CommandDetailsResponse {
     }
 
     @Override
-    public void send() throws CommandExecutionException {
+    public Collection<ChatMessage> send() throws CommandExecutionException {
         if (getObjectName() != null && getObjectKey() != null) {
             getSender().sendMessage(getObjectName() + " \"" + getObjectKey() + "\" details:");
         } else if (getObjectName() != null) {
@@ -22,7 +24,11 @@ public class DefaultBasicCommandDetailsResponse extends CommandDetailsResponse {
             getSender().sendMessage("\"" + getObjectKey() + "\" details:");
         }
 
+        Collection<ChatMessage> chatMessages = new LinkedList<>();
+
         for (Item item : getItems())
-            getSender().sendMessage(" " + item.getKey() + ": " + item.getValue());
+            chatMessages.addAll(getSender().sendMessage(" " + item.getKey() + ": " + item.getValue()));
+
+        return chatMessages;
     }
 }

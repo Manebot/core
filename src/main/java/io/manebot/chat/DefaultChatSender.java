@@ -1,5 +1,6 @@
 package io.manebot.chat;
 
+import io.manebot.command.exception.CommandExecutionException;
 import io.manebot.command.response.*;
 import io.manebot.platform.PlatformUser;
 
@@ -30,10 +31,10 @@ public class DefaultChatSender implements ChatSender {
     }
 
     @Override
-    public <T> CommandListResponse<T> list(
+    public <T> Collection<ChatMessage> sendList(
             Class<T> type,
-            Function<CommandListResponse.Builder<T>, CommandListResponse<T>> function
-    ) {
+            Consumer<CommandListResponse.Builder<T>> function
+    ) throws CommandExecutionException {
         CommandListResponse.Builder<T> builder;
 
         if (canSendEmbeds()) {
@@ -66,11 +67,14 @@ public class DefaultChatSender implements ChatSender {
             };
         }
 
-        return function.apply(builder);
+        function.accept(builder);
+
+        return builder.build().send();
     }
 
     @Override
-    public CommandDetailsResponse details(Function<CommandDetailsResponse.Builder, CommandDetailsResponse> function) {
+    public Collection<ChatMessage> sendDetails(Consumer<CommandDetailsResponse.Builder> consumer)
+            throws CommandExecutionException {
         CommandDetailsResponse.Builder builder;
 
         if (canSendEmbeds()) {
@@ -99,7 +103,9 @@ public class DefaultChatSender implements ChatSender {
             };
         }
 
-        return function.apply(builder);
+        consumer.accept(builder);
+
+        return builder.build().send();
     }
 
     /**

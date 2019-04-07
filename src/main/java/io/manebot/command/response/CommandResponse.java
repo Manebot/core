@@ -1,7 +1,10 @@
 package io.manebot.command.response;
 
+import io.manebot.chat.ChatMessage;
 import io.manebot.chat.ChatSender;
 import io.manebot.command.exception.CommandExecutionException;
+
+import java.util.Collection;
 
 public abstract class CommandResponse {
     private final ChatSender sender;
@@ -14,5 +17,5 @@ public abstract class CommandResponse {
         return sender;
     }
 
-    public abstract void send() throws CommandExecutionException;
+    public abstract Collection<ChatMessage> send() throws CommandExecutionException;
 }
