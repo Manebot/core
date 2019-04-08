@@ -46,7 +46,7 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     @Column()
     private boolean registrationAllowed = true;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "defaultGroupId")
     private Group defaultGroup;
 
