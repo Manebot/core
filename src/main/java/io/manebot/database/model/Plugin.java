@@ -12,7 +12,8 @@ import java.util.Collections;
 @Table(
         indexes = {
                 @Index(columnList = "packageId,artifactId", unique = true),
-                @Index(columnList = "enabled")
+                @Index(columnList = "enabled"),
+                @Index(columnList = "required")
         },
         uniqueConstraints = {@UniqueConstraint(columnNames ={"packageId","artifactId"})}
 )
@@ -49,6 +50,9 @@ public class Plugin extends TimedRow {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(nullable = false)
+    private boolean required = false;
+
     public int getPluginId() {
         return pluginId;
     }
@@ -72,6 +76,21 @@ public class Plugin extends TimedRow {
             this.enabled = database.executeTransaction(s -> {
                 Plugin plugin = s.find(Plugin.class, getPluginId());
                 return plugin.enabled = enabled;
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        try {
+            this.required = database.executeTransaction(s -> {
+                Plugin plugin = s.find(Plugin.class, getPluginId());
+                return plugin.required = required;
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);

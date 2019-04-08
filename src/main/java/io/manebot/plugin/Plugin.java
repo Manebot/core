@@ -234,9 +234,16 @@ public interface Plugin {
         PluginProperty getProperty(String name);
 
         /**
+         * Gets the specified plugin.
+         * @param identifier ManifestIdentifier of a plugin to get.
+         * @return Plugin instance of the required plugin. Plugin.isEnabled() may not return true.
+         */
+        Plugin getPlugin(ManifestIdentifier identifier) throws PluginLoadException;
+
+        /**
          * Require that the specified identifier plugin is included, and enabled.
          * @param identifier ManifestIdentifier of a plugin to require.
-         * @return Plugin instance of the required plugin.
+         * @return Plugin instance of the required plugin. Plugin.isEnabled() should return true.
          */
         Plugin requirePlugin(ManifestIdentifier identifier) throws PluginLoadException;
 

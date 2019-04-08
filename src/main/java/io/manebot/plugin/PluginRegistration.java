@@ -59,6 +59,20 @@ public interface PluginRegistration {
      * @return true if the plugin should auto-start, false otherwise.
      */
     boolean willAutoStart();
+
+    /**
+     * Sets if the plugin is required on start. Required plugins failing startup on auto-start will crash the bot purposefully.
+     * @param required true if the plugin is required.
+     * @throws SecurityException if there was a security violation setting the property.
+     */
+    void setRequired(boolean required) throws SecurityException;
+
+    /**
+     * Finds if the plugin is required. Required plugins failing startup on auto-start will crash the bot purposefully.
+     * @return true if the plugin is required, false if it is not required during startup.
+     */
+    boolean isRequired();
+
     /**
      * Gets the plugin properties for this plugin.
      * @return immutable collection of plugin properties.
