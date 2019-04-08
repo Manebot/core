@@ -25,7 +25,7 @@ public interface Platform {
      * Gets the default group assignment for users registered on this platform.
      * @return Platform default user group, or null if no default is assigned.
      */
-    default UserGroup getDefaultUserGroup() {
+    default UserGroup getDefaultGroup() {
         return null;
     }
 

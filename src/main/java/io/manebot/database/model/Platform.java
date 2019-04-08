@@ -3,6 +3,7 @@ package io.manebot.database.model;
 import io.manebot.platform.PlatformRegistration;
 import io.manebot.user.User;
 import io.manebot.user.UserAssociation;
+import io.manebot.user.UserGroup;
 
 import javax.persistence.*;
 import java.sql.SQLException;
@@ -44,6 +45,10 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
 
     @Column()
     private boolean registrationAllowed = true;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "defaultGroupId")
+    private Group defaultGroup;
 
     public int getPlatformId() {
         return platformId;
@@ -116,5 +121,22 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     @Override
     public int hashCode() {
         return Integer.hashCode(platformId);
+    }
+
+    @Override
+    public Group getDefaultGroup() {
+        return defaultGroup;
+    }
+
+    public void setDefaultGroup(UserGroup defaultGroup) {
+        try {
+            this.defaultGroup = database.executeTransaction(s -> {
+                Platform platform = s.find(Platform.class, getPlatformId());
+                platform.setUpdated(System.currentTimeMillis());
+                return platform.defaultGroup = (Group) defaultGroup;
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
