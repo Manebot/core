@@ -305,12 +305,12 @@ public interface Plugin {
          * Instances are defined when a plugin is successfully enabled and has configured other features,
          * such as Platforms.
          *
-         * @param instantiator instantiator function: load() called during Plugin enable, unload() at disable.
+         * @param instanceClass class to bind the reference to.
+         * @param function instantiation function; called upon Plugin initialization.
          * @param <T> User-chosen type to bind the instance to.
          * @return Builder instance.
          */
-        <T extends PluginReference>
-        Builder setInstance(Class<T> instanceClass, Function<Future, T> instantiator);
+        <T extends PluginReference> Builder setInstance(Class<T> instanceClass, Function<Plugin, T> function);
 
         /**
          * Calls the specified function when the Plugin is enabled.
