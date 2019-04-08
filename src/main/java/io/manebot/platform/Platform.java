@@ -30,6 +30,12 @@ public interface Platform {
     }
 
     /**
+     * Sets the default group assignment for users registered on this platform.
+     * @param defaultGroup default user group for newly registered users.
+     */
+    void setDefaultGroup(UserGroup defaultGroup);
+
+    /**
      * Gets the platform's internal unique ID.
      *
      * @return platform ID.
