@@ -1,4 +1,6 @@
-package io.manebot.database.search;
+package io.manebot.database.search.handler;
+
+import io.manebot.database.search.SearchArgument;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -12,11 +14,6 @@ public interface SearchArgumentHandler {
     Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value);
 
     default SearchArgumentHandler not() {
-        return new SearchArgumentHandler() {
-            @Override
-            public Predicate handle(Root root, CriteriaBuilder criteriaBuilder, SearchArgument value) {
-                return SearchArgumentHandler.this.handle(root, criteriaBuilder, value).not();
-            }
-        };
+        return (root, criteriaBuilder, value) -> SearchArgumentHandler.this.handle(root, criteriaBuilder, value).not();
     }
 }

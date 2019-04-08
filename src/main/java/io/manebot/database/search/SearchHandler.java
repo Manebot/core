@@ -1,12 +1,17 @@
 package io.manebot.database.search;
 
 import io.manebot.database.Database;
+import io.manebot.database.search.handler.SearchArgumentHandler;
+import io.manebot.database.search.handler.SearchOrderHandler;
+import io.manebot.database.search.handler.SearchOrderHandlerProperty;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.SQLException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * SearchHandlers are used to handle <b>Search</b> queries, which are in turn constructed by command arguments passed
@@ -111,6 +116,51 @@ public interface SearchHandler<T> {
          * @return Builder instance.
          */
         Builder<T> always(Consumer<Clause<T>> executionConsumer);
+
+        /**
+         * Binds the specified key to an order handler.
+         * @param key key to bind to.
+         * @param handler handler to associate with ordering the result list.
+         * @return Builder instance.
+         */
+        Builder<T> sort(String key, SearchOrderHandler handler);
+
+        /**
+         * Binds the specified key to an order handler.
+         * @param key key to bind to.
+         * @param field field name to associate with ordering the result list.
+         * @return Builder instance.
+         */
+        default Builder<T> sort(String key, String field) {
+            return sort(key, new SearchOrderHandlerProperty(field));
+        }
+
+        /**
+         * Binds the specified key to an order handler.
+         * @param key key to bind to.
+         * @param function function to associate with ordering the result list.
+         * @return Builder instance.
+         */
+        default Builder<T> sort(String key, Function<Root, Path> function) {
+            return sort(key, new SearchOrderHandlerProperty(function));
+        }
+
+        /**
+         * Sets the specific order key as the default order handler.
+         * @param key key to designate as the default order.
+         * @param order default order.
+         * @return Builder instance.
+         */
+        Builder<T> defaultSort(String key, SortOrder order);
+
+        /**
+         * Sets the specific order key as the default ascending order handler.
+         * @param key key to designate as the default order.
+         * @return Builder instance.
+         */
+        default Builder<T> defaultSort(String key) {
+            return defaultSort(key, SortOrder.ASCENDING);
+        }
 
         /**
          * Builds the search handler, capable of executing searches with the pre-formatted parameters.

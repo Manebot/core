@@ -1,8 +1,6 @@
 package io.manebot.database.search;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * <b>Search</b> is the lexical token parsing component of the search argument system.  Search is responsible for
@@ -12,12 +10,22 @@ import java.util.LinkedList;
  * SearchHandler, using its SearchArgumentHandler bindings, which are defined by implementors of the API.
  */
 public final class Search {
+    private final Collection<Order> orders;
     private final LexicalClause rootLexicalClause;
     private int page = 1;
 
-    private Search(LexicalClause rootLexicalClause, int page) {
+    private Search(Collection<Order> orders, LexicalClause rootLexicalClause, int page) {
+        this.orders = orders;
         this.rootLexicalClause = rootLexicalClause;
         this.page = page;
+    }
+
+    /**
+     * Gets the orders that this search has.
+     * @return collection of order statements.
+     */
+    public Collection<Order> getOrders() {
+        return orders;
     }
 
     /**
@@ -33,6 +41,31 @@ public final class Search {
         return page;
     }
 
+    public interface Order {
+        String getKey();
+        SortOrder getOrder();
+    }
+
+    public static class DefaultOrder implements Order {
+        private final String key;
+        private final SortOrder order;
+
+        public DefaultOrder(String key, SortOrder order) {
+            this.key = key;
+            this.order = order;
+        }
+
+        @Override
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public SortOrder getOrder() {
+            return order;
+        }
+    }
+
     public interface LexicalClause {
 
         /**
@@ -45,7 +78,7 @@ public final class Search {
          * Gets a collection of actions on this clause.
          * @return
          */
-        Collection<SearchPredicate> getActions();
+        List<SearchPredicate> getActions();
 
         /**
          * Pushes a lexical clause onto the clause stack.
@@ -68,7 +101,7 @@ public final class Search {
     }
 
     private static class PushedLexicalClause extends SearchPredicate implements LexicalClause {
-        private final Collection<SearchPredicate> actions = new LinkedList<>();
+        private final List<SearchPredicate> actions = new LinkedList<>();
         private final LexicalClause parent;
         private final SearchOperator operator;
 
@@ -111,7 +144,7 @@ public final class Search {
         }
 
         @Override
-        public Collection<SearchPredicate> getActions() {
+        public List<SearchPredicate> getActions() {
             return actions;
         }
 
@@ -122,7 +155,7 @@ public final class Search {
 
     public static class Builder extends PushedLexicalClause implements LexicalClause {
         private int page = 1; // default page is 1, of course
-
+        private Collection<Order> orders = new LinkedList<>();
 
         Builder() {
             super(null, SearchOperator.UNSPECIFIED);
@@ -130,7 +163,7 @@ public final class Search {
 
         public Search build() {
             // Simply return a new Search object around the root lexical clause (this)
-            return new Search(this, page);
+            return new Search(orders, this, page);
         }
 
         @Override
@@ -154,6 +187,15 @@ public final class Search {
 
         public Builder page(int page) {
             this.page = page;
+            return this;
+        }
+
+        public Collection<Order> getOrders() {
+            return orders;
+        }
+
+        public Builder order(Order order) {
+            this.orders.add(order);
             return this;
         }
     }
@@ -380,7 +422,7 @@ public final class Search {
         // Attempt completion
         parser.complete();
 
-        // Bit of a hack... search for "page" argument at the very end of the parser.
+        // Bit of a hack... search for "page" argument at the very end of the parser and "sort" as well.
         PushedLexicalClause thisClause = builder;
         while (true) {
             SearchPredicate nextClause = thisClause.getLastAction();
@@ -390,23 +432,55 @@ public final class Search {
                 break;
         }
 
-        Iterator<SearchPredicate> predicateIterator = thisClause.getActions().iterator();
-        while (true) {
-            SearchPredicate predicate = predicateIterator.next();
-            if (!predicateIterator.hasNext()) {
-                if (predicate instanceof SearchPredicateArgument) {
-                    String text = predicate.getArgument().getValue();
-                    if (text.startsWith("page:")) {
-                        builder.page(Integer.parseInt(text.substring(5)));
-                        predicateIterator.remove();
-                    } else if (text.startsWith("p:")) {
-                        builder.page(Integer.parseInt(text.substring(2)));
-                        predicateIterator.remove();
-                    }
-                }
+        ListIterator<SearchPredicate> iterator = thisClause.getActions().listIterator(thisClause.getActions().size());
+        boolean first = true;
 
-                break;
+        while (iterator.hasPrevious()) {
+            SearchPredicate predicate = iterator.previous();
+
+            if (predicate instanceof SearchPredicateArgument) {
+                String text = predicate.getArgument().getValue();
+                if (text.startsWith("page:")) {
+                    if (!first) throw new IllegalStateException(
+                            "Page argument must be last in argument list: \"" + text + "\"");
+                    builder.page(Integer.parseInt(text.substring(5)));
+                    iterator.remove();
+                } else if (text.startsWith("p:")) {
+                    if (!first) throw new IllegalStateException(
+                            "Page argument must be last in argument list: \"" + text + "\"");
+                    builder.page(Integer.parseInt(text.substring(2)));
+                    iterator.remove();
+                } else if (text.startsWith("sort:")) {
+                    String[] parts = text.split("\\:", 3);
+
+                    String key = parts[1].trim();
+                    String orderString = parts.length >= 3 ? parts[2].trim().toLowerCase() : "asc";
+                    SortOrder order;
+                    switch (orderString) {
+                        case "a":
+                        case "asc":
+                        case "ascending":
+                        case "ascend":
+                            order = SortOrder.ASCENDING;
+                            break;
+                        case "d":
+                        case "desc":
+                        case "descending":
+                        case "descend":
+                            order = SortOrder.DESCENDING;
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unknown sort order: \"" + orderString + "\"");
+                    }
+
+                    builder.order(new DefaultOrder(key, order));
+                    iterator.remove();
+                } else {
+                    break;
+                }
             }
+
+            first = false;
         }
 
         // Build Search object

@@ -1,5 +1,7 @@
 package io.manebot.database.search;
 
+import io.manebot.database.search.handler.SearchArgumentHandler;
+
 /**
  * Describes a lexically-parsed search argument, which is used to build a JPA query clause around an argument definition.
  */

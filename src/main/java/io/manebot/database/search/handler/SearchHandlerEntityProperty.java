@@ -1,7 +1,6 @@
 package io.manebot.database.search.handler;
 
 import io.manebot.database.search.SearchArgument;
-import io.manebot.database.search.SearchArgumentHandler;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;

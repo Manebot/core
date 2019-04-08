@@ -8,7 +8,7 @@ public class SearchTest extends TestCase {
     }
 
     public void testParser() throws Exception {
-        Search search = Search.parse("(\"string in command\" \"\\\"\") (page:2)");
+        Search search = Search.parse("(\"string in command\" \"\\\"\") (page:2) sort:something:desc page:2");
     }
 
 }
