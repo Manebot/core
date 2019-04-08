@@ -433,6 +433,7 @@ public final class Search {
         }
 
         ListIterator<SearchPredicate> iterator = thisClause.getActions().listIterator(thisClause.getActions().size());
+        List<Order> orders = new ArrayList<>();
         boolean first = true;
 
         while (iterator.hasPrevious()) {
@@ -473,7 +474,7 @@ public final class Search {
                             throw new IllegalArgumentException("Unknown sort order: \"" + orderString + "\"");
                     }
 
-                    builder.order(new DefaultOrder(key, order));
+                    orders.add(new DefaultOrder(key, order));
                     iterator.remove();
                 } else {
                     break;
@@ -482,6 +483,10 @@ public final class Search {
 
             first = false;
         }
+
+        // We traversed in reverse
+        Collections.reverse(orders);
+        orders.forEach(builder::order);
 
         // Build Search object
         return builder.build();
