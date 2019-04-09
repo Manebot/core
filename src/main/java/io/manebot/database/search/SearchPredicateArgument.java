@@ -6,7 +6,7 @@ import io.manebot.database.search.handler.SearchArgumentHandler;
  * Describes a lexically-parsed search argument, which is used to build a JPA query clause around an argument definition.
  */
 public class SearchPredicateArgument extends SearchPredicate {
-    SearchPredicateArgument(SearchArgument argument) {
+    public SearchPredicateArgument(SearchArgument argument) {
         super(argument);
     }
 

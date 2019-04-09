@@ -38,7 +38,11 @@ public class CommandArgumentSearch extends CommandArgument {
      */
     @Override
     public ChainPriority cast(ChainState state)  {
-        if (state.size() <= 0) return ChainPriority.NONE;
+        if (state.size() <= 0) {
+            state.extend(state.size(), Search.EMPTY);
+            return ChainPriority.LOW;
+        }
+
         String queryString = String.join(" ", state.getArguments());
         state.extend(state.size(), Search.parse(queryString));
         return ChainPriority.LOW;

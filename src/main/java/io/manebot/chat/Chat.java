@@ -295,6 +295,14 @@ public interface Chat extends ChatMessageReceiver {
     }
 
     /**
+     * Gets the default page size for this chat.
+     * @return default page size.
+     */
+    default int getDefaultPageSize() {
+        return 6;
+    }
+
+    /**
      * Processes a chat message and formats the message as a command.
      * @param message ChatMessage instance to check
      * @return ReceivedChatMessage instance of the parsed command, null if there is no command detected.

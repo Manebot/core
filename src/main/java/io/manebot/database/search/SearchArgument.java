@@ -4,7 +4,7 @@ public final class SearchArgument {
     private final SearchOperator operator;
     private final String value;
 
-    SearchArgument(SearchOperator operator, String value) {
+    public SearchArgument(SearchOperator operator, String value) {
         this.operator = operator;
         this.value = value;
     }

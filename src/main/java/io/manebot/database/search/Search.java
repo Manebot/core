@@ -10,6 +10,12 @@ import java.util.*;
  * SearchHandler, using its SearchArgumentHandler bindings, which are defined by implementors of the API.
  */
 public final class Search {
+    public static final Search EMPTY = new Search(
+            Collections.emptyList(),
+            new PushedLexicalClause(null, SearchOperator.UNSPECIFIED),
+            1
+    );
+
     private final Collection<Order> orders;
     private final LexicalClause rootLexicalClause;
     private int page = 1;
@@ -157,7 +163,7 @@ public final class Search {
         private int page = 1; // default page is 1, of course
         private Collection<Order> orders = new LinkedList<>();
 
-        Builder() {
+        public Builder() {
             super(null, SearchOperator.UNSPECIFIED);
         }
 

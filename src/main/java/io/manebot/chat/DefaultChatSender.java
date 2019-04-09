@@ -67,6 +67,8 @@ public class DefaultChatSender implements ChatSender {
             };
         }
 
+        builder.elementsPerPage(chat.getDefaultPageSize());
+
         function.accept(builder);
 
         return builder.build().send();

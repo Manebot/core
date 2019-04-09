@@ -7,7 +7,7 @@ import io.manebot.database.search.handler.SearchArgumentHandler;
  * definition.
  */
 public class SearchPredicateString extends SearchPredicate {
-    SearchPredicateString(SearchArgument argument) {
+    public SearchPredicateString(SearchArgument argument) {
         super(argument);
     }
 
