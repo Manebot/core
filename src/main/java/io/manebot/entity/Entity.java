@@ -22,11 +22,11 @@ public interface Entity {
     Collection<Property> getProperties();
 
     /**
-     * Gets a specific property by its identitifer,
-     * @param id entity property identitfier.
+     * Gets a specific property by its identifier,
+     * @param id entity property identifier.
      * @return Property instance if a property exists by that ID, and a null-valued Property otherwise.
      */
-    Property getPropery(String id);
+    Property getProperty(String id);
 
     /**
      * Gets a specific pre-existing grant for this entity.

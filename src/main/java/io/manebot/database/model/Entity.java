@@ -65,13 +65,13 @@ public class Entity extends TimedRow implements io.manebot.entity.Entity {
                     io.manebot.database.model.Property.class
             ).setParameter("entityId", entityId).getResultList()
                     .stream()
-                    .map(databaseType -> getPropery(databaseType.getName()))
+                    .map(databaseType -> getProperty(databaseType.getName()))
                     .collect(Collectors.toCollection(ArrayList::new));
         }));
     }
 
     @Override
-    public io.manebot.property.Property getPropery(String node) {
+    public io.manebot.property.Property getProperty(String node) {
         return propertyMap.computeIfAbsent(node, VirtualProperty::new);
     }
 
