@@ -1,5 +1,7 @@
 package io.manebot.virtual;
 
+import io.manebot.user.User;
+
 import java.util.Collection;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
@@ -59,5 +61,7 @@ public abstract class Virtual implements ThreadFactory {
 
         return getProcesses().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
     }
+
+    public abstract User currentUser();
 
 }

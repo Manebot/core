@@ -74,12 +74,10 @@ public class Conversation extends TimedRow implements io.manebot.conversation.Co
         synchronized (chatLock) {
             if (chat == null || !chat.isConnected()) {
                 PlatformRegistration platformRegistration = getPlatform().getRegistration();
-
                 if (platformRegistration == null)
                     throw new IllegalStateException("platform not registered: " + getPlatform().getId());
 
                 PlatformConnection connection = platformRegistration.getConnection();
-
                 if (connection == null || !connection.isConnected())
                     throw new IllegalStateException("platform not connected: " + getPlatform().getId());
 

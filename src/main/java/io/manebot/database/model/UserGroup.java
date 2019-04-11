@@ -45,7 +45,7 @@ public class UserGroup extends TimedRow implements UserGroupMembership {
     @JoinColumn(name = "groupId")
     private Group group;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "addingUserId")
     private User addingUser;
 

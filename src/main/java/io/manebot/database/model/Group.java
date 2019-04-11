@@ -103,7 +103,7 @@ public class Group extends TimedRow implements UserGroup {
 
     @Override
     public void addUser(io.manebot.user.User user) throws SecurityException {
-        User addingUser = (User) Virtual.getInstance().currentProcess().getUser();
+        User addingUser = (User) Virtual.getInstance().currentUser();
         if (addingUser.getType() != UserType.SYSTEM && getOwner() != addingUser)
             throw new SecurityException("Cannot control group");
 
@@ -136,7 +136,7 @@ public class Group extends TimedRow implements UserGroup {
 
     @Override
     public void setOwner(io.manebot.user.User user) {
-        User addingUser = (User) Virtual.getInstance().currentProcess().getUser();
+        User addingUser = (User) Virtual.getInstance().currentUser();
         if (addingUser.getType() != UserType.SYSTEM && getOwner() != addingUser)
             throw new SecurityException("Cannot control group");
 
@@ -144,6 +144,7 @@ public class Group extends TimedRow implements UserGroup {
             database.executeTransaction(s -> {
                 Group group = s.find(Group.class, getGroupId());
                 group.owningUser = owningUser;
+                group.setUpdated(System.currentTimeMillis());
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);
