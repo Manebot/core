@@ -8,7 +8,7 @@ import io.manebot.command.executor.CommandExecutor;
 import io.manebot.database.Database;
 import io.manebot.event.EventListener;
 import io.manebot.platform.Platform;
-import io.manebot.platform.PlatformRegistration;
+import io.manebot.security.ElevationDispatcher;
 import io.manebot.virtual.Virtual;
 
 import java.util.ArrayList;
@@ -358,10 +358,12 @@ public interface Plugin {
 
     class Future {
         private final PluginRegistration registration;
+        private final ElevationDispatcher elevationDispatcher;
         private final List<Consumer<PluginRegistration>> postTasks = new ArrayList<>();
 
-        public Future(PluginRegistration registration) {
+        public Future(PluginRegistration registration, ElevationDispatcher elevationDispatcher) {
             this.registration = registration;
+            this.elevationDispatcher = elevationDispatcher;
         }
 
         public Plugin getPlugin() {
@@ -383,6 +385,15 @@ public interface Plugin {
 
         public Collection<Consumer<PluginRegistration>> getTasks() {
             return Collections.unmodifiableCollection(postTasks);
+        }
+
+        public ElevationDispatcher getElevation() {
+            return elevationDispatcher;
+        }
+
+        public ElevationDispatcher requireElevation() throws SecurityException {
+            if (elevationDispatcher == null) throw new SecurityException("Plugin requires elevation.");
+            return elevationDispatcher;
         }
     }
 }

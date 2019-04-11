@@ -2,6 +2,7 @@ package io.manebot.database.model;
 
 import io.manebot.artifact.ArtifactIdentifier;
 import io.manebot.plugin.PluginRegistration;
+import io.manebot.security.Permission;
 
 import javax.persistence.*;
 import java.sql.SQLException;
@@ -53,6 +54,9 @@ public class Plugin extends TimedRow {
     @Column(nullable = false)
     private boolean required = false;
 
+    @Column(nullable = false)
+    private boolean elevated = false;
+
     public int getPluginId() {
         return pluginId;
     }
@@ -61,7 +65,7 @@ public class Plugin extends TimedRow {
         return new ArtifactIdentifier(packageId, artifactId, version);
     }
 
-    public void setArtifactIdentifier(ArtifactIdentifier id) {
+    private void setArtifactIdentifier(ArtifactIdentifier id) {
         this.packageId = id.getPackageId();
         this.artifactId = id.getArtifactId();
         this.version = id.getVersion();
@@ -72,6 +76,8 @@ public class Plugin extends TimedRow {
     }
 
     public void setEnabled(boolean enabled) {
+        Permission.checkPermission("system.plugin.enabled.set");
+
         try {
             this.enabled = database.executeTransaction(s -> {
                 Plugin plugin = s.find(Plugin.class, getPluginId());
@@ -87,10 +93,29 @@ public class Plugin extends TimedRow {
     }
 
     public void setRequired(boolean required) {
+        Permission.checkPermission("system.plugin.required.set");
+
         try {
             this.required = database.executeTransaction(s -> {
                 Plugin plugin = s.find(Plugin.class, getPluginId());
                 return plugin.required = required;
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isElevated() {
+        return elevated;
+    }
+
+    public void setElevated(boolean elevated) {
+        Permission.checkPermission("system.plugin.elevate.set");
+
+        try {
+            this.elevated = database.executeTransaction(s -> {
+                Plugin plugin = s.find(Plugin.class, getPluginId());
+                return plugin.elevated = elevated;
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -111,6 +136,8 @@ public class Plugin extends TimedRow {
     }
 
     public void setVersion(String version) {
+        Permission.checkPermission("system.plugin.version.set");
+
         try {
             this.version = database.executeTransaction(s -> {
                 Plugin plugin = s.find(Plugin.class, getPluginId());
@@ -150,6 +177,8 @@ public class Plugin extends TimedRow {
     }
 
     public void setProperty(String name, String value) {
+        Permission.checkPermission("system.plugin.property.set");
+
         PluginProperty property = getProperty(name);
         if (property != null) {
             if (value != null)

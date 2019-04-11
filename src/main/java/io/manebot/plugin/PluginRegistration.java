@@ -74,6 +74,19 @@ public interface PluginRegistration {
     boolean isRequired();
 
     /**
+     * Sets if the plugin is elevated. Elevated plugins can call routines as the system user.
+     * @param elevated true if the plugin is elevated.
+     * @throws SecurityException if there was a security violation setting the property.
+     */
+    void setElevated(boolean elevated) throws SecurityException;
+
+    /**
+     * Finds if the plugin is required. Elevated plugins can call routines as the system user.
+     * @return true if the plugin is elevated, false otherwise.
+     */
+    boolean isElevated();
+
+    /**
      * Gets the plugin properties for this plugin.
      * @return immutable collection of plugin properties.
      */

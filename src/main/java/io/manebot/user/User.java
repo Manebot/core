@@ -138,6 +138,14 @@ public interface User extends EntityType {
     UserBan ban(String reason, Date end) throws SecurityException;
 
     /**
+     * Bans the user until the specified date
+     * @param reason ban reason, may be null.
+     * @return UserBan instance.
+     * @throws SecurityException if there was a security violation creating the ban.
+     */
+    UserBan ban(String reason) throws SecurityException;
+
+    /**
      * Gets a user association by platform and ID.
      * @param platform Platform to search for
      * @param id ID to search for.

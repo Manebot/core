@@ -2,6 +2,7 @@ package io.manebot.virtual;
 
 import io.manebot.user.User;
 
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 public interface VirtualProcess {
@@ -37,5 +38,7 @@ public interface VirtualProcess {
     boolean isRunning();
 
     Profiler getProfiler();
+
+    ThreadFactory newThreadFactory() throws SecurityException;
 
 }
