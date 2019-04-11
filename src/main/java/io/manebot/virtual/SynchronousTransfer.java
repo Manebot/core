@@ -1,15 +1,20 @@
 package io.manebot.virtual;
 
+import io.manebot.lambda.ThrowingFunction;
+
 import java.util.concurrent.*;
 import java.util.function.Function;
 
-public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnable {
+public class SynchronousTransfer<C, S, E extends Exception> extends Transfer<C, S, E> implements Runnable {
     private final Object lock = new Object();
 
+    private final Class<E> exceptionClass;
     private final BlockingQueue<Message> serverQueue = new SynchronousQueue<>(true);
 
-    public SynchronousTransfer(Function<C, S> function) {
+    public SynchronousTransfer(Class<E> exceptionClass, ThrowingFunction<C, S, E> function) {
         super(function);
+
+        this.exceptionClass = exceptionClass;
     }
 
     /**
@@ -18,8 +23,9 @@ public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnabl
      * @return response object.
      * @throws RuntimeException if execution fails.
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public S apply(C object) {
+    public S applyChecked(C object) throws E {
         final Message msg = new Message(object);
 
         try {
@@ -30,7 +36,12 @@ public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnabl
 
         try {
             return msg.future.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
+            if (e.getCause() != null && e.getCause().getClass().isAssignableFrom(exceptionClass))
+                throw (E) e;
+            else
+                throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +71,7 @@ public class SynchronousTransfer<C, S> extends Transfer<C, S> implements Runnabl
         while (true) {
             try (Message message = next()) {
                 try {
-                    message.complete(SynchronousTransfer.super.apply(message.getObject()));
+                    message.complete(SynchronousTransfer.super.applyChecked(message.getObject()));
                 } catch (Throwable e) {
                     message.completeExceptionally(e);
                 }

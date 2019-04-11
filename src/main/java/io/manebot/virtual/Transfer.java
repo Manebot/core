@@ -1,16 +1,16 @@
 package io.manebot.virtual;
 
-import java.util.function.Function;
+import io.manebot.lambda.ThrowingFunction;
 
-public abstract class Transfer<C, S> implements Function<C, S> {
-    private final Function<C, S> function;
+public abstract class Transfer<C, S, E extends Exception> implements ThrowingFunction<C, S, E> {
+    private final ThrowingFunction<C, S, E> function;
 
-    public Transfer(Function<C, S> function) {
+    public Transfer(ThrowingFunction<C, S, E> function) {
         this.function = function;
     }
 
     @Override
-    public S apply(C c) {
-        return function.apply(c);
+    public S applyChecked(C c) throws E {
+        return function.applyChecked(c);
     }
 }
