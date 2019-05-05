@@ -76,7 +76,7 @@ public abstract class AbstractPlatformConnection implements PlatformConnection {
 
     @Override
     public PlatformUser getPlatformUser(String id) {
-        return userMap.computeIfAbsent(id, this::loadUserById);
+        return getCachedUserById(id, this::loadUserById);
     }
 
     @Override
