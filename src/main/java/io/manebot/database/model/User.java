@@ -278,9 +278,8 @@ public class User extends TimedRow implements io.manebot.user.User {
     public io.manebot.user.UserBan ban(String reason) throws SecurityException {
         Date oneMonthAgo = new Date(System.currentTimeMillis() - (2419200000L));
         long bans = getBans().stream().filter(ban -> ban.getDate().after(oneMonthAgo)).count();
-        long baseTime = 300;
-        Date end = new Date(System.currentTimeMillis() + (baseTime * (10 ^ (bans))));
-        return ban(reason, end);
+
+        return ban(reason, new Date(System.currentTimeMillis() + (300 * (10 ^ (bans)) * 1_000)));
     }
 
     @Override
