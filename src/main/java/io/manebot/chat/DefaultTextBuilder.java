@@ -59,6 +59,12 @@ public class DefaultTextBuilder implements TextBuilder {
     }
 
     @Override
+    public TextBuilder appendUrl(String message) {
+        builder.append(message);
+        return this;
+    }
+
+    @Override
     public TextBuilder append(String message, EnumSet<TextStyle> styles) {
         builder.append(getFormat().format(message, styles));
         return this;
