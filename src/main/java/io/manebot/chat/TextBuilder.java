@@ -2,6 +2,8 @@ package io.manebot.chat;
 
 import io.manebot.platform.PlatformUser;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.EnumSet;
 
 public interface TextBuilder {
@@ -59,6 +61,24 @@ public interface TextBuilder {
      * @return continued FormattedMessage instance.
      */
     TextBuilder append(String message);
+
+    /**
+     * Appends a formatted URL to this message.
+     * @param url URL to append to the message.
+     * @return continued FormattedMessage instance.
+     */
+    default TextBuilder appendUrl(String url) {
+        return append(url);
+    }
+
+    /**
+     * Appends a formatted URL to this message.
+     * @param url URL to append to the message.
+     * @return continued FormattedMessage instance.
+     */
+    default TextBuilder appendUrl(URL url) {
+        return appendUrl(url.toExternalForm());
+    }
 
     /**
      * Appends formatted text to the message.
