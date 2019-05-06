@@ -124,7 +124,6 @@ public interface Platform {
         else return registration.getPlugin();
     }
 
-
     abstract class Builder {
         private Plugin plugin;
         private String id, name;
