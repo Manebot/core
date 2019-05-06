@@ -1,6 +1,7 @@
 package io.manebot.platform;
 
 import io.manebot.plugin.Plugin;
+import io.manebot.security.ElevationDispatcher;
 import io.manebot.user.User;
 import io.manebot.user.UserAssociation;
 import io.manebot.user.UserGroup;

@@ -350,6 +350,22 @@ public interface Plugin {
          */
         Builder setType(PluginType type);
 
+        /**
+         * Gets the elevation dispatcher instance, if one is provided.
+         * @return ElevationDispatcher instance.
+         */
+        ElevationDispatcher getElevation();
+
+        /**
+         * Gets the elevation dispatcher instance, if one is provided.
+         * @return ElevationDispatcher instance.
+         */
+        default ElevationDispatcher requireElevation() {
+            ElevationDispatcher dispatcher = getElevation();
+            if (dispatcher == null) throw new SecurityException("Plugin requires elevation.");
+            return dispatcher;
+        }
+
     }
 
     interface PluginFunction {
