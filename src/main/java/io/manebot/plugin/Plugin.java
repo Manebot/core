@@ -154,7 +154,10 @@ public interface Plugin {
      * @return property value, or null if it is not defined.
      */
     default String getProperty(String name) {
-        return getRegistration().getProperty(name);
+        PluginRegistration registration = getRegistration();
+        if (registration == null) return null;
+
+        return registration.getProperty(name);
     }
 
     /**
