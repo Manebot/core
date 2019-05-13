@@ -117,6 +117,12 @@ public abstract class CommandDetailsResponse extends CommandResponse {
             return this;
         }
 
+        public Builder item(String key, Object value) {
+            if (value == null) return this;
+            items.add(new DefaultItem(key, value.toString()));
+            return this;
+        }
+
         public Builder item(String key, Collection<? extends Object> collection) {
             if (collection == null) return this;
             items.add(new ArrayItem(key, collection));

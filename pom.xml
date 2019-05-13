@@ -35,7 +35,7 @@
 
     <groupId>io.manebot</groupId>
     <artifactId>manebot-core</artifactId>
-    <version>0.1.6.23</version>
+    <version>0.1.6.24</version>
 
     <build>
         <plugins>
