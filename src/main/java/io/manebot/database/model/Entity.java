@@ -7,10 +7,7 @@ import com.google.common.collect.MapMaker;
 
 import javax.persistence.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @javax.persistence.Entity
@@ -77,16 +74,32 @@ public class Entity extends TimedRow implements io.manebot.entity.Entity {
 
     @Override
     public Permission getPermission(String node) {
+        Objects.requireNonNull(node);
+        if (node.length() <= 0) return null;
+
+        String[] nodeComponents = node.split("\\.");
+        List<String> testNodes = new ArrayList<>(nodeComponents.length + 1);
+        List<String> buffer = new ArrayList<>();
+        testNodes.add("*");
+        for (String component : nodeComponents) {
+            buffer.add(component);
+
+            if (buffer.size() < nodeComponents.length)
+                testNodes.add(String.join(".", buffer) + ".*");
+        }
+        testNodes.add(node);
+
         return database.execute(s -> {
             return s.createQuery(
                     "SELECT p FROM " + Permission.class.getName() + " p " +
                             "inner join p.entity e " +
-                            "where e.entityId = :entityId and p.node = :node",
+                            "where e.entityId = :entityId and p.node IN :nodes" +
+                            "order by length(p.node) desc", /* most specific */
                     Permission.class
             )
                     .setMaxResults(1)
                     .setParameter("entityId", entityId)
-                    .setParameter("node", node)
+                    .setParameter("nodes", testNodes)
                     .getResultList()
                     .stream()
                     .findFirst()
