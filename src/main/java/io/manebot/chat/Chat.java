@@ -151,6 +151,12 @@ public interface Chat extends ChatMessageReceiver {
     }
 
     /**
+     * Gets the community associated with this conversation.
+     * @return Community instance, or null if no community is associated with this chat.
+     */
+    Community getCommunity();
+
+    /**
      * Gets the last <i>n</i> messages in this chat.
      * @param max Maximum messages to return.
      * @return ChatMessage collection of previous messages.

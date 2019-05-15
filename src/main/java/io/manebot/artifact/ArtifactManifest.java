@@ -2,6 +2,7 @@ package io.manebot.artifact;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface ArtifactManifest {
 

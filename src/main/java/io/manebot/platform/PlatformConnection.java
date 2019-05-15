@@ -1,6 +1,7 @@
 package io.manebot.platform;
 
 import io.manebot.chat.Chat;
+import io.manebot.chat.Community;
 import io.manebot.plugin.PluginException;
 import io.manebot.user.User;
 import io.manebot.user.UserRegistration;
@@ -91,6 +92,25 @@ public interface PlatformConnection {
      * @return immutable collection of Chat identifiers associated with this platform.
      */
     Collection<String> getChatIds();
+
+    /**
+     * Gets a collection of community IDs.
+     * @return collection of community IDs.
+     */
+    Collection<String> getCommunityIds();
+
+    /**
+     * Gets a collection of communities in this platform.
+     * @return communities.
+     */
+    Collection<Community> getCommunities();
+
+    /**
+     * Gets a community by its ID.
+     * @param id community ID.
+     * @return Community instance.
+     */
+    Community getCommunity(String id);
 
     /**
      * Creates a new chat with the specified participants.
