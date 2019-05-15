@@ -1,5 +1,7 @@
 package io.manebot;
 
+import io.manebot.artifact.Artifact;
+import io.manebot.artifact.ArtifactIdentifier;
 import io.manebot.chat.ChatDispatcher;
 import io.manebot.command.CommandDispatcher;
 import io.manebot.conversation.ConversationProvider;
@@ -22,11 +24,16 @@ public interface Bot {
      */
     Version getVersion();
 
+    ArtifactIdentifier getIdentifier();
     /**
      * Gets the API version of the bot.
      * @return API Version.
      */
     Version getApiVersion();
+
+    default ArtifactIdentifier getApiIdentifier() {
+        return new ArtifactIdentifier("io.manebot", "manebot-core", getApiVersion().toString());
+    }
 
     /**
      * Gets a list of platforms registered to the system.

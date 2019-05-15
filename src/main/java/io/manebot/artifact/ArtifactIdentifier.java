@@ -40,6 +40,19 @@ public class ArtifactIdentifier extends ManifestIdentifier {
     }
 
     /**
+     * Constructs a new artifact identifier.
+     *
+     * @param manifestIdentifier Manifest identifier of the artifact, must not be null.
+     * @param version Version of the artifact, may be null.
+     */
+    public ArtifactIdentifier(ManifestIdentifier manifestIdentifier, String version) {
+        super(manifestIdentifier.getPackageId(), manifestIdentifier.getArtifactId());
+
+        if (version == null) throw new NullPointerException("version");
+        this.version = version;
+    }
+
+    /**
      * Gets the version associated with this artifact.  May be null.
      * @return version.
      */

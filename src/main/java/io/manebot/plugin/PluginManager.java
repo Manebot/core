@@ -6,6 +6,7 @@ import io.manebot.artifact.*;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
