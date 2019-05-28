@@ -43,7 +43,7 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     @Column(length = 64, nullable = false)
     private String id;
 
-    @Column()
+    @Column(nullable = false)
     private boolean registrationAllowed = true;
 
     @ManyToOne(optional = true)
@@ -73,7 +73,8 @@ public class Platform extends TimedRow implements io.manebot.platform.Platform {
     public void setRegistrationAllowed(boolean allowed) {
         try {
             this.registrationAllowed = database.executeTransaction(s -> {
-                Platform platform = s.find(Platform.class, getId());
+                Platform platform = s.find(Platform.class, getPlatformId());
+                platform.setUpdated(System.currentTimeMillis());
                 return platform.registrationAllowed = allowed;
             });
         } catch (SQLException e) {
