@@ -59,7 +59,5 @@ public class CommandArgumentURL extends CommandArgument {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
     @AnnotatedCommandExecutor.Argument(type = CommandArgumentURL.class)
-    public @interface Argument {
-        String label();
-    }
+    public @interface Argument { }
 }

@@ -491,6 +491,11 @@ public class User extends TimedRow implements io.manebot.user.User {
         return Integer.hashCode(userId);
     }
 
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
+
     private class Prompt implements UserPrompt {
         private final io.manebot.user.User caller;
         private final String name;
