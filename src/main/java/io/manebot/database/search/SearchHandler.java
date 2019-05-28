@@ -103,6 +103,13 @@ public interface SearchHandler<T> {
         Builder<T> command(String name, SearchArgumentHandler handler);
 
         /**
+         * Binds the specified argument handler to all un-bound command keys.
+         * @param handler handler to associate with the un-specified argument names.
+         * @return Builder instance.
+         */
+        Builder<T> command(SearchArgumentHandler handler);
+
+        /**
          * Binds the specified argument handler to any string query used (i.e.: "test string" text in query).
          * If no string handler is specified, exceptions are thrown during search.
          * @param handler handler to associate with any quoted string query.
