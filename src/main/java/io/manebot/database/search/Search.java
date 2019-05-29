@@ -43,6 +43,18 @@ public final class Search {
         return rootLexicalClause;
     }
 
+    public Search withPage(int page) {
+        return new Search(orders, rootLexicalClause, page);
+    }
+
+    public Search withOrders(Collection<Order> orders) {
+        return new Search(Collections.unmodifiableCollection(orders), rootLexicalClause, page);
+    }
+
+    public Search withOrders(Order... orders) {
+        return withOrders(Arrays.asList(orders));
+    }
+
     public int getPage() {
         return page;
     }

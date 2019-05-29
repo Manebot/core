@@ -10,6 +10,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -79,6 +81,16 @@ public interface SearchHandler<T> {
      * @throws IllegalArgumentException if the arguments provided by the <i>search</i> argument were invalid.
      */
     SearchResult<T> search(Search search, int maxResults) throws SQLException, IllegalArgumentException;
+
+    /**
+     * Executes a search and returns one random row.
+     * @param search Search object to parse, containing predicates to filter down the specified entity list.
+     * @param maxResults Maximum page result count
+     * @return Random singleton from the search
+     * @throws SQLException if there was a SQL exception executing a completed or incomplete search.
+     * @throws IllegalArgumentException if the arguments provided by the <i>search</i> argument were invalid.
+     */
+    SearchResult<T> random(Search search, int maxResults) throws SQLException, IllegalArgumentException;
 
     /**
      * Builds SearchHandlers.
