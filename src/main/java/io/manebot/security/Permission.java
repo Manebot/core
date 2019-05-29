@@ -58,12 +58,29 @@ public final class Permission {
     /**
      * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
      * @param node node to check.
+     */
+    public static boolean hasPermission(String node) throws IllegalStateException, SecurityException {
+        return hasPermission(get(node));
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param node node to check.
      * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
-     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
      * @throws SecurityException if the user associated with the current thread does not have the permission node.
      */
     public static void checkPermission(String node, Grant defaultGrant) throws IllegalStateException, SecurityException {
         checkPermission(get(node), defaultGrant);
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param node node to check.
+     * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
+     * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
+     */
+    public static boolean hasPermission(String node, Grant defaultGrant) throws IllegalStateException, SecurityException {
+        return hasPermission(get(node), defaultGrant);
     }
 
     /**
@@ -93,6 +110,22 @@ public final class Permission {
     /**
      * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
      * @param permission Permission instance to check.
+     */
+    public static boolean hasPermission(Permission permission) throws IllegalStateException, SecurityException {
+        VirtualProcess currentProcess = Virtual.getInstance().currentProcess();
+        if (currentProcess == null)
+            return false;
+
+        User user = currentProcess.getUser();
+        if (user == null)
+            return false;
+
+        return user.hasPermission(permission);
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param permission Permission instance to check.
      * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
      * @throws IllegalStateException if the current thread is not a member of the virtual process system, or if that thread is not logged in.
      * @throws SecurityException if the user associated with the current thread does not have the permission node.
@@ -112,5 +145,21 @@ public final class Permission {
             );
 
         currentProcess.getUser().checkPermission(permission, defaultGrant);
+    }
+
+    /**
+     * Checks that the current process has a specific permission, defaulting to deny if no permission is defined.
+     * @param permission Permission instance to check.
+     * @param defaultGrant default grant behavior.  When DENY, users with no matching permission node are denied.  When ALLOW, these users are allowed.
+     */
+    public static boolean hasPermission(Permission permission, Grant defaultGrant) throws IllegalStateException, SecurityException {
+        VirtualProcess currentProcess = Virtual.getInstance().currentProcess();
+        if (currentProcess == null)
+            return false;
+
+        if (currentProcess.getUser() == null)
+            return false;
+
+        return currentProcess.getUser().hasPermission(permission, defaultGrant);
     }
 }
