@@ -27,17 +27,10 @@ public class CommandArgumentURL extends CommandArgument {
         String next = state.next();
         if (next == null) return ChainPriority.NONE;
 
-        URI uri;
-        try {
-           uri = URI.create(next);
-        } catch (IllegalArgumentException ex) {
-            return NONE;
-        }
 
         URL url;
-
         try {
-            url = uri.toURL();
+            url = new URL(next);
         } catch (MalformedURLException e) {
             return NONE;
         }
