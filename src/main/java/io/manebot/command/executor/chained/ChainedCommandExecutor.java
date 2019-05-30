@@ -124,6 +124,7 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
                     .map(PrioritizedChain::getPriority)
                     .max(Comparator.naturalOrder())
                     .orElse(ChainPriority.NONE);
+
             for (PrioritizedChain chain : prioritizedChainList) {
                 if (chain.getPriority().compareTo(bestPriority) >= 0) {
                     if (chain.getChain().getChildren().size() <= 0) {
@@ -138,22 +139,24 @@ public abstract class ChainedCommandExecutor implements CommandExecutor {
         }
 
         // Final cleaning of argument chains
-        completedChains.sort((b, a) -> Integer.compare(a.priority.getOrdinal(), b.priority.getOrdinal()));
+        ChainPriority bestPriority = completedChains
+                .stream()
+                .map(PrioritizedChain::getPriority)
+                .max(Comparator.naturalOrder())
+                .orElse(ChainPriority.NONE);
 
-        Iterator<PrioritizedChain> priorityIterator = completedChains.iterator();
-        ChainPriority priority = null;
-        while (priorityIterator.hasNext()) {
-            ChainPriority thisPriority = priorityIterator.next().getPriority();
-            if (priority == null) priority = thisPriority;
-            else if (priority != thisPriority) priorityIterator.remove();
-        }
 
-        if (completedChains.size() <= 0)
+        if (completedChains.size() <= 0 || bestPriority.getOrdinal() < 0)
             throw new CommandArgumentException("Arguments not acceptable; see command help for more information.");
-        else if (completedChains.size() > 1)
-            throw new CommandArgumentException("CommandMessage argument disambiguation: " + completedChains.size() + " matches.");
 
-        PrioritizedChain chain = completedChains.get(0);
+        completedChains = completedChains.stream()
+                .filter(chain -> chain.getPriority() == bestPriority)
+                .collect(Collectors.toList());
+
+        if (completedChains.size() > 1)
+            throw new CommandArgumentException("Multiple argument chains: " + completedChains.size() + " matches.");
+
+        PrioritizedChain chain = completedChains.stream().findFirst().orElseThrow(IllegalStateException::new);
         if (chain.getChain().getExecutor() == null) throw new CommandExecutionException("No handler for command.");
         chain.getChain().getExecutor().execute(sender, label, chain.getChainState().getParsedArguments().toArray());
     }
