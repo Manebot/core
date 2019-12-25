@@ -131,6 +131,15 @@ public interface Plugin {
     Collection<Database> getDatabases();
 
     /**
+     * Gets a database registered to this plugin.
+     * @param name database name.
+     * @return registered database if found, null otherwise.
+     */
+    default Database getDatabase(String name) {
+        return getDatabases().stream().filter(database -> database.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    /**
      * Gets the registered command labels for this plugin.
      * @return registered commands.
      */
