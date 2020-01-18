@@ -1,6 +1,6 @@
 package io.manebot.event;
 
-public class EventExecutionException extends Exception {
+public class EventExecutionException extends RuntimeException {
 
     public EventExecutionException(Throwable cause) {
         super(cause);
