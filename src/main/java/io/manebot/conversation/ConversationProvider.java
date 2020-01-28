@@ -8,6 +8,12 @@ import java.util.stream.Collectors;
 public interface ConversationProvider {
 
     /**
+     * Gets a system null-output conversation.
+     * @return Null conversation.
+     */
+    Conversation getNullConversation();
+
+    /**
      * Gets a conversation by the specified Id.
      * @param id Id to search for.
      * @return Conversation associated with the specified Id.
