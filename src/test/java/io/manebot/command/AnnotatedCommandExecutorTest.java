@@ -1,17 +1,16 @@
-import io.manebot.command.CommandSender;
+package io.manebot.command;
+
 import io.manebot.command.executor.CommandExecutor;
 import io.manebot.command.executor.chained.AnnotatedCommandExecutor;
 import io.manebot.command.executor.chained.argument.CommandArgumentLabel;
 import io.manebot.command.executor.chained.argument.CommandArgumentString;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 
-public class AnnotatedCommandExecutorTest extends TestCase {
-    public static void main(String[] args) throws Exception {
-        new AnnotatedCommandExecutorTest().testParser();
-    }
-
-    public void testParser() throws Exception {
+public class AnnotatedCommandExecutorTest {
+    @Test
+    public void testExecute_Valid() throws Exception {
         CommandExecutor executor = new AnnotatedCommandExecutor() {
             @Command(description = "test description")
             public void test(CommandSender sender,

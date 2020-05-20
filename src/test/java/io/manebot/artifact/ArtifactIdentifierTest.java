@@ -1,13 +1,13 @@
-import io.manebot.artifact.ArtifactIdentifier;
-import junit.framework.TestCase;
+package io.manebot.artifact;
 
-public class ArtifactIdentifierTest extends TestCase {
+import org.junit.Test;
 
-    public static void main(String[] args) throws Exception {
-        new ArtifactIdentifierTest().testParser();
-    }
+import static junit.framework.TestCase.assertEquals;
 
-    public void testParser() throws Exception {
+public class ArtifactIdentifierTest {
+
+    @Test
+    public void testFromString_Valid() throws Exception {
         assertEquals(
                 "manebot",
                 ArtifactIdentifier.fromString("io.manebot:manebot:1.0.0").getArtifactId()
@@ -27,6 +27,17 @@ public class ArtifactIdentifierTest extends TestCase {
                 "io.manebot:manebot:1.0.0",
                 ArtifactIdentifier.fromString("io.manebot:manebot:1.0.0").toString()
         );
+    }
+
+    @Test
+    public void testFromString_Invalid() throws Exception {
+        try {
+            ArtifactIdentifier.fromString("io.manebot_invalid");
+
+            throw new AssertionError("fromString did not throw expected exception");
+        } catch (IllegalArgumentException expected) {
+
+        }
     }
 
 }

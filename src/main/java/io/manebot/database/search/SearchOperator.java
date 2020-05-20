@@ -5,15 +5,17 @@ package io.manebot.database.search;
  * should take place on a given token in a search string.
  */
 public enum SearchOperator {
-    INCLUDE('~'), // OR
-    EXCLUDE('-'), // AND NOT
-    MERGE('+'),   // AND
-    UNSPECIFIED('?');
+    INCLUDE('~', true), // OR
+    EXCLUDE('-', true), // AND NOT
+    MERGE('+', true),   // AND
+    UNSPECIFIED('?', false);
 
     private final char character;
+    private final boolean canSpecify;
 
-    SearchOperator(char character) {
+    SearchOperator(char character, boolean canSpecify) {
         this.character = character;
+        this.canSpecify = canSpecify;
     }
 
     public static SearchOperator getDefault() {
@@ -22,5 +24,9 @@ public enum SearchOperator {
 
     public char getCharacter() {
         return character;
+    }
+
+    public boolean canSpecify() {
+        return canSpecify;
     }
 }

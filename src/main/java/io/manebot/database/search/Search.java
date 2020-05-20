@@ -118,7 +118,7 @@ public final class Search {
         boolean canPop();
     }
 
-    private static class PushedLexicalClause extends SearchPredicate implements LexicalClause {
+    protected static class PushedLexicalClause extends SearchPredicate implements LexicalClause {
         private final List<SearchPredicate> actions = new LinkedList<>();
         private final LexicalClause parent;
         private final SearchOperator operator;
@@ -128,6 +128,10 @@ public final class Search {
 
             this.parent = parent;
             this.operator = operator;
+        }
+
+        public SearchOperator getOperator() {
+            return operator;
         }
 
         public LexicalClause push(PushedLexicalClause clause) {
@@ -218,7 +222,7 @@ public final class Search {
         }
     }
 
-    private interface LexicalParser {
+    protected interface LexicalParser {
         /**
          * Attempts to complete the parser, such as when a query string has ended.
          */
@@ -233,7 +237,7 @@ public final class Search {
         boolean interpret(char c) throws IllegalArgumentException;
     }
 
-    private static abstract class AbstractParser implements LexicalParser {
+    protected static abstract class AbstractParser implements LexicalParser {
         private final SearchOperator operator;
         private final LexicalClause clause;
 
@@ -251,7 +255,7 @@ public final class Search {
         }
     }
 
-    private static class StringParser extends AbstractParser {
+    protected static class StringParser extends AbstractParser {
         static final char ASSOCIATED_CHARACTER = '"';
         private static final char escapeCharacter = '\\';
 
@@ -293,7 +297,7 @@ public final class Search {
         }
     }
 
-    private static class CommandParser extends AbstractParser {
+    protected static class CommandParser extends AbstractParser {
         private final StringBuilder builder = new StringBuilder();
 
         protected CommandParser(SearchOperator operator, LexicalClause clause) {
@@ -323,7 +327,7 @@ public final class Search {
     /**
      * Introspective self-parsing clause parser
      */
-    private static class ClauseParser extends AbstractParser {
+    protected static class ClauseParser extends AbstractParser {
         static final char ASSOCIATED_CHARACTER = '(';
         private static final char closingCharacter = ')';
         private final boolean requireClosingToken;
@@ -452,54 +456,63 @@ public final class Search {
 
         ListIterator<SearchPredicate> iterator = thisClause.getActions().listIterator(thisClause.getActions().size());
         List<Order> orders = new ArrayList<>();
-        boolean first = true;
+
+        boolean hasPage = false, hasSort = false, hasOther = false;
 
         while (iterator.hasPrevious()) {
             SearchPredicate predicate = iterator.previous();
 
             if (predicate instanceof SearchPredicateArgument) {
                 String text = predicate.getArgument().getValue();
-                if (text.startsWith("page:")) {
-                    if (!first) throw new IllegalStateException(
-                            "Page argument must be last in argument list: \"" + text + "\"");
-                    builder.page(Integer.parseInt(text.substring(5)));
+                if (text.startsWith("page:") || text.startsWith("p:")) {
+                    if (predicate.getArgument().getOperator() != SearchOperator.UNSPECIFIED) {
+                        throw new IllegalArgumentException("Search page number has unexpected operator: " +
+                                predicate.getArgument().getOperator().getCharacter());
+                    } else if (hasPage) {
+                        throw new IllegalArgumentException("Search has multiple page numbers");
+                    } else if (hasOther) {
+                        throw new IllegalArgumentException("Unexpected page number: \"" + text + "\"");
+                    }
+
+                    String pageNumberString = text.split(":", 2)[1];
+                    builder.page(Integer.parseInt(pageNumberString));
                     iterator.remove();
-                } else if (text.startsWith("p:")) {
-                    if (!first) throw new IllegalStateException(
-                            "Page argument must be last in argument list: \"" + text + "\"");
-                    builder.page(Integer.parseInt(text.substring(2)));
-                    iterator.remove();
+
+                    hasPage = true;
                 } else if (text.startsWith("sort:")) {
+                    if (predicate.getArgument().getOperator() != SearchOperator.UNSPECIFIED) {
+                        throw new IllegalArgumentException("Search sort has unexpected operator: " +
+                                predicate.getArgument().getOperator().getCharacter());
+                    } else if (hasOther) {
+                        throw new IllegalArgumentException("Unexpected sort: \"" + text + "\"");
+                    }
+
                     String[] parts = text.split("\\:", 3);
 
                     String key = parts[1].trim();
-                    String orderString = parts.length >= 3 ? parts[2].trim().toLowerCase() : "asc";
+                    String orderString = parts.length >= 3 ? parts[2].trim() : null;
                     SortOrder order;
-                    switch (orderString) {
-                        case "a":
-                        case "asc":
-                        case "ascending":
-                        case "ascend":
-                            order = SortOrder.ASCENDING;
-                            break;
-                        case "d":
-                        case "desc":
-                        case "descending":
-                        case "descend":
-                            order = SortOrder.DESCENDING;
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unknown sort order: \"" + orderString + "\"");
+
+                    if (orderString != null) {
+                        order = Arrays.stream(SortOrder.values())
+                                .filter(element -> Arrays.stream(element.getKeys())
+                                        .anyMatch(string -> string.equalsIgnoreCase(orderString)))
+                                .findFirst().orElseThrow(() ->
+                                        new IllegalArgumentException("Invalid search order key \"" + key + "\""));
+                    } else {
+                        order = SortOrder.DEFAULT;
                     }
 
                     orders.add(new DefaultOrder(key, order));
                     iterator.remove();
-                } else {
-                    break;
-                }
-            }
 
-            first = false;
+                    hasSort = true;
+                } else {
+                    hasOther = true;
+                }
+            } else {
+                hasOther = true;
+            }
         }
 
         // We traversed in reverse

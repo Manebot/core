@@ -15,6 +15,7 @@ import java.net.URL;
 import static io.manebot.command.executor.chained.ChainPriority.*;
 
 public class CommandArgumentURL extends CommandArgument {
+    public CommandArgumentURL() { }
     public CommandArgumentURL(Argument argument) { }
 
     @Override

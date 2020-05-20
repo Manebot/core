@@ -8,9 +8,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 
 public class CommandArgumentInterval extends CommandArgument {
-    private final IntervalTime[] intervals = new IntervalTime[]
+    protected static final IntervalTime[] intervals = new IntervalTime[]
             {
                     new IntervalTime(1, new String[] {"s", "sec", "second"}),
                     new IntervalTime(60, new String[] {"m", "min", "minute"}),
@@ -72,13 +75,21 @@ public class CommandArgumentInterval extends CommandArgument {
         return !(b instanceof CommandArgumentInterval);
     }
 
-    private static class IntervalTime {
+    protected static class IntervalTime {
         private final long milliseconds;
         private final String[] matches;
 
         private IntervalTime(long milliseconds, String[] matches) {
             this.milliseconds = milliseconds;
             this.matches = matches;
+        }
+
+        public long getMilliseconds() {
+            return milliseconds;
+        }
+
+        public Collection<String> getMatches() {
+            return Arrays.asList(matches);
         }
     }
 

@@ -1,13 +1,13 @@
-import io.manebot.Version;
-import junit.framework.TestCase;
+package io.manebot;
 
-public class VersionTest extends TestCase {
+import org.junit.Test;
 
-    public static void main(String[] args) throws Exception {
-        new VersionTest().testParser();
-    }
+import static org.junit.Assert.assertEquals;
 
-    public void testParser() throws Exception {
+public class VersionTest {
+
+    @Test
+    public void testFromString() throws Exception {
         assertEquals("1.0.0-abcdefg", Version.fromString("1.0.0-abcdefg").toString());
         assertEquals("1.0-abcdefg", Version.fromString("1.0-abcdefg").toString());
         assertEquals("1-abcdefg", Version.fromString("1-abcdefg").toString());
