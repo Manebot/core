@@ -236,7 +236,16 @@ public interface Plugin {
          * @param listener event listener to bind.
          * @return Builder instance.
          */
-        Builder addListener(EventListener listener);
+        default Builder addListener(EventListener listener) {
+            return addListener((future) -> listener);
+        }
+
+        /**
+         * Registers an event listener to this Plugin.
+         * @param function event listener future to bind.
+         * @return Builder instance.
+         */
+        Builder addListener(Function<Future, EventListener> function);
 
         /**
          * Gets a plugin property.
