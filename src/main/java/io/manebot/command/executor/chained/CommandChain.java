@@ -63,12 +63,6 @@ public class CommandChain {
 
     public CommandChain withDescription(String description) {
         this.description = description;
-        
-        setExecutor((sender, label, args) -> {
-            Integer number1 = (Integer) args[0];
-            Integer number2 = (Integer) args[1];
-            sender.sendMessage(Integer.toString(number1 + number2));
-        });
         return this;
     }
 
