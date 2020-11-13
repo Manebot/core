@@ -5,6 +5,7 @@ import io.manebot.platform.PlatformUser;
 import io.manebot.user.User;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public interface Community {
@@ -67,6 +68,7 @@ public interface Community {
     default Collection<User> getUsers() {
         return getPlatformUsers().stream()
                 .map(PlatformUser::getAssociatedUser)
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -77,7 +79,10 @@ public interface Community {
      * @return true if the user is a member of the community, false otherwise.
      */
     default boolean isMember(User user) {
-        return getPlatformUsers().stream().map(PlatformUser::getAssociatedUser).anyMatch(member -> member.equals(user));
+        return getPlatformUsers().stream()
+                .map(PlatformUser::getAssociatedUser)
+                .filter(Objects::nonNull)
+                .anyMatch(member -> member.equals(user));
     }
 
     /**
