@@ -5,6 +5,7 @@ import io.manebot.platform.PlatformUser;
 import io.manebot.user.User;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public interface Community {
 
@@ -58,6 +59,17 @@ public interface Community {
      * @return Platform user collection.
      */
     Collection<PlatformUser> getPlatformUsers();
+
+    /**
+     * Gets a distinct, immutable collection of bot users associated with this community.
+     * @return Bot user collection.
+     */
+    default Collection<User> getUsers() {
+        return getPlatformUsers().stream()
+                .map(PlatformUser::getAssociatedUser)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 
     /**
      * Finds if a bot user is a member of this community

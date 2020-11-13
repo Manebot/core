@@ -39,6 +39,14 @@ public interface ChatSender extends ChatMessageReceiver {
     Chat getChat();
 
     /**
+     * Gets the community the message was sent in.
+     * @return Community instance.
+     */
+    default Community getCommunity() {
+        return getChat().getCommunity();
+    }
+
+    /**
      * Opens the command buffer.
      * @return true if the buffer was opened, false if no changes were made.
      */
