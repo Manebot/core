@@ -2,6 +2,7 @@ package io.manebot.chat;
 
 import io.manebot.platform.Platform;
 import io.manebot.platform.PlatformUser;
+import io.manebot.user.User;
 
 import java.util.Collection;
 
@@ -57,6 +58,24 @@ public interface Community {
      * @return Platform user collection.
      */
     Collection<PlatformUser> getPlatformUsers();
+
+    /**
+     * Finds if a bot user is a member of this community
+     * @param user user to look up
+     * @return true if the user is a member of the community, false otherwise.
+     */
+    default boolean isMember(User user) {
+        return getPlatformUsers().stream().map(PlatformUser::getAssociatedUser).anyMatch(member -> member.equals(user));
+    }
+
+    /**
+     * Finds if a platform user is a member of this community
+     * @param user platform user to look up
+     * @return true if the platform user is a member of the community, false otherwise.
+     */
+    default boolean isMember(PlatformUser user) {
+        return getPlatformUsers().stream().anyMatch(member -> member.equals(user));
+    }
 
     /**
      * Gets the default chat for this community.
