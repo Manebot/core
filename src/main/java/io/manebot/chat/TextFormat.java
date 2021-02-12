@@ -16,11 +16,11 @@ public interface TextFormat {
     boolean shouldMention(PlatformUser user);
 
     default String mention(Chat target) {
-        return target.getName();
+        return target != null ? target.getName() : "(null)";
     }
 
     default String mention(PlatformUser user) {
-        return user.getNickname();
+        return user != null ? user.getNickname() : "(null)";
     }
 
     default String format(String string, EnumSet<TextStyle> styles) {
